@@ -1,3 +1,6 @@
 \section{Introduction}
 SPARQL, the standard query language for RDF graphs is also the de-facto standard for building applications that consume Linked Data. 
-Despite substantial research on optimizing SPARQL query processing, the computation of solutions remains a computationally intensive task
+Despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, the computation of query solutions remains a computationally intensive task for datasets with hundreds of millions of RDF triples.
+As a result, it becomes challenging for maintainers of public SPARQL endpoints to guarantee high availability.
+For example, recent survey \cite{buil2013sparql}revealed that less than half of the public endpoints reach an availability of 95%.
+The computational cost of SPRQL query answering also makes it challenging for application developers to build high performance applications serving large numbers of users.
