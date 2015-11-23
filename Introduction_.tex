@@ -6,5 +6,6 @@ For example, a recent survey \cite{buil2013sparql} revealed that less than half 
 The computational cost of SPARQL query answering also makes it challenging for application developers to build high performance applications serving large numbers of users.
 Application developers often spend a substantial amount of time optimizing queries to support interactive applications \cite{Loizou_Angles_Groth_2014}.
 
-Common approaches to address the availability and performance challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint, and optimizing the endpoint for the selected types.
+Common approaches to address the availability and performance challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
 A simple approach is to restrict access to the endpoint using a Web API \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}.
+Each entry point in the API is implemented using a query template where the arguments in API invocations are substituted in the template to generate a SPARQL query.
