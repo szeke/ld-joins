@@ -1,6 +1,5 @@
 abstract.tex
 Introduction_.tex
-can_you_combine_markdown_with__.md
 figures/ld_joins_paper_outline1/ld_joins_paper_outline1.png
 motivation.tex
 approach.tex
