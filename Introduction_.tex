@@ -10,11 +10,11 @@ Common approaches to address the availability and performance challenges involve
 A simple approach is to restrict access to the endpoint using a Web API \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}.
 Each entry point in the API is implemented using a query template where the arguments in API invocations are substituted in the template to generate a SPARQL query.
 Limiting queries using an API makes it possible to support highly available SPARQL endpoints as needed in production applications.
-
+%
 Verborgh et al. \cite{Verborgh2014} propose Link Data Fragments to restrict the types of queries that can be submitted to an endpoint. 
 The approach splits query processing between the server and its clients.
 Clients decompose complex queries into a collection of simpler, single triple pattern queries, that can be submitted to the server.
 In this approach, servers only need to implement support for single triple pattern queries, making it possible to provide efficient response times and high availability for large numbers of clients.
-The approach shifts the burden of implementing joins to the client, requiring multiple server requests to answer one query and significant data transfer between servers and clients. 
-The approach trades off high endpoint availability for query performance, and is well suited for applications that query multiple endpoints.
+The approach shifts the burden of implementing joins in the client, requiring many server requests to answer one query and significant data transfer between servers and clients. 
+The approach trades off query performance for high endpoint availability.
 
