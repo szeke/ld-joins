@@ -1,5 +1,6 @@
 abstract.tex
 Introduction_.tex
+We_propose_a_new_approach__.tex
 figures/ld_joins_paper_outline1/ld_joins_paper_outline1.png
 motivation.tex
 approach.tex
