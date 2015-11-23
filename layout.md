@@ -5,6 +5,7 @@ figures/ld_joins_paper_outline1/ld_joins_paper_outline1.png
 motivation.tex
 label_sec_motivation__.tex
 approach.tex
+label_sec_approach__.tex
 evaluation.tex
 related-work.tex
 discussion.tex
