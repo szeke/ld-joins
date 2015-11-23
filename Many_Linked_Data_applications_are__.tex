@@ -1,5 +1,8 @@
 Many Linked Data applications are web portals that offer users query and visualization of RDF datasets constructed by integrating multiple data sources and mapping them to a domain model defined by one or several ontologies.
-Notable examples include Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, Bio2RDF \cite{callahan2013bio2rdf} and \cite{szekely2015building}.
+Notable examples include Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, Bio2RDF \cite{callahan2013bio2rdf} and DIG \cite{szekely2015building}.
+These applications use massive RDF datasets containing 100s of millions of RDF triples and require interactive query response
 
+We propose a new approach to address the computational cost of RDF query processing to support web portal applications that use massive RDF datasets.
+Our approach pre-computes the join operations needed in the queries to support the web portal, and indexes the resulting data so that no join operations are performed at query time.
+We use the JSON-LD serialization of RDF to index the data in a NoSQL store, and enable clients to query the RDF using the native query language of the NoSQL store.
 
-We propose a new approach to address the computational cost of RDF query processing to support interactive applications that use massive datasets.
