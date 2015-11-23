@@ -16,5 +16,5 @@ The approach splits query processing between the server and its clients.
 Clients decompose complex queries into a collection of simpler, single triple pattern queries, that can be submitted to the server.
 In this approach, servers only need to implement support for single triple pattern queries, making it possible to provide efficient response times and high availability for large numbers of clients.
 The approach shifts the burden of implementing joins in the client, requiring many server requests to answer one query and significant data transfer between servers and clients. 
-The approach trades off query performance for high endpoint availability.
+The approach trades off query performance for high endpoint availability, and is well suited for applications that query multiple endpoints, but don't need efficient query response times.
 
