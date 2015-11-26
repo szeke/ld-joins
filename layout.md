@@ -1,6 +1,7 @@
 abstract.tex
 Introduction_.tex
 Many_Linked_Data_applications_are__.tex
+figures/views-01/views-01.png
 motivation.tex
 approach.tex
 evaluation.tex
