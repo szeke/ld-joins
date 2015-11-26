@@ -1,16 +1,12 @@
 \section{Introduction}
 There are several examples of applications that illustrate the benefits of Semantic Web technology to build data analysis applications that integrate data from heterogeneous sources and that continuously evolve their schema to integrate new sources.
-Notable examples include Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, Bio2RDF \cite{callahan2013bio2rdf}, Event Registry \cite{Leban_Fortuna_Brank_Grobelnik_2014}and DIG \cite{szekely2015building}.
-These applications use massive datasets: 
-Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014} has over 3 billion triples\footnote{http://semantics.cc/open-phacts-semantic-interoperability-drug-discovery};
-our human trafficking dataset has over 5 billion triples that integrate data extracted from over 70 million web pages, adding over 100,000 new pages every day;
-Event Registry has 56 million articles, also adding over 100,000 new articles every day.
+Notable examples include Bio2RDF \cite{callahan2013bio2rdf} with 11 billion triples, Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014} with 3 billion triples, Event Registry \cite{Leban_Fortuna_Brank_Grobelnik_2014} with 56 million documents and DIG \cite{szekely2015building} with 74 million documents.
 These systems also offer rapid response times, with queries and navigation responding within one 1 or 2 seconds, they support a substantial number of users and high levels of availability.
-All these systems use semantic technologies for integrating the data, but only Open PHACTS use a triple store.
-The others use alternative technologies due to scalability and performance considerations.
+Bio2RDF and Open PHACTS integrate RDF datasets, store their data in triple stores and use SPARQL to query the data.
+Event Regsitry and DIG integrate extractions from Web documents and both add extractions from over 100,000 new pages every day.
+They both use semantic technologies to integrate the data, but neither uses a triple store or SPARQL due to scalability and performance considerations.
 
-SPARQL is the standard query language for RDF graphs, 
-and despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, the computation of query solutions remains a computationally intensive task for large datasets.
+Despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, the computation of query solutions remains a computationally intensive task for large datasets.
 As a result, it becomes challenging for maintainers of SPARQL endpoints to guarantee the levels availability required in production applications such as the ones listed above.
 For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.
 The computational cost of SPARQL query answering also makes it challenging for application developers to achieve query response times of 1 or 2 seconds as users expect and as advocated in user interface guidelines \cite{nielsen1994usability}, especially when serving large numbers of users.
