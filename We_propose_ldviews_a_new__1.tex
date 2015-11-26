@@ -1,11 +1,10 @@
-We propose \ldviews, a new approach to reduce the computational cost of RDF query processing, supporting faster query execution than SPARQL and reduced server load to provide high availability.
-In \ldviews, developers define views of an RDF graph, and the system materializes the views to provide efficient query over the data in the views.
+We propose \ldviews, an approach that enables data providers to define views on an RDF graph as directed acyclic graphs that can be materialized and indexed to support efficient queries.
+Our approach uses the JSON-LD serialization of RDF \cite{Lanthaler:2012:UJC:2307819.2307827} to materialize the views as JSON documents, indexes the data in a NoSQL store, and enables clients to query the RDF using the native query language of the NoSQL store.
+%
+The approach provides significantly richer access to the graph than traditional parameterized SPARQL queries exposed as Web APIs and superior performance compared to equivalent SPARQL queries on the original graph.
+Unlike Triple Pattern Fragments, \ldviews provides a sophisticated query language on the server, avoiding the need for clients to issue multiple requests to answer queries. 
 
-to support web portal applications that use massive RDF datasets.
-Our approach pre-computes the join operations needed in the queries to support the web portal, and indexes the resulting data so that no join operations are performed at query time.
-We use the JSON-LD serialization of RDF \cite{Lanthaler:2012:UJC:2307819.2307827} to index the data in a NoSQL store, and enable clients to query the RDF using the native query language of the NoSQL store.
-
-In section~\ref{sec:motivation} we present a taxonomy of the types of queries needed in Web portals and discuss how these queries can be combined to build web portals in a variety of domains.
+We present a motivating example for our approach in section~\ref{sec:motivation}.
 We present details of our approach in section~\ref{sec:approach}, including a formal definition of the types of queries we propose to support, the approach for specifying and pre-computing joins, and the approach to indexing the data in ElasticSearch, the NoSQL store we use in our implementation.
 We evaluate our approach in section~\ref{sec:evaluation}, describing a new benchmark for evaluating query performance for web portal applications. 
 Our evaluation shows that our approach vastly outperforms centralized SPARQL and Linked Data Fragments, enabling 1 second response times in a large web portal compared to XXX seconds in SPARQL and YYY seconds in Linked data Fragments.
