@@ -1,6 +1,7 @@
+We propose \ldjoins, a new approach to reduce the computational cost of RDF query processing.
+In \ldviews
 
-
-We propose a new approach to address the computational cost of RDF query processing to support web portal applications that use massive RDF datasets.
+to support web portal applications that use massive RDF datasets.
 Our approach pre-computes the join operations needed in the queries to support the web portal, and indexes the resulting data so that no join operations are performed at query time.
 We use the JSON-LD serialization of RDF \cite{Lanthaler:2012:UJC:2307819.2307827} to index the data in a NoSQL store, and enable clients to query the RDF using the native query language of the NoSQL store.
 
