@@ -15,7 +15,7 @@ For example, a recent survey \cite{buil2013sparql} revealed that less than half 
 Common approaches to address the performance and availability challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
 We can think of the different approaches as defining views over an RDF graph.
 A simple approach is to define views of the graph as a parameterized SPARQL queries, similar to views in a relational database.
-A good example of this approach is Open PHACTS, which exposes the parameterized queries to clients using a Web API.
+Open PHACTS uses this approach, exposing the parameterized queries to clients using a Web API.
 The approach is very conservative as it limits clients to a small number of queries.
 %
 Triple Pattern Fragments \cite{Verborgh2014} can be seen as providing simple views of an RDF graph, where each view is defined in terms of a triple pattern, where any of the subject, predicate or object roles can be a variable.
