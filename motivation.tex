@@ -1,6 +1,17 @@
 \section{Motivation}
 \label{sec:motivation}
-The main motivation for our work on \ldviews is desire to build interactive web portals that offer users keyword and structured search, faceted browsing and visualization over massive datasets with fast response times:  under 1 second to give users the feeling that they are navigating the data, and under 10 seconds for more complex operations such as the creation of visualizations \cite{nielsen1994usability}.
+The main motivation for our work on \ldviews is to facilitate construction of interactive web portals that offer users keyword and structured search, faceted browsing and rich visualization over massive datasets with fast response times.
+Semantic Web technology is ideally suited to build data analysis applications that integrate data from heterogeneous sources and that continuously evolve their schema to integrate new sources.
+Many interesting applications use massive datasets: 
+Open PHACTS has over 3 billion triples\footnote{http://semantics.cc/open-phacts-semantic-interoperability-drug-discovery};
+our human trafficking dataset has over 5 billion triples that integrate data extracted from over 70 million web pages, adding over 100,000 new pages every day;
+Event Registry has 56 million articles, also adding over 100,000 new articles every day.
+All these systems use semantic technologies for integrating the data, but only Open PHACTS use a triple store.
+The others use alternative technologies due to scalability and performance considerations.
+
+
+
+:  under 1 second to give users the feeling that they are navigating the data, and under 10 seconds for more complex operations such as the creation of visualizations \cite{nielsen1994usability}.
 
 Many Linked Data applications are web portals that offer users query and visualization of RDF datasets constructed by integrating multiple data sources and mapping them to a domain model defined by one or several ontologies.
 Notable examples include Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, Bio2RDF \cite{callahan2013bio2rdf} and DIG \cite{szekely2015building}.
