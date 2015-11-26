@@ -11,6 +11,5 @@ A simple approach is to restrict access to the endpoint using a Web API \cite{Gr
 %
 Verborgh et al. \cite{Verborgh2014} propose Link Data Fragments to restrict the types of queries that can be submitted to an endpoint. 
 The approach splits query processing between the server and its clients.
-Clients decompose complex queries into a collection of simpler, single triple pattern queries, that can be submitted to the server.
-In this approach, servers only need to implement support for single triple pattern queries, making it possible to provide efficient response times and high availability for large numbers of clients.
+Clients decompose complex queries into a collection of simpler, single triple pattern queries, that servers can answer efficiently.
 To answer queries, clients need to submit many server requests to answer one query resulting in significant data transfer between servers and clients and degraded performance. 
