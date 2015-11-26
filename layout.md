@@ -1,7 +1,7 @@
 abstract.tex
 Introduction_.tex
-We_propose_a_new_approach__.tex
 figures/views-01/views-01.png
+We_propose_a_new_approach__.tex
 motivation.tex
 approach.tex
 evaluation.tex
