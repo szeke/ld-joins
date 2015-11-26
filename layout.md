@@ -1,9 +1,9 @@
 abstract.tex
 Introduction_.tex
-figures/views-01/views-01.png
 We_propose_ldviews_an_approach__.tex
 motivation.tex
 approach.tex
+figures/views-01/views-01.png
 evaluation.tex
 related-work.tex
 discussion.tex
