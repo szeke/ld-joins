@@ -6,9 +6,13 @@ For example, a recent survey \cite{buil2013sparql} revealed that less than half 
 The computational cost of SPARQL query answering also makes it challenging for application developers to build high performance applications serving large numbers of users.
 Application developers often spend a substantial amount of time optimizing queries to support interactive applications \cite{Loizou_Angles_Groth_2014}.
 
-Common approaches to address the availability and performance challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
-A simple approach is to restrict access to the endpoint using a Web API that provides access to a predefined set of queries \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}.
+Common approaches to address the performance and availability challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
+We can think of the different approaches as defining views of an RDF graph.
+A simple approach is to define views of the graph as a parameterized SPARQL queries, similar to views in a relational database.
+A good example of this approach is Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, which exposes the parameterized queries to clients using a Web API.
+The approach is very conservative as it limits clients to a small number of queries.
 %
-Verborgh et al. \cite{Verborgh2014} propose Link Data Fragments to restrict the types of queries that can be submitted to an endpoint. 
-Clients decompose complex queries into a collection of simpler, single triple pattern queries, that servers can answer efficiently.
-To answer queries, clients need to submit many server requests to answer one query resulting in significant data transfer between servers and clients and degraded performance. 
+Link Data Fragments \cite{Verborgh2014} can be seen simple views of an RDF graph defined in terms of a triple pattern, enabling clients to efficiently retrieve triples from these views.
+The queries are very simple, so servers can answer them with minimal computational resources.
+The approach provides a library that implements a subset of SPARQL in terms of the Linked Data Fragments, thereby providing a rich query language for clients, implemented on top of very simple views.
+Each query generates multiple requests to the server, resulting in significant data transfer between servers and clients and degraded performance. 
