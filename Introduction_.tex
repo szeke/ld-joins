@@ -1,4 +1,13 @@
 \section{Introduction}
+There are several examples of applications that illustrate the benefits of Semantic Web technology to build data analysis applications that integrate data from heterogeneous sources and that continuously evolve their schema to integrate new sources.
+Many interesting applications use massive datasets: 
+Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014} has over 3 billion triples\footnote{http://semantics.cc/open-phacts-semantic-interoperability-drug-discovery};
+our human trafficking dataset has over 5 billion triples that integrate data extracted from over 70 million web pages, adding over 100,000 new pages every day;
+Event Registry has 56 million articles, also adding over 100,000 new articles every day.
+These systems also offer rapid response times, with queries and navigation responding within one 1 or 2 seconds, they support a substantial number of users and high levels of availability.
+All these systems use semantic technologies for integrating the data, but only Open PHACTS use a triple store.
+The others use alternative technologies due to scalability and performance considerations.
+
 SPARQL, the standard query language for RDF graphs is also the de-facto standard for building applications that consume Linked Data. 
 Despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, the computation of query solutions remains a computationally intensive task for large datasets.
 As a result, it becomes challenging for maintainers of SPARQL endpoints to guarantee high availability.
@@ -9,10 +18,19 @@ Application developers often spend a substantial amount of time optimizing queri
 Common approaches to address the performance and availability challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
 We can think of the different approaches as defining views of an RDF graph.
 A simple approach is to define views of the graph as a parameterized SPARQL queries, similar to views in a relational database.
-A good example of this approach is Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, which exposes the parameterized queries to clients using a Web API.
+A good example of this approach is Open PHACTS, which exposes the parameterized queries to clients using a Web API.
 The approach is very conservative as it limits clients to a small number of queries.
 %
 Triple Pattern Fragments \cite{Verborgh2014} can be seen as providing simple views of an RDF graph, where each view is defined in terms of a triple pattern, where any of the subject, predicate or object roles can be a variable.
 Queries consist of a single triple pattern, so servers can answer them with minimal computational resources.
 The approach provides a client-side library that implements a subset of SPARQL in terms of Triple Pattern Fragments, thereby exposing a rich query language for clients, implemented on top of the simple, efficient views.
 Each query generates multiple requests to the server, resulting in significant data transfer between servers and clients and degraded performance. 
+
+
+The main motivation for our work on \ldviews is to facilitate construction of interactive web portals that offer users keyword and structured search, faceted browsing and rich visualization over massive datasets with fast response times.
+
+
+
+
+
+:  under 1 second to give users the feeling that they are navigating the data, and under 10 seconds for more complex operations such as the creation of visualizations \cite{nielsen1994usability}.
