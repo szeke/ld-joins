@@ -13,7 +13,7 @@ In addition, it is challenging for maintainers of SPARQL endpoints to guarantee 
 For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.
 
 Common approaches to address the performance and availability challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
-We can think of the different approaches as defining views of an RDF graph.
+We can think of the different approaches as defining views over an RDF graph.
 A simple approach is to define views of the graph as a parameterized SPARQL queries, similar to views in a relational database.
 A good example of this approach is Open PHACTS, which exposes the parameterized queries to clients using a Web API.
 The approach is very conservative as it limits clients to a small number of queries.
