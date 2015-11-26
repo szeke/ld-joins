@@ -7,10 +7,10 @@ Event Regsitry and DIG integrate extractions from Web documents, both adding ext
 They both use semantic technologies to integrate the data, but neither uses a triple store or SPARQL due to scalability, performance and robustness considerations.
 
 Despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, the computation of query solutions remains a computationally intensive task for large datasets.
-As a result, it becomes challenging for maintainers of SPARQL endpoints to guarantee the levels availability required in production applications such as the ones listed above.
-For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.
-The computational cost of SPARQL query answering also makes it challenging for application developers to achieve query response times of 1 or 2 seconds as users expect and as advocated in user interface guidelines \cite{nielsen1994usability}, especially when serving large numbers of users.
+As a result, it challenging for application developers to achieve query response times of 1 or 2 seconds as users expect and as advocated in user interface guidelines \cite{nielsen1994usability}, especially when serving large numbers of users.
 Application developers often spend a substantial amount of time optimizing queries to support interactive applications \cite{Loizou_Angles_Groth_2014}.
+In addition, it is challenging for maintainers of SPARQL endpoints to guarantee the levels availability required in production applications such as the ones listed above.
+For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.
 
 Common approaches to address the performance and availability challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
 We can think of the different approaches as defining views of an RDF graph.
