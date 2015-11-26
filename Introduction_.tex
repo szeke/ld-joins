@@ -7,9 +7,8 @@ The computational cost of SPARQL query answering also makes it challenging for a
 Application developers often spend a substantial amount of time optimizing queries to support interactive applications \cite{Loizou_Angles_Groth_2014}.
 
 Common approaches to address the availability and performance challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
-A simple approach is to restrict access to the endpoint using a Web API \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014} that provides access to a predefined set of queries.
+A simple approach is to restrict access to the endpoint using a Web API that provides access to a predefined set of queries \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}.
 %
 Verborgh et al. \cite{Verborgh2014} propose Link Data Fragments to restrict the types of queries that can be submitted to an endpoint. 
-The approach splits query processing between the server and its clients.
 Clients decompose complex queries into a collection of simpler, single triple pattern queries, that servers can answer efficiently.
 To answer queries, clients need to submit many server requests to answer one query resulting in significant data transfer between servers and clients and degraded performance. 
