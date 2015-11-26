@@ -12,7 +12,7 @@ A simple approach is to define views of the graph as a parameterized SPARQL quer
 A good example of this approach is Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014}, which exposes the parameterized queries to clients using a Web API.
 The approach is very conservative as it limits clients to a small number of queries.
 %
-Triple Pattern Fragments \cite{Verborgh2014} can be seen as providing simple views of an RDF graph, where each view is defined in terms of a triple pattern.
+Triple Pattern Fragments \cite{Verborgh2014} can be seen as providing simple views of an RDF graph, where each view is defined in terms of a triple pattern, where any of the subject, predicate or object roles can be a variable.
 Queries consist of a single triple pattern, so servers can answer them with minimal computational resources.
-The approach provides a library that implements a subset of SPARQL in terms of Triple Pattern Fragments, thereby exposing a rich query language for clients, implemented on top of very simple, efficient views.
+The approach provides a client-side library that implements a subset of SPARQL in terms of Triple Pattern Fragments, thereby exposing a rich query language for clients, implemented on top of the simple, efficient views.
 Each query generates multiple requests to the server, resulting in significant data transfer between servers and clients and degraded performance. 
