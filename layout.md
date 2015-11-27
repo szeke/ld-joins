@@ -3,6 +3,7 @@ Introduction_.tex
 We_propose_ldviews_an_approach__.tex
 motivation.tex
 figures/views-01/views-01.png
+Figure_ref_fig_ldviews_shows__.tex
 figures/dig-composite/dig-composite.png
 approach.tex
 evaluation.tex
