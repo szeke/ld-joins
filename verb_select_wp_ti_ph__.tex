@@ -17,16 +17,23 @@ select ?wp ?ti ?ph
       mainEntity / seller / telephone / name ?ph
 \end{verbatim}
 
+\verbatimfont{\small}
 \begin{table} 
     \begin{tabular}{ c c c }
         1 & Explanation here & 
-\begin{minipage}{3in}\verbatimfont{\small}\begin{verbatim}
+\begin{minipage}{3in}\begin{verbatim}
 select ?wp ?ti ?ph
    ?wp contains K
       title ?ti
       mainEntity / seller / telephone / name ?ph
 \end{verbatim}\end{minipage}\\ 
-        2 & Explanation here & code here \\ 
+        2 & Explanation here & 
+\begin{minipage}{3in}\begin{lstlisting}
+select ?wp ?ti ?ph
+   ?wp contains K
+      title ?ti
+      mainEntity / seller / telephone / name ?ph
+\end{lstlisting}\end{minipage}\\  
     \end{tabular} 
     \caption{Queries} 
 \end{table}
