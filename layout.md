@@ -2,6 +2,7 @@ abstract.tex
 Introduction_.tex
 We_propose_ldviews_an_approach__.tex
 motivation.tex
+figures/dig-composite/dig-composite.png
 approach.tex
 figures/views-01/views-01.png
 evaluation.tex
