@@ -1,0 +1,12 @@
+\paragraph{Facet Query (2):} retrieve the distinct values and counts for a facet.
+The following example illustrates a query that computes the \verb|city| facet for adult services.
+\begin{quote}
+{\footnotesize
+\begin{verbatim}
+select ?locality count(?place)
+   ?as a AdultService ;
+       offer/availableAt ?place .
+   ?place locality ?locality .
+group by ?place
+\end{verbatim}}
+\end{quote}
