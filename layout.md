@@ -9,7 +9,7 @@ Figure_ref_fig_ui_presents__.tex
 paragraph_Keyword_Query_1_retrieve__.tex
 paragraph_Facet_Query_2_retrieve__.tex
 paragraph_Missing_Values_Query_3__.tex
-paragraph_Timeline_Query_4_retrieve__.tex
+paragraph_Anchored_Timeline_Query_4__.tex
 approach.tex
 evaluation.tex
 related-work.tex
