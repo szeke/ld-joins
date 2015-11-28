@@ -1,9 +1,23 @@
 \usepackage{xspace}
 \usepackage{listings}
-\usepackage{fancyvrb}
+
 
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
 \noindent\keywordname\enspace\ignorespaces#1}
 \newcommand{\ldviews}{\textsc{LD-VIEWS}\xspace}
 
-\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
+\usepackage{listings}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{OliveGreen},    % comment style
+  keywordstyle=\color{BlueViolet},       % keyword style
+  stringstyle=\color{black},     % string literal style
+  language=SQL,             % Set your language (you can change the language for each code-block optionally)
+  frame=lrtb, %
+  xleftmargin=\fboxsep, %
+  xrightmargin=-\fboxsep, %
+  moretexcs={lstset,color,colorlet, cellcolor, newcolumntype, columncolor, rowcolor, multirow, xspace, LaTeX, TeX},
+}
