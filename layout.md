@@ -8,6 +8,7 @@ figures/dig-composite/dig-composite.png
 Figure_ref_fig_ui_presents__.tex
 paragraph_Keyword_Query_1_retrieve__.tex
 paragraph_Facet_Query_2_retrieve__.tex
+paragraph_Missing_Values_Query_2__.tex
 approach.tex
 evaluation.tex
 related-work.tex
