@@ -1,9 +1,8 @@
 
 {\footnotesize
 \begin{verbatim}
-select ?wp ?ti ?ph
-   ?wp contains K
-       title ?ti
-       mainEntity/seller/telephone/name ?ph
+select ?title ?phone
+   ?wp a WebPage ; title ?title ; mainEntity/seller/telephone/name ?phone ;
+       contains(description, K)
 \end{verbatim}
 }
