@@ -3,9 +3,9 @@ The following example illustrates the query to count the number of WebPages miss
 \begin{quote}
 {\footnotesize
 \begin{verbatim}
-select distinct ?locality count(?webpage)
-   ?webpage a WebPage ;
-       mainEntity/availableAt/locality ?locality .
-group by ?locality
+select count(?webpage)
+   ?webpage a WebPage .
+   filter not exists
+      ?webpage mainEntity/availableAt/locality ?locality .
 \end{verbatim}}
 \end{quote}
