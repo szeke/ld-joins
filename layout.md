@@ -5,6 +5,7 @@ motivation.tex
 figures/views-01/views-01.png
 Figure_ref_fig_ldviews_shows__.tex
 figures/dig-composite/dig-composite.png
+Figure_ref_fig_ui_presents__.tex
 paragraph_Keyword_Query_1_retrieve__.tex
 paragraph_Facet_Query_2_retrieve__.tex
 approach.tex
