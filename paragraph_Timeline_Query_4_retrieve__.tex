@@ -1,0 +1,11 @@
+\paragraph{Timeline Query (4):} retrieve the number of instances of a class grouped according to a date attribute reachable via property path associated with a class.
+The following example illustrates a query to display a timeline of offers with a count of number of offers published each week\footnote{The listed query is a simplified version for illustration purposes.}.
+\begin{quote}
+{\footnotesize
+\begin{verbatim}
+select count(?offer)
+   ?offer a Offer ;
+      startDate ?date .
+group by week(?date)
+\end{verbatim}}
+\end{quote}
