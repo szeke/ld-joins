@@ -1,8 +1,11 @@
 
 {\footnotesize
 \begin{verbatim}
-select ?title ?phone
-   ?wp a WebPage ; title ?title ; mainEntity/seller/telephone/name ?phone ;
-       contains(description, K)
+select ?title ?date ?locality ?phone
+   ?wp a WebPage ; 
+       contains(description, K) ;   
+       title ?title ; created ?date ;
+       mainEntity/availableAt ?locality ;
+       mainEntity/seller/telephone/name ?phone .
 \end{verbatim}
 }
