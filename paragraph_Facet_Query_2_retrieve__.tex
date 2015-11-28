@@ -3,8 +3,8 @@ The following example illustrates the query to populate the \verb|CITY| facet in
 \begin{quote}
 {\footnotesize
 \begin{verbatim}
-select ?locality count(?locality)
-   ?as a WebPage ;
+select distinct ?locality count(?webpage)
+   ?webpage a WebPage ;
        mainEntity/availableAt/locality ?locality .
 group by ?locality
 \end{verbatim}}
