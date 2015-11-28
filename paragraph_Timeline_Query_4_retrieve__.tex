@@ -1,9 +1,11 @@
-\paragraph{Timeline Query (4):} retrieve the number of instances of a class grouped according to a date attribute reachable via property path associated with a class.
-The following example illustrates a query to display a timeline of offers with a count of number of offers published each week\footnote{The listed query is a simplified version for illustration purposes.}.
+\paragraph{(Anchored) Timeline Query (4):} retrieve the number of instances of a class grouped according to a date attribute reachable via property path associated with a class.
+A timeline query is anchored when restricted to only the instances associated with a particular entity called the anchor.
+The following example illustrates a query to compute the timeline of offers associated with a phone, as shown in Figure \ref{fig:ui}\footnote{The listed query is a simplified version for illustration purposes; the correct query must group for weeks across years.}.
 \begin{quote}
 {\footnotesize
 \begin{verbatim}
 select count(?offer)
+   PHONE owner/offer ?offer .
    ?offer a Offer ;
       startDate ?date .
 group by week(?date)
