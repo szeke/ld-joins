@@ -5,7 +5,7 @@ motivation.tex
 figures/views-01/views-01.png
 Figure_ref_fig_ldviews_shows__.tex
 figures/dig-composite/dig-composite.png
-begin_table_begin_tabular_l__.tex
+footnotesize_begin_verbatim_select_wp__.tex
 approach.tex
 evaluation.tex
 related-work.tex
