@@ -1,0 +1,11 @@
+\paragraph{Missing Values Query (3):} retrieve the number of instances of a class that have no value for a property path associated with a class.
+The following example illustrates the query to count the number of WebPages missing a value for the \verb|CITY| facet in Figure \ref{fig:ui}.
+\begin{quote}
+{\footnotesize
+\begin{verbatim}
+select count(?webpage)
+   ?webpage a WebPage .
+   filter not exists
+      ?webpage mainEntity/availableAt/locality ?locality .
+\end{verbatim}}
+\end{quote}

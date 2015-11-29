@@ -1,0 +1,13 @@
+\paragraph{Keyword Query (1):} retrieve instances of a class that match keywords \verb|KEYWORDS|, and for each instance retrieve the values of fields to display, possibly using property paths over intermediate graph nodes\footnote{Multiple values along any property path produces a cross-product of results in select queries; in SPARQL, the cross-products can be avoided using  CONSTRUCT queries}.
+The following query illustrates retrieval of web pages and fields to populate the query results in Figure \ref{fig:ui}.
+\begin{quote}
+{\footnotesize
+\begin{verbatim}
+select ?title ?date ?locality ?phone
+   ?wp a WebPage ; 
+       contains(description, KEYWORDS) ;   
+       title ?title ; created ?date ;
+       mainEntity/availableAt ?locality ;
+       mainEntity/seller/telephone/name ?phone .
+\end{verbatim}}
+\end{quote}
