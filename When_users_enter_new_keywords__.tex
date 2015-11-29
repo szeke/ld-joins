@@ -1,3 +1,11 @@
+As users interact with the system selecting filters the queries include additional clauses such as the following to constrain results according to the selected filters:
+\begin{quote}
+{\footnotesize
+\begin{verbatim}
+?webpage mainEntity/itemProvided/eyeColor "blue"
+\end{verbatim}}
+\end{quote}
+
 When users enter new keywords and click the search button, or when they click on the facets to filter the results, the system performs the following queries.
 Assume that the interface shows $N$ search results, and includes $K$ facets:
 \begin{itemize}
@@ -9,7 +17,3 @@ Assume that the interface shows $N$ search results, and includes $K$ facets:
 \item $N*M$ anchored facet queries, assuming the interface shows $M$ sparkline visualizations for each search result (e.g., small pie-charts next to each phone number) 
 \end{itemize}
 The challenge to support responsive user interfaces is to compute the answers for the first 3 queries in under 1 second and the answers to the visualization queries under 10 seconds \cite{nielsen1994usability}.
-
-As users interact with the system selecting filters the queries include additional clauses such as
-\verb|?webpage mainEntity/itemProvided/eyeColor "blue"|
-to constrain results according to the selected filters.
