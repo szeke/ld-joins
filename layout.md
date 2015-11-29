@@ -14,6 +14,7 @@ paragraph_Map_Query_5_retrieve__.tex
 As_users_interact_with_the__.tex
 approach.tex
 figures/architecture-v01/architecture-v01.png
+Figure_ref_fig_architecture_shows__.tex
 evaluation.tex
 related-work.tex
 discussion.tex
