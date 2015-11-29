@@ -11,7 +11,7 @@ paragraph_Facet_Query_2_retrieve__.tex
 paragraph_Missing_Values_Query_3__.tex
 paragraph_Anchored_Timeline_Query_4__.tex
 paragraph_Map_Query_5_retrieve__.tex
-When_users_enter_new_keywords__.tex
+As_users_interact_with_the__.tex
 approach.tex
 evaluation.tex
 related-work.tex
