@@ -13,6 +13,7 @@ paragraph_Anchored_Timeline_Query_4__.tex
 paragraph_Map_Query_5_retrieve__.tex
 As_users_interact_with_the__.tex
 approach.tex
+figures/architecture-v01/architecture-v01.png
 evaluation.tex
 related-work.tex
 discussion.tex
