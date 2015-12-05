@@ -1,0 +1,188 @@
+{
+  "types": [
+    {
+      "name": "Page",
+      "type": "WebPage",
+      "facets": [
+        {
+          "name": "Publisher",
+          "path": "publisher"
+        },
+        {
+          "name": "Country",
+          "path": "mainEntity.availableAtOrFrom.address.addressCountry"
+        },
+        {
+          "name": "Region",
+          "path": "mainEntity.availableAtOrFrom.address.addressRegion"
+        },
+        {
+          "name": "City",
+          "path": "mainEntity.availableAtOrFrom.address.addressLocality"
+        }
+      ]
+    },
+    {
+      "name": "Offer",
+      "type": "Offer",
+      "facets": [
+        {
+          "name": "Country",
+          "path": "availableAtOrFrom.address.addressCountry"
+        },
+        {
+          "name": "Region",
+          "path": "availableAtOrFrom.address.addressRegion"
+        },
+        {
+          "name": "City",
+          "path": "availableAtOrFrom.address.addressLocality"
+        },
+        {
+          "name": "Price",
+          "path": "priceSpecification"
+        },
+        {
+          "name": "Publisher",
+          "path": "mainEntityOfPage.publisher"
+        }
+      ]
+    },
+    {
+      "name": "Adult Service",
+      "type": "AdultService",
+      "facets": [
+        {
+          "name": "Name",
+          "path": "name.raw"
+        },
+        {
+          "name": "Age",
+          "path": "personAge"
+        },
+        {
+          "name": "Ethnicity",
+          "path": "ethnicity"
+        },
+        {
+          "name": "Eyes",
+          "path": "eyeColor"
+        },
+        {
+          "name": "Hair",
+          "path": "hairColor"
+        },
+        {
+          "name": "Weight",
+          "path": "weight"
+        },
+        {
+          "name": "Height",
+          "path": "height"
+        },
+        {
+          "name": "Country",
+          "path": "offers.availableAtOrFrom.address.addressCountry"
+        },
+        {
+          "name": "Region",
+          "path": "offers.availableAtOrFrom.address.addressRegion"
+        },
+        {
+          "name": "City",
+          "path": "offers.availableAtOrFrom.address.addressLocality"
+        },
+        {
+          "name": "Publisher",
+          "path": "offers.mainEntityOfPage.publisher"
+        }
+      ]
+    },
+    {
+      "name": "Seller",
+      "type": "PersonOrOrganization",
+      "facets": [
+        {
+          "name": "Phone",
+          "path": "telephone.name.raw"
+        },
+        {
+          "name": "Email",
+          "path": "email.name.raw"
+        },
+        {
+          "name": "Escort Name",
+          "path": "itemOffered.name.raw"
+        },
+        {
+          "name": "Country",
+          "path": "makesOffer.availableAtOrFrom.address.addressCountry"
+        },
+        {
+          "name": "Region",
+          "path": "makesOffer.availableAtOrFrom.address.addressRegion"
+        },
+        {
+          "name": "City",
+          "path": "makesOffer.availableAtOrFrom.address.addressLocality"
+        },
+        {
+          "name": "Publisher",
+          "path": "makesOffer.mainEntityOfPage.publisher"
+        }
+      ]
+    },
+    {
+      "name": "Phone",
+      "type": "PhoneNumber",
+      "facets": [
+        {
+          "name": "Number",
+          "path": "owner.name.raw"
+        },
+        {
+          "name": "Country",
+          "path": "owner.makesOffer.availableAtOrFrom.address.addressCountry"
+        },
+        {
+          "name": "Region",
+          "path": "owner.makesOffer.availableAtOrFrom.address.addressRegion"
+        },
+        {
+          "name": "City",
+          "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality"
+        },
+        {
+          "name": "Publisher",
+          "path": "owner.makesOffer.mainEntityOfPage.publisher"
+        }
+      ]
+    },
+    {
+      "name": "Email",
+      "type": "EmailAddress",
+      "facets": [
+        {
+          "name": "Email",
+          "path": "email.name.raw"
+        },
+        {
+          "name": "Country",
+          "path": "owner.makesOffer.availableAtOrFrom.address.addressCountry"
+        },
+        {
+          "name": "Region",
+          "path": "owner.makesOffer.availableAtOrFrom.address.addressRegion"
+        },
+        {
+          "name": "City",
+          "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality"
+        },
+        {
+          "name": "Publisher",
+          "path": "owner.makesOffer.mainEntityOfPage.publisher"
+        }
+      ]
+    }
+  ]
+}
