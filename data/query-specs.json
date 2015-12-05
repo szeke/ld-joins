@@ -20,6 +20,24 @@
           "name": "City",
           "path": "mainEntity.availableAtOrFrom.address.addressLocality"
         }
+      ],
+      "results": [
+        {
+          "name": "Title",
+          "path": "name"
+        },
+        {
+          "name": "Posted",
+          "path": "dateCreated"
+        },
+        {
+          "name": "URL",
+          "path": "url"
+        },
+        {
+          "name": "Body",
+          "path": "description"
+        }
       ]
     },
     {
