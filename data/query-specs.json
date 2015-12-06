@@ -21,24 +21,47 @@
           "path": "mainEntity.availableAtOrFrom.address.addressLocality"
         }
       ],
-      "results": [
-        {
-          "name": "Title",
-          "path": "name"
-        },
-        {
-          "name": "Posted",
-          "path": "dateCreated"
-        },
-        {
-          "name": "URL",
-          "path": "url"
-        },
-        {
-          "name": "Body",
-          "path": "description"
-        }
-      ]
+      "results": {
+        "fields": [
+          {
+            "name": "Title",
+            "path": "name"
+          },
+          {
+            "name": "Posted",
+            "path": "dateCreated"
+          },
+          {
+            "name": "URL",
+            "path": "url"
+          },
+          {
+            "name": "Body",
+            "path": "description"
+          }
+        ],
+        "aggregations": [
+          {
+            "comment": "Show a sparkline when other WebPage with the same url were posted.",
+            "name": "Revisions",
+            "query": "anchored_timeline",
+            "sparql": "URI :url ?url . ?wp a :WebPage ; :url ?url ; :dateCreated ?date .",
+            "elastic": {
+              "type": "WebPage",
+              "anchor_path": "url",
+              "filter": {
+                "term": {
+                  "url": "ANCHOR"
+                }
+              },
+              "date_histogram": {
+                "field": "dateCreated",
+                "interval": "week"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "name": "Offer",
@@ -64,7 +87,82 @@
           "name": "Publisher",
           "path": "mainEntityOfPage.publisher"
         }
-      ]
+      ],
+      "results": {
+        "fields": [
+          {
+            "name": "Title",
+            "path": "title"
+          },
+          {
+            "name": "Posted",
+            "path": "validFrom"
+          },
+          {
+            "name": "City",
+            "path": "availableAtOrFrom.address.addressLocality"
+          },
+          {
+            "name": "Region",
+            "path": "availableAtOrFrom.address.addressRegion"
+          },
+          {
+            "name": "Country",
+            "path": "availableAtOrFrom.address.addressCountry"
+          },
+          {
+            "name": "Phone",
+            "path": "seller.telephone.name"
+          },
+          {
+            "name": "Email",
+            "path": "seller.email.name"
+          },
+          {
+            "name": "Price",
+            "path": "priceSpecification.name"
+          }
+        ],
+        "aggregations": [
+          {
+            "comment": "Show a sparkline of other offers by the same seller.",
+            "name": "Offers by this seller",
+            "query": "anchored_timeline",
+            "sparql": "URI :seller ?seller . ?of a :Offer ; :seller ?seller ; :validFrom ?date .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "seller",
+              "filter": {
+                "term": {
+                  "seller": "ANCHOR"
+                }
+              },
+              "date_histogram": {
+                "field": "validFrom",
+                "interval": "week"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of cities of other offers by the same seller.",
+            "name": "Locations of this seller",
+            "query": "anchored_facet",
+            "sparql": "URI :seller ?seller . ?of a :Offer ; :seller ?seller ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "seller",
+              "filter": {
+                "term": {
+                  "seller": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "availableAtOrFrom.address.addressLocality"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "name": "Adult Service",
@@ -114,7 +212,100 @@
           "name": "Publisher",
           "path": "offers.mainEntityOfPage.publisher"
         }
-      ]
+      ],
+      "results": {
+        "fields": [
+          {
+            "name": "Name",
+            "path": "name"
+          },
+          {
+            "name": "Age",
+            "path": "age"
+          },
+          {
+            "name": "Eyes",
+            "path": "eyeColor"
+          },
+          {
+            "name": "Hair",
+            "path": "hairColor"
+          },
+          {
+            "name": "Ethnicity",
+            "path": "ethnicity"
+          },
+          {
+            "name": "Phone",
+            "path": "offers.seller.telephone.name"
+          },
+          {
+            "name": "Email",
+            "path": "offers.seller.email.name"
+          },
+          {
+            "name": "Price",
+            "path": "priceSpecification.name"
+          }
+        ],
+        "aggregations": [
+          {
+            "comment": "Show a sparkline of other offers for this adult service.",
+            "name": "Offers for this service",
+            "query": "anchored_timeline",
+            "sparql": "URI :offers ?of . ?of a :Offer ; :validFrom ?date .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "itemOffered": "ANCHOR"
+                }
+              },
+              "date_histogram": {
+                "field": "validFrom",
+                "interval": "week"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of cities of other offers for the same service.",
+            "name": "Locations of this service",
+            "query": "anchored_facet",
+            "sparql": "URI :offers ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "itemOffered": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "availableAtOrFrom.address.addressLocality"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
+            "name": "Associated phone numbers",
+            "query": "anchored_facet",
+            "sparql": "URI :offers/:seller/:telephone ?ph . ?se a :Seller ; :telephone ?ph ; :telephone ?value .",
+            "elastic": {
+              "type": "Seller",
+              "anchor_path": "offers.seller.telephone",
+              "filter": {
+                "term": {
+                  "telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "telephone"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "name": "Seller",
@@ -148,7 +339,96 @@
           "name": "Publisher",
           "path": "makesOffer.mainEntityOfPage.publisher"
         }
-      ]
+      ],
+      "results": {
+        "fields": [
+          {
+            "name": "Phone",
+            "path": "telephone.name"
+          },
+          {
+            "name": "Email",
+            "path": "email.name"
+          },
+          {
+            "name": "Name",
+            "path": "itemOffered.name"
+          },
+          {
+            "name": "Age",
+            "path": "itemOffered.age"
+          },
+          {
+            "name": "Eyes",
+            "path": "itemOffered.eyeColor"
+          },
+          {
+            "name": "Hair",
+            "path": "itemOffered.hairColor"
+          },
+          {
+            "name": "Ethnicity",
+            "path": "itemOffered.ethnicity"
+          }
+        ],
+        "aggregations": [
+          {
+            "comment": "Show a sparkline of other offers from this seller.",
+            "name": "Offers from this seller",
+            "query": "anchored_timeline",
+            "sparql": "URI :makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "seller": "ANCHOR"
+                }
+              },
+              "date_histogram": {
+                "field": "validFrom",
+                "interval": "week"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of cities of other offers from this seller.",
+            "name": "Locations of this seller",
+            "query": "anchored_facet",
+            "sparql": "URI :makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "seller": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "availableAtOrFrom.address.addressLocality"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
+            "name": "Associated phone numbers",
+            "query": "anchored_facet",
+            "sparql": "URI :telephone ?ph . ?se a :Seller ; :telephone ?ph ; :telephone ?value .",
+            "elastic": {
+              "type": "Seller",
+              "anchor_path": "offers.seller.telephone",
+              "filter": {
+                "term": {
+                  "telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "telephone"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "name": "Phone",
@@ -174,7 +454,120 @@
           "name": "Publisher",
           "path": "owner.makesOffer.mainEntityOfPage.publisher"
         }
-      ]
+      ],
+      "results": {
+        "fields": [
+          {
+            "name": "Phone",
+            "path": "name"
+          },
+          {
+            "name": "Email",
+            "path": "seller.email.name"
+          },
+          {
+            "name": "Name",
+            "path": "owner.makesOffer.itemOffered.name"
+          },
+          {
+            "name": "City",
+            "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality"
+          }
+        ],
+        "aggregations": [
+          {
+            "comment": "Show a sparkline of offers by sellers using this phone number.",
+            "name": "Offers for this phone number",
+            "query": "anchored_timeline",
+            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "seller.telephone": "ANCHOR"
+                }
+              },
+              "date_histogram": {
+                "field": "validFrom",
+                "interval": "week"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of cities of offers by sellers using this phone number.",
+            "name": "Locations of this phone number",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "availableAtOrFrom.address.addressLocality"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
+            "name": "Associated ages",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :age ?value .",
+            "elastic": {
+              "type": "AdultService",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "offers.seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "age"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart ethnicities of adult services by sellers using this phone number.",
+            "name": "Associated ethnicities",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
+            "elastic": {
+              "type": "AdultService",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "offers.seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "ethnicity"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart names of adult services by sellers using this phone number.",
+            "name": "Associated names",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
+            "elastic": {
+              "type": "AdultService",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "offers.seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "name"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "name": "Email",
@@ -200,7 +593,120 @@
           "name": "Publisher",
           "path": "owner.makesOffer.mainEntityOfPage.publisher"
         }
-      ]
+      ],
+      "results": {
+        "fields": [
+          {
+            "name": "Phone",
+            "path": "name"
+          },
+          {
+            "name": "Email",
+            "path": "seller.email.name"
+          },
+          {
+            "name": "Name",
+            "path": "owner.makesOffer.itemOffered.name"
+          },
+          {
+            "name": "City",
+            "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality"
+          }
+        ],
+        "aggregations": [
+          {
+            "comment": "Show a sparkline of offers by sellers using this email.",
+            "name": "Offers for this email",
+            "query": "anchored_timeline",
+            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "seller.telephone": "ANCHOR"
+                }
+              },
+              "date_histogram": {
+                "field": "validFrom",
+                "interval": "week"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart of cities of offers by sellers using this email.",
+            "name": "Locations of this email",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "elastic": {
+              "type": "Offer",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "availableAtOrFrom.address.addressLocality"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart ages of adult services by sellers using this email.",
+            "name": "Associated ages",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :age ?value .",
+            "elastic": {
+              "type": "AdultService",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "offers.seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "age"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart ethnicities of adult services by sellers using this email.",
+            "name": "Associated ethnicities",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
+            "elastic": {
+              "type": "AdultService",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "offers.seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "ethnicity"
+              }
+            }
+          },
+          {
+            "comment": "Show a sparkchart names of adult services by sellers using this email.",
+            "name": "Associated names",
+            "query": "anchored_facet",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
+            "elastic": {
+              "type": "AdultService",
+              "anchor_path": "",
+              "filter": {
+                "term": {
+                  "offers.seller.telephone": "ANCHOR"
+                }
+              },
+              "terms": {
+                "field": "name"
+              }
+            }
+          }
+        ]
+      }
     }
   ]
 }
