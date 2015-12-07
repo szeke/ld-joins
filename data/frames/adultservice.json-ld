@@ -1,0 +1,32 @@
+{ 
+  "@type": "AdultService",
+  "offers": {
+    "@type" : "Offer",
+    "seller" : {
+      "telephone": {
+        "@type": "Phone"
+      },
+      "email": {
+        "@type": "EmailAddress"
+      }
+    },
+    "availableAtOrFrom": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress"
+      },
+      "geo": {
+        "@type":"GeoCoordinates"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "publisher": {
+        "@type": "Organization"
+      }
+    },
+    "priceSpecification": {
+      "@type": "PriceSpecification"
+    }
+  }
+}
