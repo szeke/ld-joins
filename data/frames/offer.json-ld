@@ -1,8 +1,9 @@
 { 
   "@type" : "Offer",
   "seller" : {
+    "@type" : "PersonOrOrganization",
     "telephone": {
-      "@type": "Phone"
+      "@type": "PhoneNumber"
     },
     "email": {
       "@type": "EmailAddress"

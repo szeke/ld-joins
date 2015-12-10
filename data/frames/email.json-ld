@@ -27,7 +27,7 @@
       }
     },
     "telephone": {
-      "@type": "Phone"
+      "@type": "PhoneNumber"
     }
   }  
   

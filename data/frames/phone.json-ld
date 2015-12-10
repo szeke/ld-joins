@@ -1,5 +1,5 @@
 {
-  "@type": "Phone",
+  "@type": "PhoneNumber",
   "owner": {
     "@type" : "PersonOrOrganization",
     "makesOffer": {
