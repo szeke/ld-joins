@@ -15,12 +15,17 @@
                 "aggs": {
                   "facet": {
                     "terms": {
-                      "field": "publisher.name"
+                      "field": "publisher.name",
+                      "size": 20
                     }
                   }
                 },
                 "size": 0
               }
+            },
+            {
+              "type": "sparql",
+              "query": "facet-locality.sparql"
             }
           ]
         },
@@ -35,7 +40,8 @@
                 "aggs": {
                   "facet": {
                     "terms": {
-                      "field": "mainEntity.availableAtOrFrom.address.addressCountry"
+                      "field": "mainEntity.availableAtOrFrom.address.addressCountry",
+                      "size": 20
                     }
                   }
                 },
@@ -55,7 +61,8 @@
                 "aggs": {
                   "facet": {
                     "terms": {
-                      "field": "mainEntity.availableAtOrFrom.address.addressRegion"
+                      "field": "mainEntity.availableAtOrFrom.address.addressRegion",
+                      "size": 20
                     }
                   },
                   "size": 0
@@ -75,7 +82,8 @@
                 "aggs": {
                   "facet": {
                     "terms": {
-                      "field": "mainEntity.availableAtOrFrom.address.addressLocality"
+                      "field": "mainEntity.availableAtOrFrom.address.addressLocality",
+                      "size": 20
                     }
                   }
                 },
