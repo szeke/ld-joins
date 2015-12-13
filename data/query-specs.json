@@ -28,27 +28,35 @@
               "comment": "publisher selected, text Jessica",
               "query": {
                 "aggs": {
-                  "facet": {
-                    "filter": {
-                      "bool": {
-                        "must": [
-                          {
-                            "term": {
-                              "publisher.name": "backpage.com"
+                  "aggs": {
+                    "facet": {
+                      "filter": {
+                        "bool": {
+                          "must": [
+                            {
+                              "term": {
+                                "publisher.name": "backpage.com"
+                              }
+                            },
+                            {
+                              "term": {
+                                "description": "jessica"
+                              }
                             }
+                          ]
+                        }
+                      },
+                      "aggs": {
+                        "facet": {
+                          "terms": {
+                            "field": "mainEntity.availableAtOrFrom.address.addressLocality",
+                            "size": 20
                           }
-                        ]
-                      }
-                    },
-                    "aggs": {
-                      "facet": {
-                        "terms": {
-                          "field": "mainEntity.availableAtOrFrom.address.addressLocality",
-                          "size": 20
                         }
                       }
                     }
-                  }
+                  },
+                  "size": 0
                 },
                 "query": {
                   "query_string": {
