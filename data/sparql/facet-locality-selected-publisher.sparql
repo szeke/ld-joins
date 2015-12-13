@@ -1,0 +1,11 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select ?locality count(?locality) as ?count where 
+{ 
+	?x a s:WebPage ;
+		 s:mainEntity/s:availableAtOrFrom/s:address/s:addressLocality ?locality .
+	?x s:publisher/s:name "backpage.com"
+}
+group by ?locality
+order by desc(?count)
+limit 20

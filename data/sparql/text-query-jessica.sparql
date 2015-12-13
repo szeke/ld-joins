@@ -1,0 +1,10 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select * where 
+{ 
+	?x a s:WebPage ;
+		s:description ?text .
+	FILTER bif:contains(?text, "Jessica") .
+}
+limit 20
+

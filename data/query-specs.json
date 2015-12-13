@@ -24,8 +24,57 @@
               }
             },
             {
+              "type": "elastic",
+              "comment": "publisher selected, text Jessica",
+              "query": {
+                "aggs": {
+                  "facet": {
+                    "filter": {
+                      "bool": {
+                        "must": [
+                          {
+                            "term": {
+                              "publisher.name": "backpage.com"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "aggs": {
+                      "facet": {
+                        "terms": {
+                          "field": "mainEntity.availableAtOrFrom.address.addressLocality",
+                          "size": 20
+                        }
+                      }
+                    }
+                  }
+                },
+                "query": {
+                  "query_string": {
+                    "query": "Jessica",
+                    "fields": [
+                      "description"
+                    ]
+                  }
+                },
+                "size": 0
+              }
+            },
+            {
               "type": "sparql",
+              "comment": "no other facet selected",
               "query": "facet-locality.sparql"
+            },
+            {
+              "type": "sparql",
+              "comment": "publisher selected",
+              "query": "facet-locality-selected-publisher.sparql"
+            },
+            {
+              "type": "sparql",
+              "comment": "publisher selected",
+              "query": "facet-locality-selected-publisher-text-jessica.sparql"
             }
           ]
         },
