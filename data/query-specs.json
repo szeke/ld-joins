@@ -102,27 +102,33 @@
           },
           {
             "name": "City",
-            "path": "availableAtOrFrom.address.addressLocality"
+            "path": "availableAtOrFrom.address.addressLocality",
+            "can_be_null": "true"
           },
           {
             "name": "Region",
-            "path": "availableAtOrFrom.address.addressRegion"
+            "path": "availableAtOrFrom.address.addressRegion",
+            "can_be_null": "true"
           },
           {
             "name": "Country",
-            "path": "availableAtOrFrom.address.addressCountry"
+            "path": "availableAtOrFrom.address.addressCountry",
+            "can_be_null": "true"
           },
           {
             "name": "Phone",
-            "path": "seller.telephone.name"
+            "path": "seller.telephone.name",
+            "can_be_null": "true"
           },
           {
             "name": "Email",
-            "path": "seller.email.name"
+            "path": "seller.email.name",
+            "can_be_null": "true"
           },
           {
             "name": "Price",
-            "path": "priceSpecification.name"
+            "path": "priceSpecification.name",
+            "can_be_null": "true"
           }
         ],
         "aggregations": [
@@ -221,35 +227,43 @@
         "fields": [
           {
             "name": "Name",
-            "path": "name"
+            "path": "name",
+            "can_be_null": "true"
           },
           {
             "name": "Age",
-            "path": "age"
+            "path": "age",
+            "can_be_null": "true"
           },
           {
             "name": "Eyes",
-            "path": "eyeColor"
+            "path": "eyeColor",
+            "can_be_null": "true"
           },
           {
             "name": "Hair",
-            "path": "hairColor"
+            "path": "hairColor",
+            "can_be_null": "true"
           },
           {
             "name": "Ethnicity",
-            "path": "ethnicity"
+            "path": "ethnicity",
+            "can_be_null": "true"
           },
           {
             "name": "Phone",
-            "path": "offers.seller.telephone.name"
+            "path": "offers.seller.telephone.name",
+            "can_be_null": "true"
           },
           {
             "name": "Email",
-            "path": "offers.seller.email.name"
+            "path": "offers.seller.email.name",
+            "can_be_null": "true"
           },
           {
             "name": "Price",
-            "path": "priceSpecification.name"
+            "path": "priceSpecification.name",
+            "can_be_null": "true"
           }
         ],
         "aggregations": [
@@ -352,31 +366,38 @@
         "fields": [
           {
             "name": "Phone",
-            "path": "telephone.name"
+            "path": "telephone.name",
+            "can_be_null": "true"
           },
           {
             "name": "Email",
-            "path": "email.name"
+            "path": "email.name",
+            "can_be_null": "true"
           },
           {
             "name": "Name",
-            "path": "itemOffered.name"
+            "path": "itemOffered.name",
+            "can_be_null": "true"
           },
           {
             "name": "Age",
-            "path": "itemOffered.age"
+            "path": "itemOffered.age",
+            "can_be_null": "true"
           },
           {
             "name": "Eyes",
-            "path": "itemOffered.eyeColor"
+            "path": "itemOffered.eyeColor",
+            "can_be_null": "true"
           },
           {
             "name": "Hair",
-            "path": "itemOffered.hairColor"
+            "path": "itemOffered.hairColor",
+            "can_be_null": "true"
           },
           {
             "name": "Ethnicity",
-            "path": "itemOffered.ethnicity"
+            "path": "itemOffered.ethnicity",
+            "can_be_null": "true"
           }
         ],
         "aggregations": [
@@ -474,15 +495,18 @@
           },
           {
             "name": "Email",
-            "path": "seller.email.name"
+            "path": "seller.email.name",
+            "can_be_null": "true"
           },
           {
             "name": "Name",
-            "path": "owner.makesOffer.itemOffered.name"
+            "path": "owner.makesOffer.itemOffered.name",
+            "can_be_null": "true"
           },
           {
             "name": "City",
-            "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality"
+            "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality",
+            "can_be_null": "true"
           }
         ],
         "aggregations": [
@@ -614,7 +638,8 @@
         "fields": [
           {
             "name": "Phone",
-            "path": "name"
+            "path": "name",
+            "can_be_null": "true"
           },
           {
             "name": "Email",
@@ -622,11 +647,13 @@
           },
           {
             "name": "Name",
-            "path": "owner.makesOffer.itemOffered.name"
+            "path": "owner.makesOffer.itemOffered.name",
+            "can_be_null": "true"
           },
           {
             "name": "City",
-            "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality"
+            "path": "owner.makesOffer.availableAtOrFrom.address.addressLocality",
+            "can_be_null": "true"
           }
         ],
         "aggregations": [
