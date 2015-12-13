@@ -1,0 +1,11 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select count(?x) as ?count where 
+{ 
+	?x a m:AdultService .
+	{
+		filter not exists { ?x m:personAge ?age . }
+	}
+}
+limit 20
+

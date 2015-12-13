@@ -1,0 +1,11 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select count(?x) as ?count where 
+{ 
+	?x a s:Offer .
+	{
+		filter not exists { ?x s:availableAtOrFrom/s:address/s:addressLocality ?locality . }
+	}
+}
+limit 20
+

@@ -1,0 +1,58 @@
+{
+  "filter": {
+    "bool": {
+      "must": [
+        {
+          "bool": {
+            "should": [
+              {
+                "term": {
+                  "publisher.name": "backpage.com"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "bool": {
+            "should": [
+              {
+                "term": {
+                  "mainEntity.availableAtOrFrom.address.addressLocality": "Los Angeles"
+                }
+              },
+              {
+                "term": {
+                  "mainEntity.availableAtOrFrom.address.addressLocality": "San Diego"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "must_not": [
+        {}
+      ],
+      "should": [
+        {}
+      ]
+    }
+  },
+  "_source": {
+    "include": [
+      "url",
+      "name",
+      "dateCreated",
+      "description",
+      "publisher.name"
+    ]
+  },
+  "query": {
+    "query_string": {
+      "query": "Jessica",
+      "fields": [
+        "description"
+      ]
+    }
+  }
+}

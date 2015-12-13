@@ -1,0 +1,28 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select ?x ?text where 
+{ 
+	?x a s:WebPage ;
+		s:name ?title ;
+		s:dateCreated ?date ;
+		s:description ?text .
+#	{
+#		optional { ?x s:dateCreated ?date . }
+#	}
+	{
+		{
+			?x s:publisher/s:name "backpage.com" .
+		}
+	}
+	{
+		{
+			?x s:mainEntity/s:availableAtOrFrom/s:address/s:addressLocality "San Diego" .
+		}
+		union
+		{
+			?x s:mainEntity/s:availableAtOrFrom/s:address/s:addressLocality "Los Angeles" .
+		}
+	}
+	filter bif:contains(?text, "Jessica") .
+}
+limit 20
