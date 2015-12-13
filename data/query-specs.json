@@ -42,6 +42,7 @@
         ],
         "aggregations": [
           {
+            "id": "page--revisions",
             "comment": "Show a sparkline when other WebPage with the same url were posted.",
             "name": "Revisions",
             "query": "anchored_timeline",
@@ -125,6 +126,7 @@
         ],
         "aggregations": [
           {
+            "id": "offer--offers-by-this-seller",
             "comment": "Show a sparkline of other offers by the same seller.",
             "name": "Offers by this seller",
             "query": "anchored_timeline",
@@ -144,6 +146,7 @@
             }
           },
           {
+            "id": "offer-locations-by-this-seller",
             "comment": "Show a sparkchart of cities of other offers by the same seller.",
             "name": "Locations of this seller",
             "query": "anchored_facet",
@@ -250,6 +253,7 @@
         ],
         "aggregations": [
           {
+            "id": "adultservice--offers-for-this-service",
             "comment": "Show a sparkline of other offers for this adult service.",
             "name": "Offers for this service",
             "query": "anchored_timeline",
@@ -269,6 +273,7 @@
             }
           },
           {
+            "id": "adultservice--locations-of-this-service",
             "comment": "Show a sparkchart of cities of other offers for the same service.",
             "name": "Locations of this service",
             "query": "anchored_facet",
@@ -287,10 +292,11 @@
             }
           },
           {
+            "id": "adultservice--associated-phone-numbers",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
             "name": "Associated phone numbers",
             "query": "anchored_facet",
-            "sparql": "URI :offers/:seller/:telephone ?ph . ?se a :Seller ; :telephone ?ph ; :telephone ?value .",
+            "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?anchor . ?anchor s:telephone ?value .",
             "elastic": {
               "type": "Seller",
               "anchor_path": "offers.seller.telephone",
@@ -373,6 +379,7 @@
         ],
         "aggregations": [
           {
+            "id": "seller--offers-from-this-seller",
             "comment": "Show a sparkline of other offers from this seller.",
             "name": "Offers from this seller",
             "query": "anchored_timeline",
@@ -392,6 +399,7 @@
             }
           },
           {
+            "id": "seller--locations-of-this-seller",
             "comment": "Show a sparkchart of cities of other offers from this seller.",
             "name": "Locations of this seller",
             "query": "anchored_facet",
@@ -410,6 +418,7 @@
             }
           },
           {
+            "id": "seller--associated-phone-numbers",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
             "name": "Associated phone numbers",
             "query": "anchored_facet",
@@ -476,6 +485,7 @@
         ],
         "aggregations": [
           {
+            "id": "phone--offers-for-this-phone-number",
             "comment": "Show a sparkline of offers by sellers using this phone number.",
             "name": "Offers for this phone number",
             "query": "anchored_timeline",
@@ -495,6 +505,7 @@
             }
           },
           {
+            "id": "phone--locations-of-this-phone-number",
             "comment": "Show a sparkchart of cities of offers by sellers using this phone number.",
             "name": "Locations of this phone number",
             "query": "anchored_facet",
@@ -513,6 +524,7 @@
             }
           },
           {
+            "id": "phone--associated-ages",
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
             "name": "Associated ages",
             "query": "anchored_facet",
@@ -531,6 +543,7 @@
             }
           },
           {
+            "id": "phone--associated-ethnicities",
             "comment": "Show a sparkchart ethnicities of adult services by sellers using this phone number.",
             "name": "Associated ethnicities",
             "query": "anchored_facet",
@@ -549,6 +562,7 @@
             }
           },
           {
+            "id": "phone--associated-names",
             "comment": "Show a sparkchart names of adult services by sellers using this phone number.",
             "name": "Associated names",
             "query": "anchored_facet",
@@ -615,6 +629,7 @@
         ],
         "aggregations": [
           {
+            "id": "email--offers-for-this-email",
             "comment": "Show a sparkline of offers by sellers using this email.",
             "name": "Offers for this email",
             "query": "anchored_timeline",
@@ -634,6 +649,7 @@
             }
           },
           {
+            "id": "email--locations-of-this-email",
             "comment": "Show a sparkchart of cities of offers by sellers using this email.",
             "name": "Locations of this email",
             "query": "anchored_facet",
@@ -652,6 +668,7 @@
             }
           },
           {
+            "id": "email--associated-ages",
             "comment": "Show a sparkchart ages of adult services by sellers using this email.",
             "name": "Associated ages",
             "query": "anchored_facet",
@@ -670,6 +687,7 @@
             }
           },
           {
+            "id": "email--associated-ethnicities",
             "comment": "Show a sparkchart ethnicities of adult services by sellers using this email.",
             "name": "Associated ethnicities",
             "query": "anchored_facet",
@@ -688,6 +706,7 @@
             }
           },
           {
+            "id": "email--associated-names",
             "comment": "Show a sparkchart names of adult services by sellers using this email.",
             "name": "Associated names",
             "query": "anchored_facet",
