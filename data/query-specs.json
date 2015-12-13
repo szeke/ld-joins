@@ -6,171 +6,19 @@
       "facets": [
         {
           "name": "Publisher",
-          "path": "publisher.name",
-          "sample-queries": [
-            {
-              "type": "elastic",
-              "comment": "no other facet selected",
-              "query": {
-                "aggs": {
-                  "facet": {
-                    "terms": {
-                      "field": "publisher.name",
-                      "size": 20
-                    }
-                  }
-                },
-                "size": 0
-              }
-            },
-            {
-              "type": "elastic",
-              "comment": "publisher selected, text Jessica",
-              "query": {
-                "aggs": {
-                  "aggs": {
-                    "facet": {
-                      "filter": {
-                        "bool": {
-                          "must": [
-                            {
-                              "term": {
-                                "publisher.name": "backpage.com"
-                              }
-                            },
-                            {
-                              "term": {
-                                "description": "jessica"
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      "aggs": {
-                        "facet": {
-                          "terms": {
-                            "field": "mainEntity.availableAtOrFrom.address.addressLocality",
-                            "size": 20
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "size": 0
-                },
-                "query": {
-                  "query_string": {
-                    "query": "Jessica",
-                    "fields": [
-                      "description"
-                    ]
-                  }
-                },
-                "size": 0
-              }
-            },
-            {
-              "type": "sparql",
-              "comment": "no other facet selected",
-              "query": "facet-locality.sparql"
-            },
-            {
-              "type": "sparql",
-              "comment": "publisher selected",
-              "query": "facet-locality-selected-publisher.sparql"
-            },
-            {
-              "type": "sparql",
-              "comment": "publisher selected",
-              "query": "facet-locality-selected-publisher-text-jessica.sparql"
-            }
-          ]
+          "path": "publisher.name"
         },
         {
           "name": "Country",
-          "path": "mainEntity.availableAtOrFrom.address.addressCountry",
-          "sample-queries": [
-            {
-              "type": "elastic",
-              "comment": "no other facet selected",
-              "query": {
-                "aggs": {
-                  "facet": {
-                    "terms": {
-                      "field": "mainEntity.availableAtOrFrom.address.addressCountry",
-                      "size": 20
-                    }
-                  }
-                },
-                "size": 0
-              }
-            }
-          ]
+          "path": "mainEntity.availableAtOrFrom.address.addressCountry"
         },
         {
           "name": "Region",
-          "path": "mainEntity.availableAtOrFrom.address.addressRegion",
-          "sample-queries": [
-            {
-              "type": "elastic",
-              "comment": "no other facet selected",
-              "query": {
-                "aggs": {
-                  "facet": {
-                    "terms": {
-                      "field": "mainEntity.availableAtOrFrom.address.addressRegion",
-                      "size": 20
-                    }
-                  },
-                  "size": 0
-                }
-              }
-            }
-          ]
+          "path": "mainEntity.availableAtOrFrom.address.addressRegion"
         },
         {
           "name": "City",
-          "path": "mainEntity.availableAtOrFrom.address.addressLocality",
-          "sample-queries": [
-            {
-              "type": "elastic",
-              "comment": "no other facet selected",
-              "query": {
-                "aggs": {
-                  "facet": {
-                    "terms": {
-                      "field": "mainEntity.availableAtOrFrom.address.addressLocality",
-                      "size": 20
-                    }
-                  }
-                },
-                "size": 0
-              }
-            },
-            {
-              "type": "elastic",
-              "comment": "publisher facet selected",
-              "query": {
-                "aggs": {
-                  "facet": {
-                    "filter": {
-                      "term": {
-                        "publisher.name": "backpage.com"
-                      }
-                    },
-                    "aggs": {
-                      "facet": {
-                        "terms": {
-                          "field": "mainEntity.availableAtOrFrom.address.addressLocality"
-                        }
-                      }
-                    }
-                  },
-                  "size": 0
-                }
-              }
-            }
-          ]
+          "path": "mainEntity.availableAtOrFrom.address.addressLocality"
         }
       ],
       "results": {
@@ -210,33 +58,7 @@
                 "field": "dateCreated",
                 "interval": "week"
               }
-            },
-            "sample-queries": [
-              {
-                "type": "elastic",
-                "comment": "no other facet selected",
-                "query": {
-                  "aggs": {
-                    "anchored-timeline": {
-                      "filter": {
-                        "term": {
-                          "url": "http://bakersfield.backpage.com/FemaleEscorts/let-me-be-_-your-_-_-little-_-_-secret-_-21/6472063"
-                        }
-                      },
-                      "aggs": {
-                        "timeline": {
-                          "date_histogram": {
-                            "field": "dateCreated",
-                            "interval": "week"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "size": 0
-                }
-              }
-            ]
+            }
           }
         ]
       }

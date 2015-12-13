@@ -1,0 +1,11 @@
+{
+  "aggs": {
+    "facet": {
+      "terms": {
+        "field": "publisher.name",
+        "size": 20
+      }
+    }
+  },
+  "size": 0
+}

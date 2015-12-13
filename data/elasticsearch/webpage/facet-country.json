@@ -1,0 +1,11 @@
+{
+  "aggs": {
+    "facet": {
+      "terms": {
+        "field": "mainEntity.availableAtOrFrom.address.addressCountry",
+        "size": 20
+      }
+    }
+  },
+  "size": 0
+}

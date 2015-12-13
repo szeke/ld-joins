@@ -1,0 +1,37 @@
+{
+  "aggs": {
+    "facet": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "should": [
+                  {
+                    "term": {
+                      "publisher.name": "backpage.com"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "term": {
+                "description": "jessica"
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "facet": {
+          "terms": {
+            "field": "mainEntity.availableAtOrFrom.address.addressLocality",
+            "size": 20
+          }
+        }
+      }
+    }
+  },
+  "size": 0
+}

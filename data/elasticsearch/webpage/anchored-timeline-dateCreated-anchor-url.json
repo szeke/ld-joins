@@ -1,0 +1,32 @@
+{
+  "aggs": {
+    "anchored-timeline": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "should": [
+                  {
+        "term": {
+          "url": "http://bakersfield.backpage.com/FemaleEscorts/let-me-be-_-your-_-_-little-_-_-secret-_-21/6472063"
+        }
+      }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "timeline": {
+          "date_histogram": {
+            "field": "dateCreated",
+            "interval": "week"
+          }
+        }
+      }
+    }
+  },
+  "size": 0
+}

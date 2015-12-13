@@ -1,0 +1,11 @@
+{
+  "aggs": {
+    "facet": {
+      "terms": {
+        "field": "mainEntity.availableAtOrFrom.address.addressLocality",
+        "size": 20
+      }
+    }
+  },
+  "size": 0
+}
