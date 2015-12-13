@@ -43,10 +43,11 @@
         "aggregations": [
           {
             "id": "page--revisions",
+            "status": "done",
             "comment": "Show a sparkline when other WebPage with the same url were posted.",
             "name": "Revisions",
             "query": "anchored_timeline",
-            "sparql": "URI :url ?url . ?wp a :WebPage ; :url ?url ; :dateCreated ?date .",
+            "sparql": "?item a s:WebPage ; s:url URI ; s:dateCreated ?category .",
             "elastic": {
               "type": "WebPage",
               "anchor_path": "url",
@@ -293,10 +294,11 @@
           },
           {
             "id": "adultservice--associated-phone-numbers",
+            "status": "sparql done",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
             "name": "Associated phone numbers",
             "query": "anchored_facet",
-            "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?anchor . ?anchor s:telephone ?value .",
+            "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
             "elastic": {
               "type": "Seller",
               "anchor_path": "offers.seller.telephone",

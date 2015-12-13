@@ -1,0 +1,16 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select ?ph count(?seller) AS ?count where 
+{
+	<http://dig.isi.edu/ht/data/57F4264C07D865AB38A7541A63750D265AB98C52/adultservice> 
+		s:offers/s:seller/s:telephone/m:owner ?seller .
+	?seller s:telephone ?ph .
+}
+group by ?ph
+order by desc(?count)
+limit 20
+
+
+# "id": "adultservice--associated-phone-numbers",
+# "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
+            
