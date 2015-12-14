@@ -1,6 +1,6 @@
 {
   "aggs": {
-    "anchored-timeline": {
+    "anchored-facet": {
       "filter": {
         "bool": {
           "must": [
