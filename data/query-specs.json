@@ -289,16 +289,17 @@
           },
           {
             "id": "adultservice--locations-of-this-service",
+            "status": "done",
             "comment": "Show a sparkchart of cities of other offers for the same service.",
             "name": "Locations of this service",
             "query": "anchored_facet",
-            "sparql": "URI :offers ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "sparql": "URI s:offers ?item . ?item s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "elastic": {
               "type": "Offer",
               "anchor_path": "",
               "filter": {
                 "term": {
-                  "itemOffered": "ANCHOR"
+                  "itemOffered.uri": "ANCHOR"
                 }
               },
               "terms": {
