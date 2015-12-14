@@ -49,12 +49,14 @@ public class Worker implements Callable<String>{
 		}
 			
 		Query query = queryFactory.generateQuery(queryType);
+		int queryDepth = 0;
 		do{
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
 			JSONObject facetValue = queryResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
-		}while(rand.nextDouble() < probabilitySearchSatisfied);
+			queryDepth++;
+		}while(queryDepth < maxQueryDepth && rand.nextDouble() < probabilitySearchSatisfied);
 		queryExecutor.shutdown();
 		return null;
 	}
