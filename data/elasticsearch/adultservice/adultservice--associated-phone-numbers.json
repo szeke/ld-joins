@@ -1,0 +1,32 @@
+{
+  "aggs": {
+    "anchored-timeline": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "should": [
+                  {
+                    "term": {
+                      "telephone.name": "4157382275"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "facet": {
+          "terms": {
+            "field": "telephone.name",
+            "size": 20
+          }
+        }
+      }
+    }
+  },
+  "size": 0
+}

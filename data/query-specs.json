@@ -308,21 +308,21 @@
           },
           {
             "id": "adultservice--associated-phone-numbers",
-            "status": "sparql done",
+            "status": "done",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
             "name": "Associated phone numbers",
             "query": "anchored_facet",
             "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
             "elastic": {
               "type": "Seller",
-              "anchor_path": "offers.seller.telephone",
+              "anchor_path": "offers.seller.telephone.name",
               "filter": {
                 "term": {
-                  "telephone": "ANCHOR"
+                  "telephone.name": "ANCHOR"
                 }
               },
               "terms": {
-                "field": "telephone"
+                "field": "telephone.name"
               }
             }
           }

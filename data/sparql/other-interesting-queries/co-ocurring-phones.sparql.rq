@@ -1,0 +1,15 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select ?ph1 ?ph2 count(?x) as ?count where 
+{ 
+	?x a m:PersonOrOrganization ;
+		s:telephone/s:name ?ph1 ;
+		s:telephone/s:name ?ph2 .
+	filter(?ph1 > ?ph2)
+	filter exists { ?x s:makesOffer/s:availableAtOrFrom/s:address/s:addressLocality "Palmdale" }
+}
+group by ?ph1 ?ph2
+order by desc(?count) desc(?ph1) desc(?ph2)
+limit 200
+
+# co-occurring phones
