@@ -54,7 +54,7 @@ public class Driver {
 			long start = System.currentTimeMillis();
 			driver.drive();
 			long end = System.currentTimeMillis();
-			
+			System.out.println("Driver took " + (end - start) + " milliseconds");
 		} catch (Exception e) {
 			logger.error("Error occured while running benchmark!", e);
 		}
