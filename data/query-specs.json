@@ -232,7 +232,7 @@
           },
           {
             "name": "Age",
-            "path": "age",
+            "path": "personAge",
             "can_be_null": "true"
           },
           {

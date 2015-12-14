@@ -1,0 +1,24 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+select ?x ?name ?age ?eyeColor ?hairColor ?ethnicity ?phone ?email ?price where 
+{ 
+	?x a m:AdultService ;
+		s:offers/s:mainEntityOfPage ?wp .
+	?wp s:description ?text .
+	{
+		?wp s:publisher/s:name "backpage.com" .
+	}
+	filter bif:contains(?text, "Jessica") .
+	
+	optional { ?x s:name ?name . }
+	optional { ?x s:personAge ?age . }
+	optional { ?x s:eyeColor ?eyeColor . }
+	optional { ?x s:hairColor ?hairColor . }
+	optional { ?x s:ethnicity ?ethnicity . }
+	optional { ?x s:offers/s:seller/s:telephone/s:name ?phone . }
+	optional { ?x s:offers/s:seller/s:email/s:name ?email . }
+	optional { ?x s:offers/s:priceSpecification/s:name ?price . }
+	
+}
+limit 20
+
