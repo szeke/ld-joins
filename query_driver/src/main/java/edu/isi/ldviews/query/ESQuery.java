@@ -45,6 +45,32 @@ public class ESQuery implements Query {
 			String queryFacetPath = queryFacetSpec.getString("path");
 			if(queryFacetSpec.has("userfilter"))
 			{
+				JSONObject facetWithFilter = new JSONObject();
+				JSONObject filter = new JSONObject();
+				JSONArray shouldStatements = new JSONArray();
+				JSONArray userFilters = queryFacetSpec.getJSONArray("userfilter");
+				for(int j = 0; j < userFilters.length(); j++)
+				{
+					JSONObject userFilter = userFilters.getJSONObject(j);
+					JSONObject termFilter = new JSONObject();
+					termFilter.put(userFilter.getString("path"), userFilter.getString("term"));
+					JSONObject termFilterWrapper = new JSONObject();
+					termFilterWrapper.put("term", termFilter);
+					shouldStatements.put(termFilterWrapper);
+				}
+				JSONObject shouldStatementWrapper = new JSONObject();
+				shouldStatementWrapper.put("should", shouldStatements);
+				filter.put("bool", shouldStatementWrapper);
+				facetWithFilter.put("filter", filter);
+				JSONObject nestedAgg = new JSONObject();
+				JSONObject termsFacet = new JSONObject();
+				termsFacet.put("field", queryFacetPath);
+				termsFacet.put("size", 20);
+				JSONObject termsFacetWrapper = new JSONObject();
+				termsFacetWrapper.put("terms", termsFacet);
+				nestedAgg.put(queryFacetName+"_facet", termsFacetWrapper);
+				facetWithFilter.put("aggs",nestedAgg);
+				aggregations.put(queryFacetName+"_facet", facetWithFilter);
 				
 			}
 			else
