@@ -1,7 +1,7 @@
 {
   "types": [
     {
-      "name": "Page",
+      "name": "webpage",
       "type": "WebPage",
       "query" : {
           "keywords": [],
@@ -72,6 +72,11 @@
     {
       "name": "Offer",
       "type": "Offer",
+      "query" : {
+          "keywords": [],
+          "fields": ["description"]
+        },
+      
       "facets": [
         {
           "name": "Country",
@@ -181,6 +186,11 @@
     {
       "name": "Adult Service",
       "type": "AdultService",
+      "query" : {
+          "keywords": [],
+          "fields": ["description"]
+        },
+      
       "facets": [
         {
           "name": "Name",
@@ -236,7 +246,7 @@
           },
           {
             "name": "Age",
-            "path": "personAge",
+            "path": "age",
             "can_be_null": "true"
           },
           {
@@ -273,7 +283,6 @@
         "aggregations": [
           {
             "id": "adultservice--offers-for-this-service",
-            "status": "done",
             "comment": "Show a sparkline of other offers for this adult service.",
             "name": "Offers for this service",
             "query": "anchored_timeline",
@@ -294,17 +303,16 @@
           },
           {
             "id": "adultservice--locations-of-this-service",
-            "status": "done",
             "comment": "Show a sparkchart of cities of other offers for the same service.",
             "name": "Locations of this service",
             "query": "anchored_facet",
-            "sparql": "URI s:offers ?item . ?item s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "sparql": "URI :offers ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
             "elastic": {
               "type": "Offer",
               "anchor_path": "",
               "filter": {
                 "term": {
-                  "itemOffered.uri": "ANCHOR"
+                  "itemOffered": "ANCHOR"
                 }
               },
               "terms": {
@@ -314,21 +322,21 @@
           },
           {
             "id": "adultservice--associated-phone-numbers",
-            "status": "done",
+            "status": "sparql done",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
             "name": "Associated phone numbers",
             "query": "anchored_facet",
             "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
             "elastic": {
               "type": "Seller",
-              "anchor_path": "offers.seller.telephone.name",
+              "anchor_path": "offers.seller.telephone",
               "filter": {
                 "term": {
-                  "telephone.name": "ANCHOR"
+                  "telephone": "ANCHOR"
                 }
               },
               "terms": {
-                "field": "telephone.name"
+                "field": "telephone"
               }
             }
           }
@@ -338,18 +346,23 @@
     {
       "name": "Seller",
       "type": "PersonOrOrganization",
+      "query" : {
+          "keywords": [],
+          "fields": ["description"]
+        },
+      
       "facets": [
         {
           "name": "Phone",
-          "path": "telephone.name.raw"
+          "path": "telephone.name"
         },
         {
           "name": "Email",
-          "path": "email.name.raw"
+          "path": "email.name"
         },
         {
           "name": "Escort Name",
-          "path": "itemOffered.name.raw"
+          "path": "makesOffer.itemOffered.name"
         },
         {
           "name": "Country",
@@ -365,7 +378,7 @@
         },
         {
           "name": "Publisher",
-          "path": "makesOffer.mainEntityOfPage.publisher"
+          "path": "makesOffer.mainEntityOfPage.publisher.name"
         }
       ],
       "results": {
@@ -471,6 +484,11 @@
     {
       "name": "Phone",
       "type": "PhoneNumber",
+      "query" : {
+          "keywords": [],
+          "fields": ["description"]
+        },
+      
       "facets": [
         {
           "name": "Number",
@@ -618,6 +636,11 @@
     {
       "name": "Email",
       "type": "EmailAddress",
+      "query" : {
+          "keywords": [],
+          "fields": ["description"]
+        },
+      
       "facets": [
         {
           "name": "Email",
@@ -763,4 +786,4 @@
       }
     }
   ]
-  }
+}
