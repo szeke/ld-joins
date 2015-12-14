@@ -395,27 +395,27 @@
           },
           {
             "name": "Name",
-            "path": "itemOffered.name",
+            "path": "makesOffer.itemOffered.name",
             "can_be_null": "true"
           },
           {
             "name": "Age",
-            "path": "itemOffered.age",
+            "path": "makesOffer.itemOffered.age",
             "can_be_null": "true"
           },
           {
             "name": "Eyes",
-            "path": "itemOffered.eyeColor",
+            "path": "makesOffer.itemOffered.eyeColor",
             "can_be_null": "true"
           },
           {
             "name": "Hair",
-            "path": "itemOffered.hairColor",
+            "path": "makesOffer.itemOffered.hairColor",
             "can_be_null": "true"
           },
           {
             "name": "Ethnicity",
-            "path": "itemOffered.ethnicity",
+            "path": "makesOffer.itemOffered.ethnicity",
             "can_be_null": "true"
           }
         ],
