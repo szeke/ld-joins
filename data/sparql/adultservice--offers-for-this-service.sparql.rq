@@ -3,9 +3,9 @@ prefix m: <http://memexproxy.com/ontology/>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 select ?category count(?item) as ?count where 
 {
- 	?item a s:WebPage ; 
- 		s:url "http://bakersfield.backpage.com/FemaleEscorts/let-me-be-_-your-_-_-little-_-_-secret-_-21/6472063" ;
- 		s:dateCreated ?value .
+ 	<http://dig.isi.edu/ht/data/57F4264C07D865AB38A7541A63750D265AB98C52/adultservice> 
+		s:offers ?item .
+	?item s:validFrom ?value .
  	bind (strdt(?value, xsd:dateTime) as ?date)
  	bind (concat(year(?date), "-", month(?date)) as ?category)
 }
@@ -13,8 +13,8 @@ group by ?category
 order by desc(?count)
 limit 20
 
-# "id": "page--revisions",
-# "comment": "Show a sparkline when other WebPage with the same url were posted.",
+# "id": "adultservice--offers-for-this-service",
+# "comment": "Show a sparkline of other offers for this adult service."
 
 # pattern
-# ?item a s:WebPage ; s:url URI ; s:dateCreated ?category .
+# URI s:offers ?item . ?item s:validFrom ?value .

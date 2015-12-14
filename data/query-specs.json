@@ -269,6 +269,7 @@
         "aggregations": [
           {
             "id": "adultservice--offers-for-this-service",
+            "status": "done",
             "comment": "Show a sparkline of other offers for this adult service.",
             "name": "Offers for this service",
             "query": "anchored_timeline",

@@ -1,0 +1,32 @@
+{
+  "aggs": {
+    "anchored-timeline": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "should": [
+                  {
+                    "term": {
+                      "itemOffered.uri": "http://dig.isi.edu/ht/data/57F4264C07D865AB38A7541A63750D265AB98C52/adultservice"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "aggs": {
+        "facet": {
+          "date_histogram": {
+                "field": "validFrom",
+                "interval": "week"
+              }
+        }
+      }
+    }
+  },
+  "size": 0
+}
