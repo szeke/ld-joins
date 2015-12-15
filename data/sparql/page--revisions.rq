@@ -3,8 +3,9 @@ prefix m: <http://memexproxy.com/ontology/>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 select ?category count(?item) as ?count where 
 {
+ 	<http://dig.isi.edu/ht/data/37413847/webpage> s:url ?url .
  	?item a s:WebPage ; 
- 		s:url "http://bakersfield.backpage.com/FemaleEscorts/let-me-be-_-your-_-_-little-_-_-secret-_-21/6472063" ;
+ 		s:url ?url ;
  		s:dateCreated ?value .
  	bind (strdt(?value, xsd:dateTime) as ?date)
  	bind (concat(year(?date), "-", month(?date)) as ?category)
@@ -17,4 +18,4 @@ limit 20
 # "comment": "Show a sparkline when other WebPage with the same url were posted.",
 
 # pattern
-# ?item a s:WebPage ; s:url URI ; s:dateCreated ?category .
+# URI s:url ?url . ?item a s:WebPage ; s:url ?url ; s:dateCreated ?category .
