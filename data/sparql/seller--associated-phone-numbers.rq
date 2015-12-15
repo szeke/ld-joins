@@ -1,0 +1,21 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+select ?category count(?item) as ?count where 
+{
+ 	<http://dig.isi.edu/ht/data/57F4264C07D865AB38A7541A63750D265AB98C52/personororganization> 
+		s:telephone ?ph .
+	?item a m:PersonOrOrganization ; 
+		s:telephone ?ph ; 
+		s:telephone ?category .
+	# filter (?ph != ?category) #es query does not do this filter.
+}
+group by ?category
+order by desc(?count)
+limit 20
+
+# "id": "seller--associated-phone-numbers",
+# "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
+                         
+# pattern
+# URI s:telephone ?ph . ?item a m:PersonOrOrganization ; s:telephone ?ph ; s:telephone ?category .
