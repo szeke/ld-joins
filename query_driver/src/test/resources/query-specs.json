@@ -105,6 +105,10 @@
       "results": {
         "fields": [
           {
+            "name": "Seller URI",
+            "path": "seller.uri"
+          },
+          {
             "name": "Title",
             "path": "title"
           },
@@ -147,39 +151,45 @@
           {
             "id": "offer--offers-by-this-seller",
             "comment": "Show a sparkline of other offers by the same seller.",
-            "name": "Offers by this seller",
+            "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :seller ?seller . ?of a :Offer ; :seller ?seller ; :validFrom ?date .",
+            "anchor_path": "seller.uri",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "seller",
               "filter": {
                 "terms": {
-                  "seller": "ANCHOR"
+                  "seller.uri": "ANCHOR"
                 }
               },
-              "date_histogram": {
-                "field": "validFrom",
-                "interval": "week"
+              "aggs": {
+                "offer--offers-by-this-seller":{
+                  "date_histogram": {
+                    "field": "validFrom",
+                    "interval": "week"
+                  }
+                }
               }
             }
           },
           {
             "id": "offer-locations-by-this-seller",
             "comment": "Show a sparkchart of cities of other offers by the same seller.",
-            "name": "Locations of this seller",
+            "name": "offer",
             "query": "anchored_facet",
             "sparql": "URI :seller ?seller . ?of a :Offer ; :seller ?seller ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "anchor_path": "seller.uri",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "seller",
               "filter": {
                 "terms": {
-                  "seller": "ANCHOR"
+                  "seller.uri": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "availableAtOrFrom.address.addressLocality"
+              "aggs": {
+                "offer-locations-by-this-seller":{
+                  "terms": {
+                    "field": "availableAtOrFrom.address.addressLocality"
+                  }
+                }
               }
             }
           }
