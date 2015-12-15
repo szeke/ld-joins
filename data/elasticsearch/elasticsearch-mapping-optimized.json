@@ -678,6 +678,7 @@
           "mainEntity.availableAtOrFrom.address.addressLocality",
           "name",
           "publisher.name",
+          "uri",
           "url"
         ],
         "excludes": [
