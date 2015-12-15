@@ -1,6 +1,12 @@
 {
   "aggs": {
-    "facet": {
+    "locality_facet": {
+      "terms": {
+        "field": "mainEntity.availableAtOrFrom.address.addressLocality",
+        "size": 20
+      }
+    },
+    "country_facet": {
       "terms": {
         "field": "mainEntity.availableAtOrFrom.address.addressCountry",
         "size": 20

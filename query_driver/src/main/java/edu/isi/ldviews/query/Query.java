@@ -11,6 +11,5 @@ public interface Query {
 	void addKeywords(JSONObject queryKeywordSpec);
 	void addFields(JSONArray queryFieldsSpec);
 	void addFacets(JSONArray queryFacetsSpec);
-	void addAggregations(JSONArray queryAggregationsSpec);
-	void applyFilter(JSONObject facetValueFilter);
+	void addAggregations(JSONObject queryAggregationsSpec, JSONObject anchor);
 }

@@ -1,6 +1,8 @@
 package edu.isi.ldviews.query;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -53,6 +55,27 @@ public class Worker implements Callable<String>{
 		do{
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
+			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
+			
+				JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
+				for(int j = 0; j < aggregationsSpec.length(); j++)
+				{
+					JSONObject aggregationSpec = aggregationsSpec.getJSONObject(j);
+					String anchorPath = aggregationSpec.getString("anchor_path");
+					JSONArray anchors = queryResult.getAnchorsFromResults(anchorPath);
+							
+					for(int i = 0; i < anchors.length(); i++ )
+					{
+						JSONObject anchor = anchors.getJSONObject(i);
+						Query aggregationQuery = queryFactory.generateAggregateQuery(aggregationSpec, anchor);
+						aggregationResultFutures.add(queryExecutor.execute(aggregationQuery));
+					}
+				}
+					
+			for(Future<QueryResult> aggregationResultFuture : aggregationResultFutures)
+			{
+				aggregationResultFuture.get(10, TimeUnit.SECONDS);
+			}
 			JSONObject facetValue = queryResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
 			queryDepth++;

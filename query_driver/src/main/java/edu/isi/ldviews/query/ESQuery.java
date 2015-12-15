@@ -5,12 +5,19 @@ import org.json.JSONObject;
 
 public class ESQuery implements Query {
 
+	private static final String emptyKeywordString = "{\"query_string\":{\"query\":\"\",\"fields\":[]}}";
 	JSONObject source = new JSONObject("{\"include\":[]}");
-	JSONObject keywordQuery = new JSONObject("{\"query_string\":{\"query\":\"\",\"fields\":[]}}");
+	JSONObject keywordQuery = null;
 //	JSONObject facets = new JSONObject();
 	JSONObject aggregations = new JSONObject();
 	String type;
 	String name;
+	String routing = null;
+	Integer size = null;
+	public void setRouting(String routing)
+	{
+		this.routing = routing;
+	}
 	public void setName(String name) {
 		this.name =name;
 	}
@@ -86,28 +93,26 @@ public class ESQuery implements Query {
 		
 	}
 
-	public void addAggregations(JSONArray queryAggregationsSpec) {
-		for(int i = 0; i < queryAggregationsSpec.length(); i++)
-		{
-			JSONObject queryAggregationSpec = queryAggregationsSpec.getJSONObject(i);
-			String queryAggregationQuery = queryAggregationSpec.getString("query");
-			JSONObject queryAggregation = queryAggregationSpec.getJSONObject("elastic");
-			if(queryAggregationSpec.has("userfilter"))
-			{
-				
-			}
-			else
-			{
-				//aggregations.put(queryAggregationQuery, queryAggregation);
-			}
-		}
+	public void addAggregations(JSONObject queryAggregationSpec, JSONObject anchor) {
 		
+		JSONObject aggregation = new JSONObject(queryAggregationSpec.getJSONObject("elastic").toString());
+		if(anchor.getJSONArray("anchors").length() ==1)
+		{
+			JSONObject termFilter = aggregation.getJSONObject("filter").getJSONObject("term");
+			termFilter.put(((String)termFilter.keys().next()), anchor.getJSONArray("anchors").get(0));
+		}
+		else
+		{
+			System.err.println("too many anchors " + anchor.toString(4));
+		}
+		aggregations.put(queryAggregationSpec.getString("id"), aggregation);
+		size = 0;
 	}
 
 
 
 	public void addKeywords(JSONObject queryKeywordSpec) {
-
+		keywordQuery = new JSONObject(emptyKeywordString);
 		
 		JSONObject namedQuery = keywordQuery.getJSONObject("query_string");
 		String namedQueryKeywords = namedQuery.getString("query");
@@ -130,14 +135,19 @@ public class ESQuery implements Query {
 	{
 		JSONObject query = new JSONObject();
 		query.put("_source", source);
-		query.put("query", keywordQuery);
+		if(keywordQuery != null)
+		{
+			query.put("query", keywordQuery);
+		}
 		query.put("aggs", aggregations);
+		if(size != null)
+		{
+			query.put("size", size);
+		}
 		return query.toString(4);
 	}
 
-	@Override
-	public void applyFilter(JSONObject facetValueFilter) {
-		// TODO Auto-generated method stub
-		
+	public String getRouting() {
+		return routing;
 	}
 }

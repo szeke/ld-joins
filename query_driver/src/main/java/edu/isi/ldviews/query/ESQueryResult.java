@@ -63,4 +63,27 @@ public class ESQueryResult implements QueryResult {
 		
 		
 	}
+
+	@Override
+	public JSONArray getAnchorsFromResults(String path) {
+		JSONObject outerHits = this.json.getJSONObject("hits");
+		JSONArray hits = outerHits.getJSONArray("hits");
+		JSONArray anchorsByResult = new JSONArray();
+		String[] fields = JSONCollector.splitPath(path);
+		for(int i = 0; i < hits.length(); i++)
+		{
+			JSONArray anchors = new JSONArray();
+			JSONObject source = hits.getJSONObject(i).getJSONObject("_source");
+			String uri = hits.getJSONObject(i).getString("_id");
+			JSONCollector.collectJSONObject(source,fields, 0, anchors);
+			JSONObject resultWithValues = new JSONObject();
+			resultWithValues.put("uri", uri);
+			resultWithValues.put("anchors", anchors);
+			resultWithValues.put("path", path);
+			anchorsByResult.put(resultWithValues);
+			
+		}
+		
+		return anchorsByResult;
+	}
 }

@@ -11,7 +11,14 @@ public class ESQueryFactory implements QueryFactory{
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));
 		query.addFields(queryTypeSpec.getJSONObject("results").getJSONArray("fields"));
 		query.addFacets(queryTypeSpec.getJSONArray("facets"));
-		query.addAggregations(queryTypeSpec.getJSONObject("results").getJSONArray("aggregations"));
+		return query;
+	}
+
+	@Override
+	public Query generateAggregateQuery(JSONObject queryTypeSpec, JSONObject anchor) {
+		Query query = new ESQuery();
+		query.setName(queryTypeSpec.getString("name"));
+		query.addAggregations(queryTypeSpec, anchor);
 		return query;
 	}
 

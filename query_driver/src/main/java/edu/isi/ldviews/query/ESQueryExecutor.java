@@ -20,8 +20,13 @@ public class ESQueryExecutor implements QueryExecutor {
 	}
 
 	public Future<QueryResult> execute(Query query) {
+		String routing = query instanceof ESQuery ? ((ESQuery)query).getRouting() : null;
 		String queryURL = "http://" + host + ":" + port + "/" + index + "/"
 				+ query.getName().toLowerCase() + "/_search";
+		if(routing!= null)
+		{
+			queryURL = queryURL + "?routing=" + routing.replaceAll("\\/", "%2F");
+		}
 		BoundRequestBuilder requestBuilder = asyncHttpClient
 				.preparePost(queryURL);
 		String queryString = query.toString();

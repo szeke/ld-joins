@@ -50,7 +50,8 @@ public class SPARQLQuery implements Query {
 	}
 
 	@Override
-	public void applyFilter(JSONObject facetValueFilter) {
+	public void addAggregations(JSONObject queryAggregationsSpec,
+			JSONObject anchor) {
 		// TODO Auto-generated method stub
 		
 	}

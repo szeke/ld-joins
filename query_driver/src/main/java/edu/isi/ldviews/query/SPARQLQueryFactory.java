@@ -9,4 +9,10 @@ public class SPARQLQueryFactory implements QueryFactory {
 		return null;
 	}
 
+	@Override
+	public Query generateAggregateQuery(JSONObject queryTypeSpec, JSONObject anchor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

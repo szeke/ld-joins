@@ -417,64 +417,78 @@
             "name": "Ethnicity",
             "path": "makesOffer.itemOffered.ethnicity",
             "can_be_null": "true"
+          },
+          {
+            "name": "uri",
+            "path": "uri"
           }
         ],
         "aggregations": [
           {
             "id": "seller--offers-from-this-seller",
             "comment": "Show a sparkline of other offers from this seller.",
-            "name": "Offers from this seller",
+            "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "anchor_path": "uri",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
                 "term": {
-                  "seller": "ANCHOR"
+                  "seller.uri": "ANCHOR"
                 }
               },
+              "aggs":{
+                "seller--offers-from-this-seller":{
               "date_histogram": {
                 "field": "validFrom",
                 "interval": "week"
               }
+            }}
             }
           },
           {
             "id": "seller--locations-of-this-seller",
             "comment": "Show a sparkchart of cities of other offers from this seller.",
-            "name": "Locations of this seller",
+            "name": "offer",
             "query": "anchored_facet",
             "sparql": "URI :makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "anchor_path": "uri",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
                 "term": {
-                  "seller": "ANCHOR"
+                  "seller.uri": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "availableAtOrFrom.address.addressLocality"
+              "aggs":{
+                "seller--locations-of-this-seller":{
+                  
+                  "terms": {
+                    "field": "availableAtOrFrom.address.addressLocality"
+                  }
+                }
               }
             }
           },
           {
             "id": "seller--associated-phone-numbers",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
-            "name": "Associated phone numbers",
+            "name": "seller",
             "query": "anchored_facet",
-            "sparql": "URI :telephone ?ph . ?se a :Seller ; :telephone ?ph ; :telephone ?value .",
+            "sparql": "URI :telephone ?ph . ?se a :Seller ; :telephone ?ph ; :telephone ?name .",
+            "anchor_path": "telephone.name",
             "elastic": {
-              "type": "Seller",
-              "anchor_path": "offers.seller.telephone",
               "filter": {
                 "term": {
-                  "telephone": "ANCHOR"
+                  "telephone.name": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "telephone"
+               "aggs":{
+                "seller--associated-phone-numbers":{
+                  
+                 "terms": {
+                   "field": "telephone.name"
+                  }
+                }
               }
             }
           }
