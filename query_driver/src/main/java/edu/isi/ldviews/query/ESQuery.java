@@ -96,14 +96,14 @@ public class ESQuery implements Query {
 	public void addAggregations(JSONObject queryAggregationSpec, JSONObject anchor) {
 		
 		JSONObject aggregation = new JSONObject(queryAggregationSpec.getJSONObject("elastic").toString());
-		if(anchor.getJSONArray("anchors").length() ==1)
+	//	if(anchor.getJSONArray("anchors").length() ==1)
 		{
-			JSONObject termFilter = aggregation.getJSONObject("filter").getJSONObject("term");
-			termFilter.put(((String)termFilter.keys().next()), anchor.getJSONArray("anchors").get(0));
+			JSONObject termFilter = aggregation.getJSONObject("filter").getJSONObject("terms");
+			termFilter.put(((String)termFilter.keys().next()), anchor.getJSONArray("anchors"));
 		}
-		else
+		//else
 		{
-			System.err.println("too many anchors " + anchor.toString(4));
+		//	System.err.println("too many anchors " + anchor.toString(4));
 		}
 		aggregations.put(queryAggregationSpec.getString("id"), aggregation);
 		size = 0;

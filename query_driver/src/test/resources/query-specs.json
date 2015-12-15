@@ -49,20 +49,23 @@
             "id": "page--revisions",
             "status": "done",
             "comment": "Show a sparkline when other WebPage with the same url were posted.",
-            "name": "Revisions",
+            "name": "webpage",
             "query": "anchored_timeline",
             "sparql": "?item a s:WebPage ; s:url URI ; s:dateCreated ?category .",
-            "elastic": {
-              "type": "WebPage",
               "anchor_path": "url",
+            "elastic": {
               "filter": {
-                "term": {
+                "terms": {
                   "url": "ANCHOR"
                 }
               },
-              "date_histogram": {
-                "field": "dateCreated",
-                "interval": "week"
+              "aggs": {
+                "page--revisions" : {
+                "date_histogram": {
+                  "field": "dateCreated",
+                  "interval": "week"
+                }
+                }
               }
             }
           }
@@ -151,7 +154,7 @@
               "type": "Offer",
               "anchor_path": "seller",
               "filter": {
-                "term": {
+                "terms": {
                   "seller": "ANCHOR"
                 }
               },
@@ -171,7 +174,7 @@
               "type": "Offer",
               "anchor_path": "seller",
               "filter": {
-                "term": {
+                "terms": {
                   "seller": "ANCHOR"
                 }
               },
@@ -184,7 +187,7 @@
       }
     },
     {
-      "name": "Adult Service",
+      "name": "adultservice",
       "type": "AdultService",
       "query" : {
           "keywords": [],
@@ -240,6 +243,10 @@
       "results": {
         "fields": [
           {
+            "name": "uri",
+            "path": "uri"
+          },
+          {
             "name": "Name",
             "path": "name",
             "can_be_null": "true"
@@ -284,60 +291,66 @@
           {
             "id": "adultservice--offers-for-this-service",
             "comment": "Show a sparkline of other offers for this adult service.",
-            "name": "Offers for this service",
+            "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :offers ?of . ?of a :Offer ; :validFrom ?date .",
+            "anchor_path": "uri",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "itemOffered": "ANCHOR"
+                "terms": {
+                  "itemOffered.uri": "ANCHOR"
                 }
               },
+              "aggs": {
+                "adultservice--offers-for-this-service":{
               "date_histogram": {
                 "field": "validFrom",
                 "interval": "week"
               }
             }
+            }
+            }
           },
           {
             "id": "adultservice--locations-of-this-service",
             "comment": "Show a sparkchart of cities of other offers for the same service.",
-            "name": "Locations of this service",
+            "name": "offer",
             "query": "anchored_facet",
             "sparql": "URI :offers ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "anchor_path": "uri",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "itemOffered": "ANCHOR"
+                "terms": {
+                  "itemOffered.uri": "ANCHOR"
                 }
               },
+              "aggs":{"adultservice--locations-of-this-service":{
               "terms": {
                 "field": "availableAtOrFrom.address.addressLocality"
               }
+              }}
             }
           },
           {
             "id": "adultservice--associated-phone-numbers",
             "status": "sparql done",
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
-            "name": "Associated phone numbers",
+            "name": "seller",
             "query": "anchored_facet",
             "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
+            "anchor_path": "offers.seller.telephone.name",
             "elastic": {
-              "type": "Seller",
-              "anchor_path": "offers.seller.telephone",
+              
               "filter": {
-                "term": {
-                  "telephone": "ANCHOR"
+                "terms": {
+                  "telephone.name": "ANCHOR"
                 }
               },
+              "aggs":{"adultservice--associated-phone-numbers":{
               "terms": {
-                "field": "telephone"
+                "field": "telephone.name"
               }
+              }}
             }
           }
         ]
@@ -433,7 +446,7 @@
             "anchor_path": "uri",
             "elastic": {
               "filter": {
-                "term": {
+                "terms": {
                   "seller.uri": "ANCHOR"
                 }
               },
@@ -455,7 +468,7 @@
             "anchor_path": "uri",
             "elastic": {
               "filter": {
-                "term": {
+                "terms": {
                   "seller.uri": "ANCHOR"
                 }
               },
@@ -478,7 +491,7 @@
             "anchor_path": "telephone.name",
             "elastic": {
               "filter": {
-                "term": {
+                "terms": {
                   "telephone.name": "ANCHOR"
                 }
               },
@@ -506,7 +519,7 @@
       "facets": [
         {
           "name": "Number",
-          "path": "owner.name.raw"
+          "path": "name.raw"
         },
         {
           "name": "Country",
@@ -551,20 +564,23 @@
           {
             "id": "phone--offers-for-this-phone-number",
             "comment": "Show a sparkline of offers by sellers using this phone number.",
-            "name": "Offers for this phone number",
+            "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "seller.telephone": "ANCHOR"
+                "terms": {
+                  "seller.telephone.name.raw": "ANCHOR"
                 }
               },
-              "date_histogram": {
-                "field": "validFrom",
-                "interval": "week"
+              "aggs":{
+                "phone--offers-for-this-phone-number": {
+                  "date_histogram": {
+                    "field": "validFrom",
+                    "interval": "week"
+                  }
+                }
               }
             }
           },
@@ -574,73 +590,86 @@
             "name": "Locations of this phone number",
             "query": "anchored_facet",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
                 "term": {
-                  "seller.telephone": "ANCHOR"
+                  "seller.telephone.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "availableAtOrFrom.address.addressLocality"
+              "aggs":{
+                "phone--locations-of-this-phone-number":{
+                  "terms": {
+                    "field": "availableAtOrFrom.address.addressLocality"
+                  }
+                }
               }
             }
           },
           {
             "id": "phone--associated-ages",
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
-            "name": "Associated ages",
+            "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :age ?value .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "AdultService",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "offers.seller.telephone": "ANCHOR"
+                "terms": {
+                  "offers.seller.telephone.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "age"
+              "aggs": {
+                "phone--associated-ages": {
+                  "terms": {
+                    "field": "age"
+                  }
+                }
               }
             }
           },
           {
             "id": "phone--associated-ethnicities",
             "comment": "Show a sparkchart ethnicities of adult services by sellers using this phone number.",
-            "name": "Associated ethnicities",
+            "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "AdultService",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "offers.seller.telephone": "ANCHOR"
+                "terms": {
+                  "offers.seller.telephone.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "ethnicity"
+              "aggs": {
+                "phone--associated-ethnicities":{
+                  "terms": {
+                    "field": "ethnicity"
+                  }
+                }
               }
             }
           },
           {
             "id": "phone--associated-names",
             "comment": "Show a sparkchart names of adult services by sellers using this phone number.",
-            "name": "Associated names",
+            "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "AdultService",
-              "anchor_path": "",
+              
               "filter": {
-                "term": {
-                  "offers.seller.telephone": "ANCHOR"
+                "terms": {
+                  "offers.seller.telephone.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "name"
+              "aggs": {
+                "phone--associated-names": {
+                  "terms": {
+                    "field": "name.raw"
+                  }
+                }
               }
             }
           }
@@ -658,7 +687,7 @@
       "facets": [
         {
           "name": "Email",
-          "path": "email.name.raw"
+          "path": "name.raw"
         },
         {
           "name": "Country",
@@ -680,13 +709,13 @@
       "results": {
         "fields": [
           {
-            "name": "Phone",
+            "name": "Email",
             "path": "name",
             "can_be_null": "true"
           },
           {
-            "name": "Email",
-            "path": "seller.email.name"
+            "name": "Phone",
+            "path": "seller.telephone.name"
           },
           {
             "name": "Name",
@@ -703,58 +732,67 @@
           {
             "id": "email--offers-for-this-email",
             "comment": "Show a sparkline of offers by sellers using this email.",
-            "name": "Offers for this email",
+            "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
+              "anchor_path": "name.raw",
               "filter": {
-                "term": {
-                  "seller.telephone": "ANCHOR"
+                "terms": {
+                  "seller.email.name.raw": "ANCHOR"
                 }
               },
-              "date_histogram": {
-                "field": "validFrom",
-                "interval": "week"
+              "aggs":{
+                "email--offers-for-this-email": {
+                  "date_histogram": {
+                    "field": "validFrom",
+                    "interval": "week"
+                  }
+                }
               }
             }
           },
           {
             "id": "email--locations-of-this-email",
             "comment": "Show a sparkchart of cities of offers by sellers using this email.",
-            "name": "Locations of this email",
+            "name": "offer",
             "query": "anchored_facet",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "Offer",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "seller.telephone": "ANCHOR"
+                "terms": {
+                  "seller.email.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "availableAtOrFrom.address.addressLocality"
+              "aggs":{
+                "email--locations-of-this-email":{
+                  "terms": {
+                    "field": "availableAtOrFrom.address.addressLocality"
+                  }
+                }
               }
             }
           },
           {
             "id": "email--associated-ages",
             "comment": "Show a sparkchart ages of adult services by sellers using this email.",
-            "name": "Associated ages",
+            "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :age ?value .",
+            "anchor_path": "name.raw",
             "elastic": {
-              "type": "AdultService",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "offers.seller.telephone": "ANCHOR"
+                "terms": {
+                  "offers.seller.email.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "age"
+              "aggs":{
+                "email--associated-ages":{
+                  "terms": {
+                    "field": "age"
+                  }
+                }
               }
             }
           },
@@ -768,7 +806,7 @@
               "type": "AdultService",
               "anchor_path": "",
               "filter": {
-                "term": {
+                "terms": {
                   "offers.seller.telephone": "ANCHOR"
                 }
               },
@@ -780,19 +818,21 @@
           {
             "id": "email--associated-names",
             "comment": "Show a sparkchart names of adult services by sellers using this email.",
-            "name": "Associated names",
+            "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
+              "anchor_path": "name.raw",
             "elastic": {
-              "type": "AdultService",
-              "anchor_path": "",
               "filter": {
-                "term": {
-                  "offers.seller.telephone": "ANCHOR"
+                "terms": {
+                  "offers.seller.email.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "name"
+              "aggs":{"email--associated-names":{
+                  "terms": {
+                    "field": "name"
+                  }
+                }
               }
             }
           }
