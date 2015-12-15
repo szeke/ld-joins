@@ -1,0 +1,44 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+select ?category count(?item) as ?count where 
+{
+ 	<http://dig.isi.edu/ht/data/phonenumber/x-4157382305>
+		m:owner/s:makesOffer ?item .
+	?item s:validFrom ?value .
+ 	bind (strdt(?value, xsd:dateTime) as ?date)
+ 	bind (concat(year(?date), "-", month(?date)) as ?category)
+}
+group by ?category
+order by asc(?category)
+limit 20
+
+# "id": "phone--offers-for-this-phone-number",
+# "comment": "Show a sparkline of offers by sellers using this phone number.",
+
+# pattern
+# URI m:owner/s:makesOffer ?item . ?item s:validFrom ?value .
+
+# category  count
+# --------  -----
+# 
+# 2013-10   144  
+# 2013-11   151  
+# 2013-12   144  
+# 2013-8    6    
+# 2013-9    66   
+# 2014-1    134  
+# 2014-10   265  
+# 2014-11   267  
+# 2014-12   263  
+# 2014-2    124  
+# 2014-3    249  
+# 2014-4    790  
+# 2014-5    1914 
+# 2014-6    968  
+# 2014-7    247  
+# 2014-8    301  
+# 2014-9    253  
+# 2015-1    322  
+# 2015-2    203  
+# 2015-3    168  
