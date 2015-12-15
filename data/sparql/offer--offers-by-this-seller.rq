@@ -3,8 +3,8 @@ prefix m: <http://memexproxy.com/ontology/>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 select ?category count(?item) as ?count where 
 {
- 	<http://dig.isi.edu/ht/data/57F4264C07D865AB38A7541A63750D265AB98C52/personororganization> 
-		s:makesOffer ?item .
+ 	<http://dig.isi.edu/ht/data/1883645/offer> 
+		s:seller/s:makesOffer ?item .
 	?item s:validFrom ?value .
  	bind (strdt(?value, xsd:dateTime) as ?date)
  	bind (concat(year(?date), "-", month(?date)) as ?category)
@@ -17,4 +17,4 @@ limit 20
 # "comment": "Show a sparkline of other offers by the same seller.",
             
 # pattern
-# URI s:makesOffer ?item . ?item s:validFrom ?value .
+# URI s:seller/s:makesOffer ?item . ?item s:validFrom ?value .
