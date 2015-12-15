@@ -263,7 +263,7 @@
           },
           {
             "name": "Age",
-            "path": "age",
+            "path": "personAge",
             "can_be_null": "true"
           },
           {
@@ -423,7 +423,7 @@
           },
           {
             "name": "Age",
-            "path": "makesOffer.itemOffered.age",
+            "path": "makesOffer.itemOffered.personAge",
             "can_be_null": "true"
           },
           {
@@ -577,11 +577,11 @@
             "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
-            "anchor_path": "name.raw",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.telephone.name.raw": "ANCHOR"
+                  "seller.telephone.name": "ANCHOR"
                 }
               },
               "aggs":{
@@ -597,14 +597,14 @@
           {
             "id": "phone--locations-of-this-phone-number",
             "comment": "Show a sparkchart of cities of offers by sellers using this phone number.",
-            "name": "Locations of this phone number",
+            "name": "offer",
             "query": "anchored_facet",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
-            "anchor_path": "name.raw",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
-                "term": {
-                  "seller.telephone.name.raw": "ANCHOR"
+                "terms": {
+                  "seller.telephone.name": "ANCHOR"
                 }
               },
               "aggs":{
@@ -621,18 +621,18 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :age ?value .",
-            "anchor_path": "name.raw",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :personAge ?value .",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.telephone.name.raw": "ANCHOR"
+                  "offers.seller.telephone.name": "ANCHOR"
                 }
               },
               "aggs": {
                 "phone--associated-ages": {
                   "terms": {
-                    "field": "age"
+                    "field": "personAge"
                   }
                 }
               }
@@ -644,11 +644,11 @@
             "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
-            "anchor_path": "name.raw",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.telephone.name.raw": "ANCHOR"
+                  "offers.seller.telephone.name": "ANCHOR"
                 }
               },
               "aggs": {
@@ -666,12 +666,12 @@
             "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
-            "anchor_path": "name.raw",
+            "anchor_path": "name",
             "elastic": {
               
               "filter": {
                 "terms": {
-                  "offers.seller.telephone.name.raw": "ANCHOR"
+                  "offers.seller.telephone.name": "ANCHOR"
                 }
               },
               "aggs": {
@@ -745,8 +745,8 @@
             "name": "offer",
             "query": "anchored_timeline",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "anchor_path": "name",
             "elastic": {
-              "anchor_path": "name.raw",
               "filter": {
                 "terms": {
                   "seller.email.name.raw": "ANCHOR"
@@ -789,8 +789,8 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this email.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :age ?value .",
-            "anchor_path": "name.raw",
+            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :personAge ?value .",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
                 "terms": {
@@ -800,7 +800,7 @@
               "aggs":{
                 "email--associated-ages":{
                   "terms": {
-                    "field": "age"
+                    "field": "personAge"
                   }
                 }
               }
@@ -809,15 +809,14 @@
           {
             "id": "email--associated-ethnicities",
             "comment": "Show a sparkchart ethnicities of adult services by sellers using this email.",
-            "name": "Associated ethnicities",
+            "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
+            "anchor_path": "name",
             "elastic": {
-              "type": "AdultService",
-              "anchor_path": "",
               "filter": {
                 "terms": {
-                  "offers.seller.telephone": "ANCHOR"
+                  "offers.seller.email.name.raw": "ANCHOR"
                 }
               },
               "terms": {
@@ -831,7 +830,7 @@
             "name": "adultservice",
             "query": "anchored_facet",
             "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
-              "anchor_path": "name.raw",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
                 "terms": {
