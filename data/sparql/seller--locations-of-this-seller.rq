@@ -1,0 +1,18 @@
+prefix s: <http://schema.org/>
+prefix m: <http://memexproxy.com/ontology/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+select ?category count(?item) as ?count where 
+{
+ 	<http://dig.isi.edu/ht/data/57F4264C07D865AB38A7541A63750D265AB98C52/personororganization> 
+		s:makesOffer ?item .
+	?item s:availableAtOrFrom/s:address/s:addressLocality ?category .
+}
+group by ?category
+order by desc(?count)
+limit 20
+
+# "id": "seller--locations-of-this-seller",
+# "comment": "Show a sparkchart of cities of other offers from this seller.",
+                        
+# pattern
+# URI s:makesOffer ?item . ?item s:availableAtOrFrom/s:address/s:addressLocality ?category .
