@@ -713,7 +713,7 @@
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.email.name.raw": "ANCHOR"
+                  "seller.email.name": "ANCHOR"
                 }
               },
               "aggs":{
@@ -732,11 +732,11 @@
             "name": "offer",
             "query": "anchored_facet",
             "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
-            "anchor_path": "name.raw",
+            "anchor_path": "name",
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.email.name.raw": "ANCHOR"
+                  "seller.email.name": "ANCHOR"
                 }
               },
               "aggs":{
@@ -758,7 +758,7 @@
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.email.name.raw": "ANCHOR"
+                  "offers.seller.email.name": "ANCHOR"
                 }
               },
               "aggs":{
@@ -780,7 +780,7 @@
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.email.name.raw": "ANCHOR"
+                  "offers.seller.email.name": "ANCHOR"
                 }
               },
               "aggs":{"email--associated-names":{
