@@ -214,10 +214,6 @@
           "path": "personAge"
         },
         {
-          "name": "Ethnicity",
-          "path": "ethnicity"
-        },
-        {
           "name": "Eyes",
           "path": "eyeColor"
         },
@@ -274,11 +270,6 @@
           {
             "name": "Hair",
             "path": "hairColor",
-            "can_be_null": "true"
-          },
-          {
-            "name": "Ethnicity",
-            "path": "ethnicity",
             "can_be_null": "true"
           },
           {
@@ -434,11 +425,6 @@
           {
             "name": "Hair",
             "path": "makesOffer.itemOffered.hairColor",
-            "can_be_null": "true"
-          },
-          {
-            "name": "Ethnicity",
-            "path": "makesOffer.itemOffered.ethnicity",
             "can_be_null": "true"
           },
           {
@@ -639,28 +625,6 @@
             }
           },
           {
-            "id": "phone--associated-ethnicities",
-            "comment": "Show a sparkchart ethnicities of adult services by sellers using this phone number.",
-            "name": "adultservice",
-            "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
-            "anchor_path": "name",
-            "elastic": {
-              "filter": {
-                "terms": {
-                  "offers.seller.telephone.name": "ANCHOR"
-                }
-              },
-              "aggs": {
-                "phone--associated-ethnicities":{
-                  "terms": {
-                    "field": "ethnicity"
-                  }
-                }
-              }
-            }
-          },
-          {
             "id": "phone--associated-names",
             "comment": "Show a sparkchart names of adult services by sellers using this phone number.",
             "name": "adultservice",
@@ -801,28 +765,6 @@
                 "email--associated-ages":{
                   "terms": {
                     "field": "personAge"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "id": "email--associated-ethnicities",
-            "comment": "Show a sparkchart ethnicities of adult services by sellers using this email.",
-            "name": "adultservice",
-            "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :ethnicity ?value .",
-            "anchor_path": "name",
-            "elastic": {
-              "filter": {
-                "terms": {
-                  "offers.seller.email.name.raw": "ANCHOR"
-                }
-              },
-              "aggs": {
-                "email--associated-ethnicities":{
-                  "terms": {
-                    "field": "ethnicity"
                   }
                 }
               }
