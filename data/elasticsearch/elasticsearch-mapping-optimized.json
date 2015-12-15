@@ -1,0 +1,2050 @@
+{
+  "mappings": {
+    "email": {
+      "_timestamp": {
+        "enabled": true,
+        "store": true
+      },
+      "properties": {
+        "@context": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "a": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "owner": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "email": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "makesOffer": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "availableAtOrFrom": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "address": {
+                      "properties": {
+                        "@context": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "a": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "addressCountry": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "addressLocality": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "addressRegion": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "uri": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        }
+                      }
+                    },
+                    "geo": {
+                      "properties": {
+                        "@context": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "a": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "lat": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "lon": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "uri": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "identifier": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "itemOffered": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "eyeColor": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "hairColor": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "offers": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "personAge": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "schema:height": {
+                      "type": "string"
+                    },
+                    "schema:weight": {
+                      "type": "string"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "mainEntityOfPage": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "dateCreated": {
+                      "type": "date",
+                      "format": "dateOptionalTime"
+                    },
+                    "description": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "identifier": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "mainEntity": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "publisher": {
+                      "properties": {
+                        "@context": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "a": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "name": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "uri": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        }
+                      }
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "url": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "priceSpecification": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "billingIncrement": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "price": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "unitCode": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "seller": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "validFrom": {
+                  "type": "date",
+                  "format": "dateOptionalTime"
+                }
+              }
+            },
+            "telephone": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "name": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    },
+    "adultservice": {
+      "_timestamp": {
+        "enabled": true,
+        "store": true
+      },
+      "properties": {
+        "@context": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "a": {
+          "type": "string",
+          "index": "no"
+        },
+        "eyeColor": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "hairColor": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "name": {
+          "type": "string"
+        },
+        "offers": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "availableAtOrFrom": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "address": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "addressCountry": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "addressLocality": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "addressRegion": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "geo": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "lat": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "lon": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "name": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "identifier": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "itemOffered": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "mainEntityOfPage": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "dateCreated": {
+                  "type": "date",
+                  "format": "dateOptionalTime"
+                },
+                "description": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "identifier": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "mainEntity": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "publisher": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "url": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "priceSpecification": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "billingIncrement": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "price": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "unitCode": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "seller": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "email": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "owner": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "makesOffer": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "telephone": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "owner": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "title": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "validFrom": {
+              "type": "date",
+              "format": "dateOptionalTime"
+            }
+          }
+        },
+        "personAge": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "schema:height": {
+          "type": "string"
+        },
+        "schema:weight": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    },
+    "webpage": {
+      "_timestamp": {
+        "enabled": true,
+        "store": true
+      },
+      "properties": {
+        "@context": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "a": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "dateCreated": {
+          "type": "date",
+          "format": "dateOptionalTime"
+        },
+        "description": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "mainEntity": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "availableAtOrFrom": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "address": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "addressCountry": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "addressLocality": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "addressRegion": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "geo": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "lat": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "lon": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "name": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "identifier": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "itemOffered": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "eyeColor": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "hairColor": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "offers": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "personAge": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "schema:height": {
+                  "type": "string"
+                },
+                "schema:weight": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "mainEntityOfPage": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name": {
+              "type": "string"
+            },
+            "priceSpecification": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "billingIncrement": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "price": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "unitCode": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "seller": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "email": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "owner": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "itemOffered": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "offers": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "personAge": {
+                      "type": "string"
+                    },
+                    "schema:height": {
+                      "type": "string"
+                    },
+                    "schema:weight": {
+                      "type": "string"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "mainEntityOfPage": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "makesOffer": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "seller": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "telephone": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "owner": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "validFrom": {
+                  "type": "date",
+                  "format": "dateOptionalTime"
+                }
+              }
+            },
+            "title": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "validFrom": {
+              "type": "date",
+              "format": "dateOptionalTime"
+            }
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "publisher": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "name": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "uri": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            }
+          }
+        },
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    },
+    "offer": {
+      "_timestamp": {
+        "enabled": true,
+        "store": true
+      },
+      "properties": {
+        "@context": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "a": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "availableAtOrFrom": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "address": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "addressCountry": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "addressLocality": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "addressRegion": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "geo": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "lat": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "lon": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "name": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            }
+          }
+        },
+        "identifier": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "itemOffered": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "eyeColor": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "hairColor": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name": {
+              "type": "string"
+            },
+            "offers": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "personAge": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "schema:height": {
+              "type": "string"
+            },
+            "schema:weight": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "mainEntityOfPage": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "dateCreated": {
+              "type": "date",
+              "format": "dateOptionalTime"
+            },
+            "description": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "identifier": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "mainEntity": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "publisher": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "url": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            }
+          }
+        },
+        "priceSpecification": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "billingIncrement": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "price": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "unitCode": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "seller": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "email": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "owner": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "makesOffer": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "telephone": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "name": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "validFrom": {
+          "type": "date",
+          "format": "dateOptionalTime"
+        }
+      }
+    },
+    "seller": {
+      "_timestamp": {
+        "enabled": true,
+        "store": true
+      },
+      "properties": {
+        "@context": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "a": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "email": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "name": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "owner": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "makesOffer": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "availableAtOrFrom": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "address": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "addressCountry": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "addressLocality": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "addressRegion": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "geo": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "lat": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "lon": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "name": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "identifier": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "itemOffered": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "eyeColor": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "hairColor": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "offers": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "personAge": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "schema:height": {
+                  "type": "string"
+                },
+                "schema:weight": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "mainEntityOfPage": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "dateCreated": {
+                  "type": "date",
+                  "format": "dateOptionalTime"
+                },
+                "description": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "identifier": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "mainEntity": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "publisher": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "url": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                }
+              }
+            },
+            "priceSpecification": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "billingIncrement": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "price": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "unitCode": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "seller": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "title": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "validFrom": {
+              "type": "date",
+              "format": "dateOptionalTime"
+            }
+          }
+        },
+        "telephone": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "name": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    },
+    "phone": {
+      "_timestamp": {
+        "enabled": true,
+        "store": true
+      },
+      "properties": {
+        "@context": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "a": {
+          "type": "string",
+          "index": "no",
+          "store": false
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "properties": {
+            "@context": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "a": {
+              "type": "string",
+              "index": "no",
+              "store": false
+            },
+            "email": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "name": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "owner": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            },
+            "makesOffer": {
+              "properties": {
+                "@context": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "a": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "availableAtOrFrom": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "address": {
+                      "properties": {
+                        "@context": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "a": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "addressCountry": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "addressLocality": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "addressRegion": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "uri": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        }
+                      }
+                    },
+                    "geo": {
+                      "properties": {
+                        "@context": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "a": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "lat": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "lon": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "uri": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "identifier": {
+                  "type": "string",
+                  "index": "no",
+                  "store": false
+                },
+                "itemOffered": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "eyeColor": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "hairColor": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "offers": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "personAge": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "schema:height": {
+                      "type": "string"
+                    },
+                    "schema:weight": {
+                      "type": "string"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "mainEntityOfPage": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "dateCreated": {
+                      "type": "date",
+                      "format": "dateOptionalTime"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "identifier": {
+                      "type": "string"
+                    },
+                    "mainEntity": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "publisher": {
+                      "properties": {
+                        "@context": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "a": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        },
+                        "name": {
+                          "type": "string",
+                          "index": "not_analyzed"
+                        },
+                        "uri": {
+                          "type": "string",
+                          "index": "no",
+                          "store": false
+                        }
+                      }
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "url": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "priceSpecification": {
+                  "properties": {
+                    "@context": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "a": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    },
+                    "billingIncrement": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "name": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "price": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "unitCode": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "index": "no",
+                      "store": false
+                    }
+                  }
+                },
+                "seller": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "validFrom": {
+                  "type": "date",
+                  "format": "dateOptionalTime"
+                }
+              }
+            },
+            "telephone": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  }
+}
