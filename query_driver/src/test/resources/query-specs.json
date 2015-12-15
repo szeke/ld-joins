@@ -819,8 +819,12 @@
                   "offers.seller.email.name.raw": "ANCHOR"
                 }
               },
-              "terms": {
-                "field": "ethnicity"
+              "aggs": {
+                "email--associated-ethnicities":{
+                  "terms": {
+                    "field": "ethnicity"
+                  }
+                }
               }
             }
           },
