@@ -1,6 +1,21 @@
 {
   "mappings": {
     "email": {
+      "_source": {
+        "includes": [
+          "owner.makesOffer.mainEntityOfPage.description",
+          "owner.makesOffer.availableAtOrFrom.address.addressCountry",
+          "owner.makesOffer.availableAtOrFrom.address.addressRegion",
+          "owner.makesOffer.availableAtOrFrom.address.addressLocality",
+          "owner.makesOffer.mainEntityOfPage.publisher",
+          "seller.telephone.name",
+          "name",
+          "owner",
+          "uri"
+        ],
+        "excludes": [
+        ]
+      },
       "_timestamp": {
         "enabled": true,
         "store": true
@@ -335,6 +350,26 @@
       }
     },
     "adultservice": {
+       "_source": {
+        "includes": [
+          "offers.mainEntityOfPage.description",
+          "offers.availableAtOrFrom.address.addressCountry",
+          "offers.availableAtOrFrom.address.addressRegion",
+          "offers.availableAtOrFrom.address.addressLocality",
+          "offers.mainEntityOfPage.publisher.name",
+          "personAge",
+          "eyeColor",
+          "hairColor",
+          "name",
+          "priceSpecification.name",
+          "offers.seller.uri",
+          "offers.seller.email.name",
+          "offers.seller.telephone.name",
+          "uri"
+        ],
+        "excludes": [
+        ]
+      },
       "_timestamp": {
         "enabled": true,
         "store": true
@@ -1043,6 +1078,29 @@
       }
     },
     "offer": {
+      "_source": {
+        "includes": [
+          "mainEntityOfPage.description",
+          "availableAtOrFrom.address.addressCountry",
+          "availableAtOrFrom.address.addressRegion",
+          "availableAtOrFrom.address.addressLocality",
+          "mainEntityOfPage.publisher.name",
+          "itemOffered.personAge",
+          "itemOffered.eyeColor",
+          "itemOffered.hairColor",
+          "itemOffered.name",
+          "priceSpecification.name",
+          "seller.uri",
+          "seller.email.name",
+          "seller.telephone.name",
+          "title",
+          "validFrom",
+          "owner",
+          "uri"
+        ],
+        "excludes": [
+        ]
+      },
       "_timestamp": {
         "enabled": true,
         "store": true
@@ -1377,6 +1435,26 @@
       }
     },
     "seller": {
+      "_source": {
+        "includes": [
+          "makesOffer.mainEntityOfPage.description",
+          "makesOffer.availableAtOrFrom.address.addressCountry",
+          "makesOffer.availableAtOrFrom.address.addressRegion",
+          "makesOffer.availableAtOrFrom.address.addressLocality",
+          "makesOffer.mainEntityOfPage.publisher.name",
+          "makesOffer.itemOffered.personAge",
+          "makesOffer.itemOffered.eyeColor",
+          "makesOffer.itemOffered.hairColor",
+          "makesOffer.itemOffered.name",
+          "email.name",
+          "telephone.name",
+          "name",
+          "owner",
+          "uri"
+        ],
+        "excludes": [
+        ]
+      },
       "_timestamp": {
         "enabled": true,
         "store": true
@@ -1710,6 +1788,22 @@
       }
     },
     "phone": {
+      "_source": {
+        "includes": [
+          "owner.makesOffer.mainEntityOfPage.description",
+          "owner.makesOffer.availableAtOrFrom.address.addressCountry",
+          "owner.makesOffer.availableAtOrFrom.address.addressRegion",
+          "owner.makesOffer.availableAtOrFrom.address.addressLocality",
+          "owner.makesOffer.mainEntityOfPage.publisher",
+          "owner.makesOffer.itemOffered.name",
+          "seller.email.name",
+          "name",
+          "owner",
+          "uri"
+        ],
+        "excludes": [
+        ]
+      },
       "_timestamp": {
         "enabled": true,
         "store": true

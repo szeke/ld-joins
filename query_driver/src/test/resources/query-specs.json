@@ -101,11 +101,11 @@
         },
         {
           "name": "Price",
-          "path": "priceSpecification"
+          "path": "priceSpecification.name"
         },
         {
           "name": "Publisher",
-          "path": "mainEntityOfPage.publisher"
+          "path": "mainEntityOfPage.publisher.name"
         }
       ],
       "results": {
@@ -254,7 +254,7 @@
         },
         {
           "name": "Publisher",
-          "path": "offers.mainEntityOfPage.publisher"
+          "path": "offers.mainEntityOfPage.publisher.name"
         }
       ],
       "results": {
