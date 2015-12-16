@@ -21,7 +21,7 @@ public class Worker implements Callable<String>{
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
 	private QueryExecutor queryExecutor;
-	private int maxQueryDepth = 4;
+	private int maxQueryDepth = 1;
 	
 	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory, JSONObject querySpec, Keywords keywords, long seed)
 	{
@@ -55,7 +55,7 @@ public class Worker implements Callable<String>{
 		do{
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
-			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
+			/*List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
 			
 				JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
 				for(int j = 0; j < aggregationsSpec.length(); j++)
@@ -75,9 +75,11 @@ public class Worker implements Callable<String>{
 			for(Future<QueryResult> aggregationResultFuture : aggregationResultFutures)
 			{
 				aggregationResultFuture.get(10, TimeUnit.SECONDS);
-			}
-			JSONObject facetValue = queryResult.getFacetValue(queryType, rand);
+			}*/
+			/*JSONObject facetValue = queryResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
+			queryDepth++;*/
+			query = queryFactory.generateQuery(queryType);
 			queryDepth++;
 		}while(queryDepth < maxQueryDepth && rand.nextDouble() < probabilitySearchSatisfied);
 		queryExecutor.shutdown();

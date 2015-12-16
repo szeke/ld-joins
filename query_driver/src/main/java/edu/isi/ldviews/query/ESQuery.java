@@ -26,8 +26,9 @@ public class ESQuery implements Query {
 	{
 		return name;
 	}
-	public void addType(String type) {
-		this.type =type;
+	public void addType(JSONObject querySpec) {
+		
+		this.type =querySpec.getString("type");
 	}
 	
 	public String getType()

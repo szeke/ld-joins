@@ -2,7 +2,8 @@
   "types": [
     {
       "name": "webpage",
-      "type": "WebPage",
+      "type": "s:WebPage",
+      "path_to_webpage": "",
       "query" : {
           "keywords": [],
           "fields": ["description"]
@@ -27,6 +28,10 @@
       ],
       "results": {
         "fields": [
+          {
+            "name": "uri",
+            "path": "uri"
+          },
           {
             "name": "Title",
             "path": "name"
@@ -74,10 +79,11 @@
     },
     {
       "name": "Offer",
-      "type": "Offer",
+      "type": "s:Offer",
+      "path_to_webpage": "s:mainEntityOfPage",
       "query" : {
           "keywords": [],
-          "fields": ["description"]
+          "fields": ["mainEntityOfPage.description"]
         },
       
       "facets": [
@@ -104,6 +110,10 @@
       ],
       "results": {
         "fields": [
+          {
+            "name": "uri",
+            "path": "uri"
+          },
           {
             "name": "Seller URI",
             "path": "seller.uri"
@@ -198,10 +208,11 @@
     },
     {
       "name": "adultservice",
-      "type": "AdultService",
+      "type": "m:AdultService",
+      "path_to_webpage": "s:offers/s:mainEntityOfPage",
       "query" : {
           "keywords": [],
-          "fields": ["description"]
+          "fields": ["offers.mainEntityOfPage.description"]
         },
       
       "facets": [
@@ -359,10 +370,11 @@
     },
     {
       "name": "Seller",
-      "type": "PersonOrOrganization",
+      "type": "m:PersonOrOrganization",
+      "path_to_webpage": "s:makesOffer/s:mainEntityOfPage",
       "query" : {
           "keywords": [],
-          "fields": ["description"]
+          "fields": ["makesOffer.mainEntityOfPage.description"]
         },
       
       "facets": [
@@ -506,10 +518,11 @@
     },
     {
       "name": "Phone",
-      "type": "PhoneNumber",
+      "type": "m:PhoneNumber",
+      "path_to_webpage": "m:owner/s:makesOffer/s:mainEntityOfPage",
       "query" : {
           "keywords": [],
-          "fields": ["description"]
+          "fields": ["owner.makesOffer.mainEntityOfPage.description"]
         },
       
       "facets": [
@@ -536,6 +549,10 @@
       ],
       "results": {
         "fields": [
+          {
+            "name": "uri",
+            "path": "uri"
+          },
           {
             "name": "Phone",
             "path": "name"
@@ -652,10 +669,11 @@
     },
     {
       "name": "Email",
-      "type": "EmailAddress",
+      "type": "m:EmailAddress",
+      "path_to_webpage": "m:owner/s:makesOffer/s:mainEntityOfPage",
       "query" : {
           "keywords": [],
-          "fields": ["description"]
+          "fields": ["owner.makesOffer.mainEntityOfPage.description"]
         },
       
       "facets": [
@@ -682,6 +700,10 @@
       ],
       "results": {
         "fields": [
+          {
+            "name": "uri",
+            "path": "uri"
+          },
           {
             "name": "Email",
             "path": "name",

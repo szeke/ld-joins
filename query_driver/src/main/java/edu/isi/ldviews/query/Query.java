@@ -7,7 +7,7 @@ public interface Query {
 	String getName();
 	String getType();
 	void setName(String name);
-	void addType(String type);
+	public void addType(JSONObject querySpec);
 	void addKeywords(JSONObject queryKeywordSpec);
 	void addFields(JSONArray queryFieldsSpec);
 	void addFacets(JSONArray queryFacetsSpec);
