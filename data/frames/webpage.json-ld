@@ -8,10 +8,18 @@
     "seller" : {
       "@type" : "PersonOrOrganization",
       "telephone": {
-        "@type": "PhoneNumber"
+        "@type": "PhoneNumber",
+        "@explicit": true,
+        "name": {},
+        "uri": {},
+        "a": {}
       },
       "email": {
-        "@type": "EmailAddress"
+        "@type": "EmailAddress",
+        "@explicit": true,
+        "name": {},
+        "uri": {},
+        "a": {}
       }
     },
     "availableAtOrFrom": {
