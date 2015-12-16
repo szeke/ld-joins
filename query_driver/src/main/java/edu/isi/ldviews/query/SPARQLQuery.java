@@ -25,15 +25,23 @@ public class SPARQLQuery implements Query {
 	private String typeAndpathFromTypeToWebpage = null;
 	private String name;
 	private String aggSparql = null;
+	private String type =null; 
 	public void addType(JSONObject querySpec) {
-		
+		type = querySpec.getString("type");
 		StringBuilder typeBuilder = new StringBuilder();
 		typeBuilder.append("\t?x a ");
 		typeBuilder.append(querySpec.getString("type"));
-		typeBuilder.append(" ;\n\t\t\t");
 		
-		typeBuilder.append(querySpec.getString("path_to_webpage"));
-		typeBuilder.append(" ?wp .\n");
+		if(querySpec.getString("type").compareTo("s:WebPage") != 0)
+		{
+			typeBuilder.append(" ;\n\t\t\t");
+			typeBuilder.append(querySpec.getString("path_to_webpage"));
+			typeBuilder.append(" ?wp .\n");
+		}
+		else
+		{
+			typeBuilder.append(" .\n");
+		}
 		typeAndpathFromTypeToWebpage = typeBuilder.toString();
 	}
 	
@@ -87,7 +95,15 @@ public class SPARQLQuery implements Query {
 	public void addKeywords(JSONObject queryKeywordSpec) {
 		
 		StringBuilder keywordFilterBuilder = new StringBuilder("");
-		keywordFilterBuilder.append("	?wp a s:WebPage ;\n s:description ?text .\n");
+		if(type.compareTo("s:WebPage") != 0)
+		{
+			keywordFilterBuilder.append("	?wp a s:WebPage ;\n");
+		}
+		else
+		{
+			keywordFilterBuilder.append("?x ");
+		}
+		keywordFilterBuilder.append(" s:description ?text .\n");
 		keywordFilterBuilder.append("FILTER ");
 		JSONArray specKeywords = queryKeywordSpec.getJSONArray("keywords");
 		if(specKeywords.length()> 0)
