@@ -55,7 +55,7 @@ public class Worker implements Callable<String>{
 		do{
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
-			/*List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
+			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
 			
 				JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
 				for(int j = 0; j < aggregationsSpec.length(); j++)
@@ -75,7 +75,7 @@ public class Worker implements Callable<String>{
 			for(Future<QueryResult> aggregationResultFuture : aggregationResultFutures)
 			{
 				aggregationResultFuture.get(10, TimeUnit.SECONDS);
-			}*/
+			}
 			/*JSONObject facetValue = queryResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
 			queryDepth++;*/

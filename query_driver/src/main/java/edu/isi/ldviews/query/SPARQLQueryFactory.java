@@ -19,6 +19,7 @@ public class SPARQLQueryFactory implements QueryFactory {
 
 		Query query = new SPARQLQuery();
 		query.setName(queryTypeSpec.getString("name"));
+		query.addAggregations(queryTypeSpec, anchor);
 		return query;
 		
 	}

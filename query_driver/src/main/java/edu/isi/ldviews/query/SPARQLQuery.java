@@ -1,5 +1,6 @@
 package edu.isi.ldviews.query;
 
+import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,7 +9,7 @@ import org.json.JSONObject;
 
 public class SPARQLQuery implements Query {
 
-	private static final String PREFIXES = "prefix s: <http://schema.org/>\nprefix m: <http://memexproxy.com/ontology/>\n";
+	private static final String PREFIXES = "prefix s: <http://schema.org/>\nprefix m: <http://memexproxy.com/ontology/>\nprefix xsd: <http://www.w3.org/2001/XMLSchema#>\n";
 	private static final Set<String> memexPrefixed = new HashSet<String>();
 	static {
 		memexPrefixed.add("owner");
@@ -17,10 +18,13 @@ public class SPARQLQuery implements Query {
 		memexPrefixed.add("personAge");
 	}
 	
+	private String groupOrder = null;
 	private String keywordFilters = null;
 	private String optionalFields = null;
 	private String selectStatement = null;
 	private String typeAndpathFromTypeToWebpage = null;
+	private String name;
+	private String aggSparql = null;
 	public void addType(JSONObject querySpec) {
 		
 		StringBuilder typeBuilder = new StringBuilder();
@@ -111,13 +115,12 @@ public class SPARQLQuery implements Query {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
+			this.name =name;
 		
 	}
 
@@ -125,7 +128,11 @@ public class SPARQLQuery implements Query {
 	public void addAggregations(JSONObject queryAggregationsSpec,
 			JSONObject anchor) {
 		// TODO Auto-generated method stub
+		selectStatement = "select ?category count(?item) as ?count where \n";
+		JSONArray anchors = anchor.getJSONArray("anchors");
+		 aggSparql = queryAggregationsSpec.getString("sparql").replaceFirst("URI", "<"+anchors.getString(0)+">");
 		
+		this.groupOrder = "group by ?category\norder by desc(?count)\n";
 	}
 
 	@Override
@@ -135,6 +142,10 @@ public class SPARQLQuery implements Query {
 		sb.append(PREFIXES);
 		sb.append(selectStatement);
 		sb.append("{");
+		if(aggSparql != null)
+		{
+			sb.append(aggSparql);
+		}
 		if(typeAndpathFromTypeToWebpage != null)
 		{
 			sb.append(typeAndpathFromTypeToWebpage);
@@ -148,6 +159,8 @@ public class SPARQLQuery implements Query {
 			sb.append(optionalFields);
 		}
 		sb.append("}\n");
+		if(groupOrder != null)
+			sb.append(groupOrder);
 		sb.append("limit 20");
 		return sb.toString();
 		

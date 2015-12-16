@@ -730,7 +730,7 @@
             "comment": "Show a sparkline of offers by sellers using this email.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -753,7 +753,7 @@
             "comment": "Show a sparkchart of cities of offers by sellers using this email.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -775,7 +775,7 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this email.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :personAge ?value .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:personAge ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -797,7 +797,7 @@
             "comment": "Show a sparkchart names of adult services by sellers using this email.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item . ?item a m:AdultService ; s:name ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
