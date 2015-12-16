@@ -56,7 +56,7 @@
             "comment": "Show a sparkline when other WebPage with the same url were posted.",
             "name": "webpage",
             "query": "anchored_timeline",
-            "sparql": "?item a s:WebPage ; s:url URI ; s:dateCreated ?category .",
+            "sparql": "URI s:url ?url . ?item a s:WebPage ; s:url ?url ; s:dateCreated ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category)",
               "anchor_path": "url",
             "elastic": {
               "filter": {
@@ -163,7 +163,7 @@
             "comment": "Show a sparkline of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI :seller ?seller . ?of a :Offer ; :seller ?seller ; :validFrom ?date .",
+            "sparql": "URI s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:validFrom ?category .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -186,7 +186,7 @@
             "comment": "Show a sparkchart of cities of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI :seller ?seller . ?of a :Offer ; :seller ?seller ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "sparql": "URI s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -305,7 +305,7 @@
             "comment": "Show a sparkline of other offers for this adult service.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI :offers ?of . ?of a :Offer ; :validFrom ?date .",
+            "sparql": "URI s:offers ?item . ?item a s:Offer ; s:validFrom ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -328,7 +328,7 @@
             "comment": "Show a sparkchart of cities of other offers for the same service.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI :offers ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "sparql": "URI s:offers ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -450,7 +450,7 @@
             "comment": "Show a sparkline of other offers from this seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI :makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "sparql": "URI s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -472,7 +472,7 @@
             "comment": "Show a sparkchart of cities of other offers from this seller.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI :makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "sparql": "URI s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -495,7 +495,7 @@
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
             "name": "seller",
             "query": "anchored_facet",
-            "sparql": "URI :telephone ?ph . ?se a :Seller ; :telephone ?ph ; :telephone ?name .",
+            "sparql": "URI s:telephone ?ph . ?item a s:Seller ; s:telephone ?ph ; s:telephone ?category .",
             "anchor_path": "telephone.name",
             "elastic": {
               "filter": {
@@ -579,7 +579,7 @@
             "comment": "Show a sparkline of offers by sellers using this phone number.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :validFrom ?date .",
+            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?date .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -602,7 +602,7 @@
             "comment": "Show a sparkchart of cities of offers by sellers using this phone number.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI :owner/makesOffer ?of . ?of a :Offer ; :availableAtOrFrom/:address/:addressLocality ?value .",
+            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -624,7 +624,7 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :personAge ?value .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a :AdultService ; :personAge ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -646,7 +646,7 @@
             "comment": "Show a sparkchart names of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI :owner/:makesOffer/:itemOffered ?as. ?as a :AdultService ; :name ?value .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item . ?item a m:AdultService ; s:name ?category .",
             "anchor_path": "name",
             "elastic": {
               
