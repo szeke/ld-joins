@@ -22,14 +22,16 @@ public class SPARQLQuery implements Query {
 	private String keywordFilters = null;
 	private String optionalFields = null;
 	private String selectStatement = null;
-	private String typeAndpathFromTypeToWebpage = null;
+	private String typeAndpathFromTypeToWebpageOpen = null;
+	private String typeAndpathFromTypeToWebpageClose = null;
 	private String name;
 	private String aggSparql = null;
 	private String type =null; 
 	public void addType(JSONObject querySpec) {
 		type = querySpec.getString("type");
 		StringBuilder typeBuilder = new StringBuilder();
-		typeBuilder.append("\t?x a ");
+		typeBuilder.append("\t{\n\t\tselect distinct ?x where \n\t\t{\n");
+		typeBuilder.append("\t\t\t?x a ");
 		typeBuilder.append(querySpec.getString("type"));
 		
 		if(querySpec.getString("type").compareTo("s:WebPage") != 0)
@@ -42,20 +44,22 @@ public class SPARQLQuery implements Query {
 		{
 			typeBuilder.append(" .\n");
 		}
-		typeAndpathFromTypeToWebpage = typeBuilder.toString();
+		//typeBuilder.append("\t\t}\t\t\n\t\tlimit 20\n\t}\n");
+		typeAndpathFromTypeToWebpageOpen = typeBuilder.toString();
+		typeAndpathFromTypeToWebpageClose ="\t\t}\t\t\n\t\tlimit 20\n\t}\n"; 
 	}
 	
 
 	public void addFields(JSONArray queryFieldsSpec) {
 		StringBuilder selectStatementBuilder = new StringBuilder();
 		StringBuilder fields = new StringBuilder();
-		selectStatementBuilder.append("select  ?x ");
+		selectStatementBuilder.append("select ?x ");
 		for(int i = 0; i < queryFieldsSpec.length(); i++)
 		{
 			
 			JSONObject queryField = queryFieldsSpec.getJSONObject(i);
 			if(queryField.getString("path").compareTo("uri") == 0) continue;
-			fields.append("optional { ?x ");
+			fields.append("\toptional { ?x ");
 			String path = queryField.getString("path");
 			String[] pathElements = path.split("\\.");
 			for(int j = 0; j < pathElements.length; j++)
@@ -87,24 +91,19 @@ public class SPARQLQuery implements Query {
 		
 	}
 
-	public void addAggregations(JSONArray queryAggregationsSpec) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void addKeywords(JSONObject queryKeywordSpec) {
 		
 		StringBuilder keywordFilterBuilder = new StringBuilder("");
 		if(type.compareTo("s:WebPage") != 0)
 		{
-			keywordFilterBuilder.append("	?wp a s:WebPage ;\n");
+			keywordFilterBuilder.append("\t\t\t?wp a s:WebPage ;\n");
 		}
 		else
 		{
 			keywordFilterBuilder.append("?x ");
 		}
-		keywordFilterBuilder.append(" s:description ?text .\n");
-		keywordFilterBuilder.append("FILTER ");
+		keywordFilterBuilder.append("\n\t\t\ts:description ?text .\n");
+		keywordFilterBuilder.append("\t\t\tFILTER ");
 		JSONArray specKeywords = queryKeywordSpec.getJSONArray("keywords");
 		if(specKeywords.length()> 0)
 		{
@@ -144,9 +143,12 @@ public class SPARQLQuery implements Query {
 	public void addAggregations(JSONObject queryAggregationsSpec,
 			JSONObject anchor) {
 		// TODO Auto-generated method stub
-		selectStatement = "select ?category count(?item) as ?count where \n";
+		selectStatement = "select sample(?uri) as ?uri ?category count(?item) as ?count where \n";
 		JSONArray anchors = anchor.getJSONArray("anchors");
-		 aggSparql = queryAggregationsSpec.getString("sparql").replaceFirst("URI", "<"+anchors.getString(0)+">");
+		
+		String bind = "BIND (iri(<" + anchors.getString(0) +">) as ?uri) .\n";
+		// TODO replace URI with ?uri in query spec
+		 aggSparql = bind + queryAggregationsSpec.getString("sparql").replaceFirst("URI", "?uri");
 		
 		this.groupOrder = "group by ?category\norder by desc(?count)\n";
 	}
@@ -157,18 +159,22 @@ public class SPARQLQuery implements Query {
 		StringBuilder sb = new StringBuilder();
 		sb.append(PREFIXES);
 		sb.append(selectStatement);
-		sb.append("{");
+		sb.append("{\n");
 		if(aggSparql != null)
 		{
 			sb.append(aggSparql);
 		}
-		if(typeAndpathFromTypeToWebpage != null)
+		if(typeAndpathFromTypeToWebpageOpen != null)
 		{
-			sb.append(typeAndpathFromTypeToWebpage);
+			sb.append(typeAndpathFromTypeToWebpageOpen);
 		}
 		if(keywordFilters != null)
 		{
 			sb.append(keywordFilters);
+		}
+		if(typeAndpathFromTypeToWebpageClose != null)
+		{
+			sb.append(typeAndpathFromTypeToWebpageClose);
 		}
 		if(optionalFields != null)
 		{
@@ -177,7 +183,7 @@ public class SPARQLQuery implements Query {
 		sb.append("}\n");
 		if(groupOrder != null)
 			sb.append(groupOrder);
-		sb.append("limit 20");
+		//sb.append("limit 20");
 		return sb.toString();
 		
 	}
