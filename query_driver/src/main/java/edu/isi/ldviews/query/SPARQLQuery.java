@@ -1,6 +1,5 @@
 package edu.isi.ldviews.query;
 
-import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +25,8 @@ public class SPARQLQuery implements Query {
 	private String typeAndpathFromTypeToWebpageClose = null;
 	private String name;
 	private String aggSparql = null;
-	private String type =null; 
+	private String type =null;
+	private String facet; 
 	public void addType(JSONObject querySpec) {
 		type = querySpec.getString("type");
 		StringBuilder typeBuilder = new StringBuilder();
@@ -87,8 +87,83 @@ public class SPARQLQuery implements Query {
 	}
 
 	public void addFacets(JSONArray queryFacetsSpec) {
-		// TODO Auto-generated method stub
 		
+		selectStatement = "select ?facet str(?category) count(?category) as ?count where \n";
+		StringBuilder facetBuilder = new StringBuilder();
+		for(int i = 0; i < queryFacetsSpec.length(); i++)
+		{
+			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(i);
+			String queryFacetName = queryFacetSpec.getString("name");
+			String queryFacetPath = queryFacetSpec.getString("path");
+			String[] fields = JSONCollector.splitPath(queryFacetPath);
+			StringBuilder sparqlPathBuilder = new StringBuilder();
+			sparqlPathBuilder.append(prependPrefix(fields[0]));
+			for(int j = 1; j < fields.length; j++)
+			{
+				sparqlPathBuilder.append("/");
+				sparqlPathBuilder.append(prependPrefix(fields[j]));
+			}
+			String sparqlPath = sparqlPathBuilder.toString();
+			if(queryFacetSpec.has("userfilter"))
+			{
+				/*JSONObject facetWithFilter = new JSONObject();
+				JSONObject filter = new JSONObject();
+				JSONArray shouldStatements = new JSONArray();
+				JSONArray userFilters = queryFacetSpec.getJSONArray("userfilter");
+				for(int j = 0; j < userFilters.length(); j++)
+				{
+					JSONObject userFilter = userFilters.getJSONObject(j);
+					JSONObject termFilter = new JSONObject();
+					termFilter.put(userFilter.getString("path"), userFilter.getString("term"));
+					JSONObject termFilterWrapper = new JSONObject();
+					termFilterWrapper.put("term", termFilter);
+					shouldStatements.put(termFilterWrapper);
+				}
+				JSONObject shouldStatementWrapper = new JSONObject();
+				shouldStatementWrapper.put("should", shouldStatements);
+				filter.put("bool", shouldStatementWrapper);
+				facetWithFilter.put("filter", filter);
+				JSONObject nestedAgg = new JSONObject();
+				JSONObject termsFacet = new JSONObject();
+				termsFacet.put("field", queryFacetPath);
+				termsFacet.put("size", 20);
+				JSONObject termsFacetWrapper = new JSONObject();
+				termsFacetWrapper.put("terms", termsFacet);
+				nestedAgg.put(queryFacetName+"_facet", termsFacetWrapper);
+				facetWithFilter.put("aggs",nestedAgg);
+				aggregations.put(queryFacetName+"_facet", facetWithFilter);*/
+				
+			}
+			else
+			{
+				
+				facetBuilder.append("\t\t\toptional {\n");
+				facetBuilder.append("\t\t\t BIND(str(");
+				facetBuilder.append("\"");
+				facetBuilder.append(queryFacetName);
+				facetBuilder.append("\") as ?facet)\n");
+				facetBuilder.append("\t\t\t?x ");
+				facetBuilder.append(sparqlPath);
+				facetBuilder.append(" ?category .\n");
+				facetBuilder.append("\t\t\t}\n");
+			}
+			
+		}
+		this.facet = facetBuilder.toString();
+		this.groupOrder = "group by ?facet ?category\norder by desc(?count)\n";
+		
+	}
+
+
+	private String prependPrefix(String field) {
+		if(memexPrefixed.contains(field))
+		{
+			return "m:"+field;
+		}
+		else
+		{
+			return"s:"+field;
+		}
 	}
 
 	public void addKeywords(JSONObject queryKeywordSpec) {
@@ -179,6 +254,10 @@ public class SPARQLQuery implements Query {
 		if(optionalFields != null)
 		{
 			sb.append(optionalFields);
+		}
+		if(facet != null)
+		{
+			sb.append(facet);
 		}
 		sb.append("}\n");
 		if(groupOrder != null)

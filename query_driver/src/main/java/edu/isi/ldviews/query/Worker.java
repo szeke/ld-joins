@@ -54,6 +54,11 @@ public class Worker implements Callable<String>{
 		int queryDepth = 0;
 		do{
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
+			
+			
+			Query facetQuery = queryFactory.generateFacetQuery(queryType);
+			Future<QueryResult> facetResultFuture = queryExecutor.execute(facetQuery);
+				
 			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
 			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
 			
@@ -72,11 +77,13 @@ public class Worker implements Callable<String>{
 					}
 				}
 					
+			
+			QueryResult facetResult = facetResultFuture.get(100, TimeUnit.SECONDS);
 			for(Future<QueryResult> aggregationResultFuture : aggregationResultFutures)
 			{
-				aggregationResultFuture.get(10, TimeUnit.SECONDS);
+				aggregationResultFuture.get(100, TimeUnit.SECONDS);
 			}
-			/*JSONObject facetValue = queryResult.getFacetValue(queryType, rand);
+			/*JSONObject facetValue = facetResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
 			queryDepth++;*/
 			query = queryFactory.generateQuery(queryType);

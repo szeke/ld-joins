@@ -679,7 +679,7 @@
       "facets": [
         {
           "name": "Email",
-          "path": "name.raw"
+          "path": "name"
         },
         {
           "name": "Country",

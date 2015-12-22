@@ -10,7 +10,7 @@ public class SPARQLQueryFactory implements QueryFactory {
 		query.addType(queryTypeSpec);
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));
 		query.addFields(queryTypeSpec.getJSONObject("results").getJSONArray("fields"));
-		query.addFacets(queryTypeSpec.getJSONArray("facets"));
+		
 		return query;
 	}
 
@@ -22,6 +22,16 @@ public class SPARQLQueryFactory implements QueryFactory {
 		query.addAggregations(queryTypeSpec, anchor);
 		return query;
 		
+	}
+
+	@Override
+	public Query generateFacetQuery(JSONObject queryTypeSpec) {
+		Query query = new SPARQLQuery();
+		query.setName(queryTypeSpec.getString("name"));
+		query.addType(queryTypeSpec);
+		query.addKeywords(queryTypeSpec.getJSONObject("query"));
+		query.addFacets(queryTypeSpec.getJSONArray("facets"));
+		return query;
 	}
 
 }
