@@ -1,5 +1,6 @@
 package edu.isi.ldviews.query;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Worker implements Callable<String>{
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
 	private QueryExecutor queryExecutor;
-	private int maxQueryDepth = 1;
+	private int maxQueryDepth = 2;
 	
 	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory, JSONObject querySpec, Keywords keywords, long seed)
 	{
@@ -56,38 +57,50 @@ public class Worker implements Callable<String>{
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			
 			
-			Query facetQuery = queryFactory.generateFacetQuery(queryType);
-			Future<QueryResult> facetResultFuture = queryExecutor.execute(facetQuery);
+			
+			JSONArray facetsSpec = queryType.getJSONArray("facets");
+			List<Future<QueryResult>> facetResultFutures = new LinkedList<Future<QueryResult>>();
+			for(int j = 0; j < facetsSpec.length(); j++)
+			{
+				Query facetQuery = queryFactory.generateFacetQuery(queryType, j);
+				facetResultFutures.add(queryExecutor.execute(facetQuery));
+			}
 				
 			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
 			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
-			
-				JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
-				for(int j = 0; j < aggregationsSpec.length(); j++)
+		
+			JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
+			for(int j = 0; j < aggregationsSpec.length(); j++)
+			{
+				JSONObject aggregationSpec = aggregationsSpec.getJSONObject(j);
+				String anchorPath = aggregationSpec.getString("anchor_path");
+				JSONArray anchors = queryResult.getAnchorsFromResults(anchorPath);
+						
+				for(int i = 0; i < anchors.length(); i++ )
 				{
-					JSONObject aggregationSpec = aggregationsSpec.getJSONObject(j);
-					String anchorPath = aggregationSpec.getString("anchor_path");
-					JSONArray anchors = queryResult.getAnchorsFromResults(anchorPath);
-							
-					for(int i = 0; i < anchors.length(); i++ )
-					{
-						JSONObject anchor = anchors.getJSONObject(i);
-						Query aggregationQuery = queryFactory.generateAggregateQuery(aggregationSpec, anchor);
-						aggregationResultFutures.add(queryExecutor.execute(aggregationQuery));
-					}
+					JSONObject anchor = anchors.getJSONObject(i);
+					Query aggregationQuery = queryFactory.generateAggregateQuery(aggregationSpec, anchor);
+					aggregationResultFutures.add(queryExecutor.execute(aggregationQuery));
 				}
-					
-			
-			QueryResult facetResult = facetResultFuture.get(100, TimeUnit.SECONDS);
+			}
+				
+		
+			// the results should be populated in the same order as the facet spec
+			ArrayList<QueryResult> facetResults = new ArrayList<QueryResult>(facetResultFutures.size());
+			for(Future<QueryResult> facetResultFuture : facetResultFutures)
+			{
+				facetResults.add(facetResultFuture.get(100, TimeUnit.SECONDS));
+			}
 			for(Future<QueryResult> aggregationResultFuture : aggregationResultFutures)
 			{
 				aggregationResultFuture.get(100, TimeUnit.SECONDS);
 			}
-			/*JSONObject facetValue = facetResult.getFacetValue(queryType, rand);
+			JSONObject facetValue = getFacetValue(queryType, rand, facetResults);
+			//JSONObject facetValue = facetResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
-			queryDepth++;*/
-			query = queryFactory.generateQuery(queryType);
 			queryDepth++;
+			//query = queryFactory.generateQuery(queryType);
+			//queryDepth++;
 		}while(queryDepth < maxQueryDepth && rand.nextDouble() < probabilitySearchSatisfied);
 		queryExecutor.shutdown();
 		return null;
@@ -121,5 +134,37 @@ public class Worker implements Callable<String>{
 			facetUserFilters.put(facetValue);
 		}
 		return queryType;
+	}
+	
+	public JSONObject getFacetValue(JSONObject queryTypeSpec, Random rand, ArrayList<QueryResult> facetQueryResults) {
+		Set<Integer> facetsEvaluated = new HashSet<Integer>();
+		
+		JSONArray facetsSpec = queryTypeSpec.getJSONArray("facets");
+		boolean found = false;
+		JSONObject facetSpec = null;
+		while(facetsEvaluated.size() < facetsSpec.length() && !found)
+		{
+			Integer facetIndexToEvaluate = rand.nextInt(facetsSpec.length());
+			if(!facetsEvaluated.add(facetIndexToEvaluate))
+			{
+				continue;
+			}
+		
+			facetSpec = facetsSpec.getJSONObject(facetIndexToEvaluate);
+			QueryResult facetQueryResult = facetQueryResults.get(facetIndexToEvaluate);
+			JSONObject facetValue = facetQueryResult.getFacetValue(facetSpec, rand);
+			if(facetValue == null)
+			{
+				continue;
+			}
+			
+
+			found = true;
+			System.out.println("User selected: " + facetValue);
+			return facetValue;
+		}
+			return new JSONObject();
+		
+		
 	}
 }

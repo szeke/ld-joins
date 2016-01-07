@@ -1,12 +1,11 @@
 package edu.isi.ldviews.query;
 
-import java.net.URLEncoder;
 import java.util.concurrent.Future;
 
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
+import com.ning.http.client.Response;
 
 public class SPARQLQueryExecutor implements QueryExecutor {
 	AsyncHttpClient asyncHttpClient = new AsyncHttpClient();

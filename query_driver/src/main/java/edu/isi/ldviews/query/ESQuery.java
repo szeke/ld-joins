@@ -45,10 +45,10 @@ public class ESQuery implements Query {
 		}
 	}
 
-	public void addFacets(JSONArray queryFacetsSpec) {
-		for(int i = 0; i < queryFacetsSpec.length(); i++)
+	public void addFacets(JSONArray queryFacetsSpec, int facetIndex) {
+		//for(int i = 0; i < queryFacetsSpec.length(); i++)
 		{
-			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(i);
+			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(facetIndex);
 			String queryFacetName = queryFacetSpec.getString("name");
 			String queryFacetPath = queryFacetSpec.getString("path");
 			if(queryFacetSpec.has("userfilter"))
@@ -91,7 +91,7 @@ public class ESQuery implements Query {
 				aggregations.put(queryFacetName + "_facet", facet);
 			}
 		}
-		
+		size = 0;
 	}
 
 	public void addAggregations(JSONObject queryAggregationSpec, JSONObject anchor) {

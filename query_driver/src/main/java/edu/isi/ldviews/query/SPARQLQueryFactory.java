@@ -25,12 +25,12 @@ public class SPARQLQueryFactory implements QueryFactory {
 	}
 
 	@Override
-	public Query generateFacetQuery(JSONObject queryTypeSpec) {
+	public Query generateFacetQuery(JSONObject queryTypeSpec, int facetIndex) {
 		Query query = new SPARQLQuery();
 		query.setName(queryTypeSpec.getString("name"));
 		query.addType(queryTypeSpec);
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));
-		query.addFacets(queryTypeSpec.getJSONArray("facets"));
+		query.addFacets(queryTypeSpec.getJSONArray("facets"), facetIndex);
 		return query;
 	}
 

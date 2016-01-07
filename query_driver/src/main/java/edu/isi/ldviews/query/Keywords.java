@@ -14,7 +14,10 @@ public class Keywords {
 	
 	public String getKeyword(Random rand)
 	{
-		return keywords.getString(rand.nextInt(keywords.length()));
+		int randomKeywordIndex = rand.nextInt(keywords.length());
+		String chosenKeyword = keywords.getString(randomKeywordIndex);
+		System.out.println("chose " + chosenKeyword + " at " + randomKeywordIndex);
+		return chosenKeyword;
 	}
 	
 	public int count(){

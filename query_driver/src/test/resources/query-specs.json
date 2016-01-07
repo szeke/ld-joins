@@ -544,7 +544,7 @@
         },
         {
           "name": "Publisher",
-          "path": "owner.makesOffer.mainEntityOfPage.publisher"
+          "path": "owner.makesOffer.mainEntityOfPage.publisher.name"
         }
       ],
       "results": {
@@ -695,7 +695,7 @@
         },
         {
           "name": "Publisher",
-          "path": "owner.makesOffer.mainEntityOfPage.publisher"
+          "path": "owner.makesOffer.mainEntityOfPage.publisher.name"
         }
       ],
       "results": {

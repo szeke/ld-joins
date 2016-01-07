@@ -86,13 +86,13 @@ public class SPARQLQuery implements Query {
 		optionalFields = fields.toString();
 	}
 
-	public void addFacets(JSONArray queryFacetsSpec) {
+	public void addFacets(JSONArray queryFacetsSpec, int facetIndex) {
 		
-		selectStatement = "select ?facet str(?category) count(?category) as ?count where \n";
+		selectStatement = "select ?facet str(?category) as ?category count(?category) as ?count where \n";
 		StringBuilder facetBuilder = new StringBuilder();
-		for(int i = 0; i < queryFacetsSpec.length(); i++)
+		//for(int i = 0; i < queryFacetsSpec.length(); i++)
 		{
-			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(i);
+			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(facetIndex);
 			String queryFacetName = queryFacetSpec.getString("name");
 			String queryFacetPath = queryFacetSpec.getString("path");
 			String[] fields = JSONCollector.splitPath(queryFacetPath);
@@ -137,7 +137,7 @@ public class SPARQLQuery implements Query {
 			else
 			{
 				
-				facetBuilder.append("\t\t\toptional {\n");
+				facetBuilder.append("\t\t\t {\n");
 				facetBuilder.append("\t\t\t BIND(str(");
 				facetBuilder.append("\"");
 				facetBuilder.append(queryFacetName);
@@ -150,7 +150,8 @@ public class SPARQLQuery implements Query {
 			
 		}
 		this.facet = facetBuilder.toString();
-		this.groupOrder = "group by ?facet ?category\norder by desc(?count)\n";
+		//this.groupOrder = "group by ?facet ?category\norder by desc(?count)\n";
+		this.groupOrder = "group by ?facet ?category\norder by desc(?count) ?category\n";
 		
 	}
 
@@ -190,7 +191,7 @@ public class SPARQLQuery implements Query {
 		{
 			keywordFilterBuilder.append(" or ");
 			keywordFilterBuilder.append("\"");
-			keywordFilterBuilder.append(specKeywords.getString(0));
+			keywordFilterBuilder.append(specKeywords.getString(i));
 			keywordFilterBuilder.append("\" ");
 		}
 		

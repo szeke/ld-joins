@@ -10,6 +10,6 @@ public interface Query {
 	public void addType(JSONObject querySpec);
 	void addKeywords(JSONObject queryKeywordSpec);
 	void addFields(JSONArray queryFieldsSpec);
-	void addFacets(JSONArray queryFacetsSpec);
+	void addFacets(JSONArray queryFacetsSpec, int facetIndex);
 	void addAggregations(JSONObject queryAggregationsSpec, JSONObject anchor);
 }
