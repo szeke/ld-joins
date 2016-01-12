@@ -115,7 +115,7 @@
             "path": "uri"
           },
           {
-            "name": "Seller URI",
+            "name": "SellerURI",
             "path": "seller.uri"
           },
           {
