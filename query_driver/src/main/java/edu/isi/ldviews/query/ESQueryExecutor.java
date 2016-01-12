@@ -2,12 +2,16 @@ package edu.isi.ldviews.query;
 
 import java.util.concurrent.Future;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
 import com.ning.http.client.Response;
 
 public class ESQueryExecutor implements QueryExecutor {
+	private static final Logger LOG = LoggerFactory.getLogger(ESQueryExecutor.class); 
 	AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 	private String host;
 	private int port;
@@ -29,7 +33,7 @@ public class ESQueryExecutor implements QueryExecutor {
 		}
 		BoundRequestBuilder requestBuilder = asyncHttpClient
 				.preparePost(queryURL);
-		String queryString = query.toString();
+		final String  queryString = query.toString();
 		System.out.println(queryString);
 		requestBuilder.setBody(queryString);
 
@@ -45,7 +49,7 @@ public class ESQueryExecutor implements QueryExecutor {
 
 					@Override
 					public void onThrowable(Throwable t) {
-						// Something wrong happened.
+						LOG.error("Unable to complete query: \n" + queryString,  t);
 					}
 				});
 
