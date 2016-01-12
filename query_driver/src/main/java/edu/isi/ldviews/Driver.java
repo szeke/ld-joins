@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ning.http.client.AsyncHttpClient;
+
 import edu.isi.ldviews.query.Keywords;
 import edu.isi.ldviews.query.QueryExecutor;
 import edu.isi.ldviews.query.QueryExecutorFactory;
@@ -72,12 +74,13 @@ public class Driver {
 		Random rand = new Random(randomseed);
 		JSONObject querySpec = new JSONObject(IOUtils.toString(new File(queryFile).toURI()));
 		QueryFactory queryFactory = QueryFactoryFactory.getQueryFactory(databasetype);
-		QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
+		
 		int numberOfWorkers = 10;
 		ExecutorService executor = Executors.newFixedThreadPool(numberOfWorkers);
 		List<Future<String>> workerResults = new LinkedList<Future<String>>();
 		for(int i =0; i < numberOfWorkers; i++)
 		{
+			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
 			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, rand.nextLong(), 0.3)));
 		
 		}
