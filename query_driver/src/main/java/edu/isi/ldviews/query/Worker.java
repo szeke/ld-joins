@@ -10,21 +10,28 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.math3.random.RandomDataGenerator;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Worker implements Callable<String>{
 
+	private static Logger LOG = LoggerFactory.getLogger(Worker.class);
 	private QueryFactory queryFactory;
 	private JSONObject querySpec;
 	private Keywords keywords;
 	private Random rand;
+	private long seed; 
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
 	private QueryExecutor queryExecutor;
 	private int maxQueryDepth = 2;
+	private RandomDataGenerator rdg;
+	private double queryRate;
 	
-	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory, JSONObject querySpec, Keywords keywords, long seed)
+	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory, JSONObject querySpec, Keywords keywords, long seed, double queryRate)
 	{
 		this.queryExecutor = queryExecutor;
 		this.queryFactory = queryFactory;
@@ -32,10 +39,17 @@ public class Worker implements Callable<String>{
 		this.querySpec = new JSONObject(querySpec.toString());
 		this.keywords = keywords;
 		this.rand = new Random(seed);
+		// Share the same seed.  Doesn't really matter
+		rdg = new RandomDataGenerator();
+		rdg.reSeed(seed);
+		this.queryRate = queryRate;
+		this.seed = seed;
+		
 	}
 
 	public String call() throws Exception {
 
+		LOG.info("Worker " + seed + " is starting");
 		Set<String> selectedKeywords = new HashSet<String>();
 		while(selectedKeywords.size() < keywordCount && selectedKeywords.size() <= keywords.count())
 		{
@@ -53,7 +67,11 @@ public class Worker implements Callable<String>{
 			
 		Query query = queryFactory.generateQuery(queryType);
 		int queryDepth = 0;
+		try
+		{
 		do{
+			double waitTime = rdg.nextExponential(1.0/ queryRate);
+	//		Thread.sleep((long) (waitTime *1000));
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			
 			
@@ -66,7 +84,7 @@ public class Worker implements Callable<String>{
 				facetResultFutures.add(queryExecutor.execute(facetQuery));
 			}
 				
-			QueryResult queryResult = queryResultFuture.get(10, TimeUnit.SECONDS);
+			QueryResult queryResult = queryResultFuture.get(100, TimeUnit.SECONDS);
 			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
 		
 			JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
@@ -102,6 +120,12 @@ public class Worker implements Callable<String>{
 			//query = queryFactory.generateQuery(queryType);
 			//queryDepth++;
 		}while(queryDepth < maxQueryDepth && rand.nextDouble() < probabilitySearchSatisfied);
+		}
+		catch(Exception e)
+		{
+			LOG.error("Worker " + seed + " unable to complete queries.", e);
+		}
+		LOG.info("Worker "+seed+"is finishing");
 		queryExecutor.shutdown();
 		return null;
 	}
@@ -145,6 +169,7 @@ public class Worker implements Callable<String>{
 		while(facetsEvaluated.size() < facetsSpec.length() && !found)
 		{
 			Integer facetIndexToEvaluate = rand.nextInt(facetsSpec.length());
+			System.out.println("random " + facetIndexToEvaluate);
 			if(!facetsEvaluated.add(facetIndexToEvaluate))
 			{
 				continue;

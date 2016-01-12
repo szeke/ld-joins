@@ -1,15 +1,19 @@
 package edu.isi.ldviews;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +73,20 @@ public class Driver {
 		JSONObject querySpec = new JSONObject(IOUtils.toString(new File(queryFile).toURI()));
 		QueryFactory queryFactory = QueryFactoryFactory.getQueryFactory(databasetype);
 		QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
-		Worker worker = new Worker(queryExecutor, queryFactory, querySpec, keywords, rand.nextLong());
-		worker.call();
+		int numberOfWorkers = 10;
+		ExecutorService executor = Executors.newFixedThreadPool(numberOfWorkers);
+		List<Future<String>> workerResults = new LinkedList<Future<String>>();
+		for(int i =0; i < numberOfWorkers; i++)
+		{
+			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, rand.nextLong(), 0.3)));
+		
+		}
+		
+		for(Future<String>workerResult : workerResults)
+		{
+			workerResult.get(10, TimeUnit.MINUTES);
+		}
+		executor.shutdown();
 	}
 
 	protected void parseCommandLineOptions(CommandLine cl) {
