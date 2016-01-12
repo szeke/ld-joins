@@ -5,10 +5,8 @@ import org.json.JSONObject;
 
 public class ESQuery implements Query {
 
-	private static final String emptyKeywordString = "{\"query_string\":{\"query\":\"\",\"fields\":[]}}";
 	JSONObject source = new JSONObject("{\"include\":[]}");
 	JSONObject keywordQuery = null;
-//	JSONObject facets = new JSONObject();
 	JSONObject aggregations = new JSONObject();
 	String type;
 	String name;
@@ -113,21 +111,23 @@ public class ESQuery implements Query {
 
 
 	public void addKeywords(JSONObject queryKeywordSpec) {
-		keywordQuery = new JSONObject(emptyKeywordString);
 		
-		JSONObject namedQuery = keywordQuery.getJSONObject("query_string");
-		String namedQueryKeywords = namedQuery.getString("query");
-		JSONArray namedQueryFields = namedQuery.getJSONArray("fields");
+		keywordQuery = new JSONObject("{match:{}}");
+		
+		JSONObject matchQuery = keywordQuery.getJSONObject("match");
+		
 		JSONArray specKeywords = queryKeywordSpec.getJSONArray("keywords");
 		JSONArray specFields = queryKeywordSpec.getJSONArray("fields");
-		for(int i = 0; i < specKeywords.length(); i ++)
+		
+		String keywords = "";
+		for(int j = 0; j < specKeywords.length(); j ++)
 		{
-			namedQueryKeywords += " " + (specKeywords.getString(i));
+			keywords += " " + (specKeywords.getString(j));
 		}
-		namedQuery.put("query", namedQueryKeywords);
+		
 		for(int i = 0; i < specFields.length(); i ++)
 		{
-			namedQueryFields.put(specFields.getString(i));
+			matchQuery.put(specFields.getString(i), keywords);
 		}
 	}
 
