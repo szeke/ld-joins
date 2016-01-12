@@ -34,7 +34,8 @@ public class ESQueryResult implements QueryResult {
 		{
 			return null;
 		}
-		String facetBucketKey = buckets.getJSONObject(rand.nextInt(buckets.length())).getString("key");
+		int randomIndex = rand.nextInt(buckets.length()); 
+		String facetBucketKey = buckets.getJSONObject(randomIndex).getString("key");
 		JSONObject facetToFilterOn = new JSONObject();
 		facetToFilterOn.put("path", facetSpec.getString("path"));
 		facetToFilterOn.put("term", facetBucketKey);
