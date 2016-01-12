@@ -19,14 +19,17 @@ public class SPARQLQuery implements Query {
 	
 	private String groupOrder = null;
 	private String keywordFilters = null;
+	private String facetFilters = null;
 	private String optionalFields = null;
 	private String selectStatement = null;
 	private String typeAndpathFromTypeToWebpageOpen = null;
 	private String typeAndpathFromTypeToWebpageClose = null;
+	private String typeAndpathFromTypeToWebpageCloseWithLimit = null;
 	private String name;
 	private String aggSparql = null;
 	private String type =null;
-	private String facet; 
+	private String facet;
+	private String limit; 
 	public void addType(JSONObject querySpec) {
 		type = querySpec.getString("type");
 		StringBuilder typeBuilder = new StringBuilder();
@@ -46,7 +49,8 @@ public class SPARQLQuery implements Query {
 		}
 		//typeBuilder.append("\t\t}\t\t\n\t\tlimit 20\n\t}\n");
 		typeAndpathFromTypeToWebpageOpen = typeBuilder.toString();
-		typeAndpathFromTypeToWebpageClose ="\t\t}\t\t\n\t\tlimit 20\n\t}\n"; 
+		typeAndpathFromTypeToWebpageClose ="\t\t}\t\t\n\t\t\n\t}\n";
+		typeAndpathFromTypeToWebpageCloseWithLimit ="\t\t}\t\t\n\t\tlimit 20\n\t}\n";
 	}
 	
 
@@ -88,54 +92,35 @@ public class SPARQLQuery implements Query {
 
 	public void addFacets(JSONArray queryFacetsSpec, int facetIndex) {
 		
-		selectStatement = "select ?facet str(?category) as ?category count(?category) as ?count where \n";
+		selectStatement = "select ?facet str(?category) as ?category count(distinct(?x)) as ?count where \n";
 		StringBuilder facetBuilder = new StringBuilder();
+		StringBuilder facetFilterBuilder = new StringBuilder();
 		//for(int i = 0; i < queryFacetsSpec.length(); i++)
 		{
 			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(facetIndex);
 			String queryFacetName = queryFacetSpec.getString("name");
 			String queryFacetPath = queryFacetSpec.getString("path");
-			String[] fields = JSONCollector.splitPath(queryFacetPath);
-			StringBuilder sparqlPathBuilder = new StringBuilder();
-			sparqlPathBuilder.append(prependPrefix(fields[0]));
-			for(int j = 1; j < fields.length; j++)
-			{
-				sparqlPathBuilder.append("/");
-				sparqlPathBuilder.append(prependPrefix(fields[j]));
-			}
-			String sparqlPath = sparqlPathBuilder.toString();
+			String sparqlPath = translateToSPARQLPath(queryFacetPath);
+			
 			if(queryFacetSpec.has("userfilter"))
 			{
-				/*JSONObject facetWithFilter = new JSONObject();
-				JSONObject filter = new JSONObject();
-				JSONArray shouldStatements = new JSONArray();
+				System.out.println("park it");
 				JSONArray userFilters = queryFacetSpec.getJSONArray("userfilter");
 				for(int j = 0; j < userFilters.length(); j++)
 				{
 					JSONObject userFilter = userFilters.getJSONObject(j);
-					JSONObject termFilter = new JSONObject();
-					termFilter.put(userFilter.getString("path"), userFilter.getString("term"));
-					JSONObject termFilterWrapper = new JSONObject();
-					termFilterWrapper.put("term", termFilter);
-					shouldStatements.put(termFilterWrapper);
+					String queryFacetFilterPath = userFilter.getString("path");
+					String filterSparqlPath = translateToSPARQLPath(queryFacetFilterPath);
+					facetFilterBuilder.append("\t\t\t");
+					facetFilterBuilder.append("?x ");
+					facetFilterBuilder.append(filterSparqlPath);
+					facetFilterBuilder.append(" \"");
+					facetFilterBuilder.append(userFilter.getString("term"));
+					facetFilterBuilder.append("\" .\n");
 				}
-				JSONObject shouldStatementWrapper = new JSONObject();
-				shouldStatementWrapper.put("should", shouldStatements);
-				filter.put("bool", shouldStatementWrapper);
-				facetWithFilter.put("filter", filter);
-				JSONObject nestedAgg = new JSONObject();
-				JSONObject termsFacet = new JSONObject();
-				termsFacet.put("field", queryFacetPath);
-				termsFacet.put("size", 20);
-				JSONObject termsFacetWrapper = new JSONObject();
-				termsFacetWrapper.put("terms", termsFacet);
-				nestedAgg.put(queryFacetName+"_facet", termsFacetWrapper);
-				facetWithFilter.put("aggs",nestedAgg);
-				aggregations.put(queryFacetName+"_facet", facetWithFilter);*/
 				
+			
 			}
-			else
-			{
 				
 				facetBuilder.append("\t\t\t {\n");
 				facetBuilder.append("\t\t\t BIND(str(");
@@ -146,13 +131,28 @@ public class SPARQLQuery implements Query {
 				facetBuilder.append(sparqlPath);
 				facetBuilder.append(" ?category .\n");
 				facetBuilder.append("\t\t\t}\n");
-			}
+			
 			
 		}
+		this.facetFilters = facetFilterBuilder.toString();
 		this.facet = facetBuilder.toString();
 		//this.groupOrder = "group by ?facet ?category\norder by desc(?count)\n";
 		this.groupOrder = "group by ?facet ?category\norder by desc(?count) ?category\n";
-		
+		this.limit = "\nlimit 20\n";
+	}
+
+
+	private String translateToSPARQLPath(String path) {
+		String[] fields = JSONCollector.splitPath(path);
+		StringBuilder sparqlPathBuilder = new StringBuilder();
+		sparqlPathBuilder.append(prependPrefix(fields[0]));
+		for(int j = 1; j < fields.length; j++)
+		{
+			sparqlPathBuilder.append("/");
+			sparqlPathBuilder.append(prependPrefix(fields[j]));
+		}
+		String sparqlPath = sparqlPathBuilder.toString();
+		return sparqlPath;
 	}
 
 
@@ -170,6 +170,9 @@ public class SPARQLQuery implements Query {
 	public void addKeywords(JSONObject queryKeywordSpec) {
 		
 		StringBuilder keywordFilterBuilder = new StringBuilder("");
+		
+		
+		
 		if(type.compareTo("s:WebPage") != 0)
 		{
 			keywordFilterBuilder.append("\t\t\t?wp a s:WebPage ;\n");
@@ -244,13 +247,21 @@ public class SPARQLQuery implements Query {
 		{
 			sb.append(typeAndpathFromTypeToWebpageOpen);
 		}
+		if(facetFilters != null )
+		{
+			sb.append(facetFilters);
+		}
 		if(keywordFilters != null)
 		{
 			sb.append(keywordFilters);
 		}
-		if(typeAndpathFromTypeToWebpageClose != null)
+		if(facet != null && typeAndpathFromTypeToWebpageClose != null)
 		{
 			sb.append(typeAndpathFromTypeToWebpageClose);
+		}
+		else if(typeAndpathFromTypeToWebpageCloseWithLimit != null)
+		{
+			sb.append(typeAndpathFromTypeToWebpageCloseWithLimit);
 		}
 		if(optionalFields != null)
 		{
@@ -263,6 +274,10 @@ public class SPARQLQuery implements Query {
 		sb.append("}\n");
 		if(groupOrder != null)
 			sb.append(groupOrder);
+		if(limit != null)
+		{
+			sb.append(limit);
+		}
 		//sb.append("limit 20");
 		return sb.toString();
 		
