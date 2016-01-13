@@ -1,6 +1,8 @@
 package edu.isi.ldviews.query;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -19,7 +21,6 @@ public class SPARQLQuery implements Query {
 	
 	private String groupOrder = null;
 	private String keywordFilters = null;
-	private String facetFilters = null;
 	private String optionalFields = null;
 	private String selectStatement = null;
 	private String typeAndpathFromTypeToWebpageOpen = null;
@@ -29,7 +30,8 @@ public class SPARQLQuery implements Query {
 	private String aggSparql = null;
 	private String type =null;
 	private String facet;
-	private String limit; 
+	private String limit;
+	private SPARQLPathElement root = new SPARQLPathElement("x", true);
 	public void addType(JSONObject querySpec) {
 		type = querySpec.getString("type");
 		StringBuilder typeBuilder = new StringBuilder();
@@ -39,11 +41,14 @@ public class SPARQLQuery implements Query {
 		
 		if(querySpec.getString("type").compareTo("s:WebPage") != 0)
 		{
-			typeBuilder.append(" ;\n\t\t\t");
-			typeBuilder.append(querySpec.getString("path_to_webpage"));
-			typeBuilder.append(" ?wp .\n");
+			//typeBuilder.append(" ;\n\t\t\t");
+			//typeBuilder.append(querySpec.getString("path_to_webpage"));
+			//typeBuilder.append(" ?wp .\n");
+			List<String> pathToWPElements = translateToSPARQLPathListFromSlashes(querySpec.getString("path_to_webpage"));
+			pathToWPElements.add("?wp");
+			this.root.addValues(pathToWPElements);
 		}
-		else
+		//else
 		{
 			typeBuilder.append(" .\n");
 		}
@@ -94,8 +99,6 @@ public class SPARQLQuery implements Query {
 		
 		selectStatement = "select ?facet str(?category) as ?category count(distinct(?x)) as ?count where \n";
 		StringBuilder facetBuilder = new StringBuilder();
-		StringBuilder facetFilterBuilder = new StringBuilder();
-		//for(int i = 0; i < queryFacetsSpec.length(); i++)
 		{
 			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(facetIndex);
 			String queryFacetName = queryFacetSpec.getString("name");
@@ -104,19 +107,15 @@ public class SPARQLQuery implements Query {
 			
 			if(queryFacetSpec.has("userfilter"))
 			{
-				System.out.println("park it");
 				JSONArray userFilters = queryFacetSpec.getJSONArray("userfilter");
 				for(int j = 0; j < userFilters.length(); j++)
 				{
 					JSONObject userFilter = userFilters.getJSONObject(j);
 					String queryFacetFilterPath = userFilter.getString("path");
-					String filterSparqlPath = translateToSPARQLPath(queryFacetFilterPath);
-					facetFilterBuilder.append("\t\t\t");
-					facetFilterBuilder.append("?x ");
-					facetFilterBuilder.append(filterSparqlPath);
-					facetFilterBuilder.append(" \"");
-					facetFilterBuilder.append(userFilter.getString("term"));
-					facetFilterBuilder.append("\" .\n");
+					
+					List<String> filterElements = translateToSPARQLPathList(queryFacetFilterPath);
+					filterElements.add("\"" + userFilter.getString("term")+"\"");
+					root.addValues(filterElements);
 				}
 				
 			
@@ -134,7 +133,6 @@ public class SPARQLQuery implements Query {
 			
 			
 		}
-		this.facetFilters = facetFilterBuilder.toString();
 		this.facet = facetBuilder.toString();
 		//this.groupOrder = "group by ?facet ?category\norder by desc(?count)\n";
 		this.groupOrder = "group by ?facet ?category\norder by desc(?count) ?category\n";
@@ -142,7 +140,33 @@ public class SPARQLQuery implements Query {
 	}
 
 
-	private String translateToSPARQLPath(String path) {
+	public static List<String> translateToSPARQLPathList(String path)
+	{
+		String[] fields = JSONCollector.splitPath(path);
+		List<String> fieldsList = new ArrayList<String>(fields.length);
+		for(String field : fields)
+		{
+			fieldsList.add(prependPrefix(field));
+		}
+		return fieldsList;
+			
+	}
+	
+
+	public static List<String> translateToSPARQLPathListFromSlashes(String string) {
+		String[] fields = string.split("\\/");
+		List<String> fieldsList = new ArrayList<String>(fields.length);
+		for(String field : fields)
+		{
+			fieldsList.add(prependPrefix(field));
+		}
+		return fieldsList;
+	}
+
+
+	
+	
+	public static String translateToSPARQLPath(String path) {
 		String[] fields = JSONCollector.splitPath(path);
 		StringBuilder sparqlPathBuilder = new StringBuilder();
 		sparqlPathBuilder.append(prependPrefix(fields[0]));
@@ -156,14 +180,18 @@ public class SPARQLQuery implements Query {
 	}
 
 
-	private String prependPrefix(String field) {
+	private static String prependPrefix(String field) {
 		if(memexPrefixed.contains(field))
 		{
 			return "m:"+field;
 		}
-		else
+		else if(!field.startsWith("s:") && !field.startsWith("m:"))
 		{
 			return"s:"+field;
+		}
+		else
+		{
+			return field;
 		}
 	}
 
@@ -247,9 +275,10 @@ public class SPARQLQuery implements Query {
 		{
 			sb.append(typeAndpathFromTypeToWebpageOpen);
 		}
-		if(facetFilters != null )
+		
+		if(root.hasAChild() || root.hasChildren())
 		{
-			sb.append(facetFilters);
+			root.serialize(sb);
 		}
 		if(keywordFilters != null)
 		{
@@ -278,7 +307,6 @@ public class SPARQLQuery implements Query {
 		{
 			sb.append(limit);
 		}
-		//sb.append("limit 20");
 		return sb.toString();
 		
 	}
