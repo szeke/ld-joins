@@ -34,7 +34,7 @@ public class ESQueryExecutor implements QueryExecutor {
 		BoundRequestBuilder requestBuilder = asyncHttpClient
 				.preparePost(queryURL);
 		final String  queryString = query.toString();
-		System.out.println(queryString);
+		LOG.trace(queryString);
 		requestBuilder.setBody(queryString);
 
 		return requestBuilder

@@ -27,7 +27,7 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 		BoundRequestBuilder requestBuilder = asyncHttpClient.preparePost(queryURL);
 		requestBuilder.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		final String queryString = query.toString();
-		LOG.info(queryString);
+		LOG.trace(queryString);
 		requestBuilder.addFormParam("query", queryString);
 		requestBuilder.addHeader("Accept", "text/csv");
 		requestBuilder.setRequestTimeout(100000);
@@ -37,7 +37,7 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 					@Override
 					public QueryResult onCompleted(Response response)
 							throws Exception {
-						LOG.info(response.getResponseBody());
+						LOG.trace(response.getResponseBody());
 						LOG.info(""+response.getStatusCode());
 						LOG.info(response.getStatusText());
 						return new SPARQLQueryResult(response.getResponseBody());

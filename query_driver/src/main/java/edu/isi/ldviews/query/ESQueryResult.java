@@ -4,14 +4,17 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ESQueryResult implements QueryResult {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ESQueryResult.class);
 	private JSONObject json;
 
 	public ESQueryResult(String jsonResponse)
 	{
-		System.out.println(jsonResponse);
+		LOG.trace(jsonResponse);
 		this.json = new JSONObject(jsonResponse);
 	}
 
