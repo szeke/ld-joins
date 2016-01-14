@@ -1,5 +1,6 @@
 package edu.isi.ldviews.query;
 
+import java.io.IOException;
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
@@ -43,10 +44,24 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 						
 						LOG.trace(response.getResponseBody());
 						LOG.info(""+response.getStatusCode());
+						if(response.getStatusCode() == 400)
+						{
+							LOG.error("This request failed : "+ queryString);
+						}
 						LOG.info(response.getStatusText());
+						try
+						{
 						QueryResult queryResult = new SPARQLQueryResult(response.getResponseBody(), timestamp, System.currentTimeMillis());
 						LOG.info(""+queryResult.getQueryTime());
 						return queryResult;
+						}
+						catch(IOException e)
+						{
+							LOG.error("Request returned bad response: " + queryString);
+							LOG.error("Unable to parse response body: " + response.getResponseBody(), e);
+							throw e;
+						}
+						
 					}
 
 					@Override

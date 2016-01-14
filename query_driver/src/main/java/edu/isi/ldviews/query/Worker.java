@@ -30,8 +30,9 @@ public class Worker implements Callable<String>{
 	private int maxQueryDepth = 2;
 	private RandomDataGenerator rdg;
 	private double queryRate;
+	private int numberoftraces;
 	
-	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory, JSONObject querySpec, Keywords keywords, long seed, double queryRate)
+	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory, JSONObject querySpec, Keywords keywords, long seed, double queryRate, int numberoftraces)
 	{
 		this.queryExecutor = queryExecutor;
 		this.queryFactory = queryFactory;
@@ -44,12 +45,16 @@ public class Worker implements Callable<String>{
 		rdg.reSeed(seed);
 		this.queryRate = queryRate;
 		this.seed = seed;
+		this.numberoftraces = numberoftraces;
 		
 	}
 
 	public String call() throws Exception {
 
 		LOG.info("Worker " + seed + " is starting");
+		for(int tracenumber = 0; tracenumber < numberoftraces; tracenumber++)
+		{
+		JSONObject querySpec =  new JSONObject(this.querySpec.toString());
 		Set<String> selectedKeywords = new HashSet<String>();
 		while(selectedKeywords.size() < keywordCount && selectedKeywords.size() <= keywords.count())
 		{
@@ -71,7 +76,7 @@ public class Worker implements Callable<String>{
 		{
 		do{
 			double waitTime = rdg.nextExponential(1.0/ queryRate);
-	//		Thread.sleep((long) (waitTime *1000));
+			Thread.sleep((long) (waitTime *1000));
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
 			
 			
@@ -114,20 +119,20 @@ public class Worker implements Callable<String>{
 				aggregationResultFuture.get(100, TimeUnit.SECONDS);
 			}
 			JSONObject facetValue = getFacetValue(queryType, rand, facetResults);
-			//JSONObject facetValue = facetResult.getFacetValue(queryType, rand);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
 			queryDepth++;
-			//query = queryFactory.generateQuery(queryType);
-			//queryDepth++;
 		}while(queryDepth < maxQueryDepth && rand.nextDouble() < probabilitySearchSatisfied);
 		}
 		catch(Exception e)
 		{
 			LOG.error("Worker " + seed + " unable to complete queries.", e);
+			break;
+		}
 		}
 		LOG.info("Worker "+seed+"is finishing");
 		queryExecutor.shutdown();
 		return null;
+		
 	}
 
 	private JSONObject applyFilter(JSONObject queryType, JSONObject facetValue) {
@@ -169,7 +174,7 @@ public class Worker implements Callable<String>{
 		while(facetsEvaluated.size() < facetsSpec.length() && !found)
 		{
 			Integer facetIndexToEvaluate = rand.nextInt(facetsSpec.length());
-			System.out.println("random " + facetIndexToEvaluate);
+			//System.out.println("random " + facetIndexToEvaluate);
 			if(!facetsEvaluated.add(facetIndexToEvaluate))
 			{
 				continue;
@@ -185,7 +190,7 @@ public class Worker implements Callable<String>{
 			
 
 			found = true;
-			System.out.println("User selected: " + facetValue);
+			//System.out.println("User selected: " + facetValue);
 			return facetValue;
 		}
 			return new JSONObject();

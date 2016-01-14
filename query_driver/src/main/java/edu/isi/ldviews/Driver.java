@@ -39,6 +39,9 @@ public class Driver {
 	private long randomseed;
 	private String keywordFile;
 	private String databasetype;
+	private int numberofworkers;
+	private int concurrentnumberofworkers;
+	private int numberoftraces;
 	
 	public Driver(CommandLine cl)
 	{
@@ -75,17 +78,16 @@ public class Driver {
 		JSONObject querySpec = new JSONObject(IOUtils.toString(new File(queryFile).toURI()));
 		QueryFactory queryFactory = QueryFactoryFactory.getQueryFactory(databasetype);
 		
-		int numberOfWorkers = 100;
-		ExecutorService executor = Executors.newFixedThreadPool(100);
+		ExecutorService executor = Executors.newFixedThreadPool(concurrentnumberofworkers);
 		List<Future<String>> workerResults = new LinkedList<Future<String>>();
-		for(int i =0; i < numberOfWorkers; i++)
+		for(int i =0; i < numberofworkers; i++)
 		{
 			long workerSeed = rand.nextLong();
 			
 			{
 			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
 		
-			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3)));
+			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3, numberoftraces)));
 			}
 		
 		}
@@ -117,7 +119,9 @@ public class Driver {
 				logger.error("Need to specify --indexname if using --databasetype ES");
 			}
 		}
-		
+		this.numberofworkers = Integer.parseInt((String) cl.getOptionValue("numworkers","1"));
+		this.concurrentnumberofworkers = Integer.parseInt((String) cl.getOptionValue("concurrentnumworkers","1"));
+		this.numberoftraces = Integer.parseInt((String) cl.getOptionValue("numberoftraces","1"));
 	}
 
 	private static Options createCommandLineOptions() {
@@ -131,6 +135,9 @@ public class Driver {
 		options.addOption(new Option("keywordsfile", "keywordsfile", true, "specifies file containing keywords to sample"));
 		options.addOption(new Option("randomseed", "randomseed", true, "random seed for benchmark driver"));
 		options.addOption(new Option("databasetype", "databasetype", true, "ES or SPARQL"));
+		options.addOption(new Option("numworkers", "numworkers", true, "number of workers to execute queries"));
+		options.addOption(new Option("concurrentnumworkers", "concurrentnumworkers", true, "number of workers able to execute concurrently"));
+		options.addOption(new Option("numberoftraces", "numberoftraces", true, "number of query traces each worker should execute"));
 		options.addOption(new Option("help", "help", false, "print this message"));
 		return options;
 	}

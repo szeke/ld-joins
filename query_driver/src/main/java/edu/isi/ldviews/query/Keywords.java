@@ -16,7 +16,7 @@ public class Keywords {
 	{
 		int randomKeywordIndex = rand.nextInt(keywords.length());
 		String chosenKeyword = keywords.getString(randomKeywordIndex);
-		System.out.println("chose " + chosenKeyword + " at " + randomKeywordIndex);
+		//System.out.println("chose " + chosenKeyword + " at " + randomKeywordIndex);
 		return chosenKeyword;
 	}
 	

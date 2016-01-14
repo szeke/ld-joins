@@ -18,16 +18,11 @@ public class SPARQLQueryResult implements QueryResult {
 	private long start;
 	private long stop;
 	
-	public SPARQLQueryResult(String responseBody, long start, long stop) {
+	public SPARQLQueryResult(String responseBody, long start, long stop) throws IOException{
 		this.start = start;
 		this.stop = stop;
-		try {
 			parser = CSVParser.parse(responseBody, CSVFormat.DEFAULT.withHeader());
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 	public long getQueryTime()
