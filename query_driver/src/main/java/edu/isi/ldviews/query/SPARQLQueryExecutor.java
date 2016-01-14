@@ -52,7 +52,7 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 						try
 						{
 						QueryResult queryResult = new SPARQLQueryResult(response.getResponseBody(), timestamp, System.currentTimeMillis(), queryType);
-						LOG.info(""+queryResult.getQueryTime());
+						LOG.trace(""+queryResult.getQueryTime());
 						return queryResult;
 						}
 						catch(IOException e)
