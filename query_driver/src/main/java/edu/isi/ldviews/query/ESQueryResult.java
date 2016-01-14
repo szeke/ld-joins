@@ -11,9 +11,13 @@ public class ESQueryResult implements QueryResult {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ESQueryResult.class);
 	private JSONObject json;
-
-	public ESQueryResult(String jsonResponse)
+	private long start;
+	private long stop;
+	
+	public ESQueryResult(String jsonResponse, long start, long stop)
 	{
+		this.start = start;
+		this.stop = stop;
 		LOG.trace(jsonResponse);
 		this.json = new JSONObject(jsonResponse);
 	}
@@ -71,4 +75,10 @@ public class ESQueryResult implements QueryResult {
 		
 		return anchorsByResult;
 	}
+
+	public long getQueryTime()
+	{
+		return stop - start;
+	}
+
 }

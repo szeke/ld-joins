@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class ESQueryFactory implements QueryFactory{
 
 	public Query generateQuery(JSONObject queryTypeSpec) {
-		Query query = new ESQuery();
+		Query query = new ESQuery(QueryType.SEARCH);
 		query.setName(queryTypeSpec.getString("name"));
 		query.addType(queryTypeSpec);
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));
@@ -15,7 +15,7 @@ public class ESQueryFactory implements QueryFactory{
 
 	@Override
 	public Query generateAggregateQuery(JSONObject queryTypeSpec, JSONObject anchor) {
-		Query query = new ESQuery();
+		Query query = new ESQuery(QueryType.AGGREGATE);
 		query.setName(queryTypeSpec.getString("name"));
 		query.addAggregations(queryTypeSpec, anchor);
 		return query;
@@ -23,7 +23,7 @@ public class ESQueryFactory implements QueryFactory{
 
 	@Override
 	public Query generateFacetQuery(JSONObject queryTypeSpec, int facetIndex) {
-		Query query = new ESQuery();
+		Query query = new ESQuery(QueryType.FACET);
 		query.setName(queryTypeSpec.getString("name"));
 		query.addType(queryTypeSpec);
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));

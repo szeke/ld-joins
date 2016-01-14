@@ -14,8 +14,13 @@ import org.json.JSONObject;
 
 public class SPARQLQueryResult implements QueryResult {
 
-	CSVParser parser = null;
-	public SPARQLQueryResult(String responseBody) {
+	private CSVParser parser = null;
+	private long start;
+	private long stop;
+	
+	public SPARQLQueryResult(String responseBody, long start, long stop) {
+		this.start = start;
+		this.stop = stop;
 		try {
 			parser = CSVParser.parse(responseBody, CSVFormat.DEFAULT.withHeader());
 			
@@ -25,6 +30,10 @@ public class SPARQLQueryResult implements QueryResult {
 		}
 	}
 
+	public long getQueryTime()
+	{
+		return stop - start;
+	}
 	public JSONObject getFacetValue(JSONObject facetSpec, Random rand) {
 		
 		try

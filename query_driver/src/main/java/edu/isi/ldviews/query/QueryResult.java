@@ -9,4 +9,5 @@ public interface QueryResult {
 
 	JSONObject getFacetValue(JSONObject queryType, Random rand);
 	public JSONArray  getAnchorsFromResults(String field);
+	public long getQueryTime();
 }

@@ -39,12 +39,12 @@ public class ESQueryExecutor implements QueryExecutor {
 
 		return requestBuilder
 				.execute(new AsyncCompletionHandler<QueryResult>() {
-
+					long start = System.currentTimeMillis();
 					@Override
 					public QueryResult onCompleted(Response response)
 							throws Exception {
 						// Do something with the Response
-						return new ESQueryResult(response.getResponseBody());
+						return new ESQueryResult(response.getResponseBody(), start, System.currentTimeMillis());
 					}
 
 					@Override

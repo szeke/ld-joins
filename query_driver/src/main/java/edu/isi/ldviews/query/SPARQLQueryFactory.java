@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class SPARQLQueryFactory implements QueryFactory {
 
 	public Query generateQuery(JSONObject queryTypeSpec) {
-		Query query = new SPARQLQuery();
+		Query query = new SPARQLQuery(QueryType.SEARCH);
 		query.setName(queryTypeSpec.getString("name"));
 		query.addType(queryTypeSpec);
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));
@@ -17,7 +17,7 @@ public class SPARQLQueryFactory implements QueryFactory {
 	@Override
 	public Query generateAggregateQuery(JSONObject queryTypeSpec, JSONObject anchor) {
 
-		Query query = new SPARQLQuery();
+		Query query = new SPARQLQuery(QueryType.AGGREGATE);
 		query.setName(queryTypeSpec.getString("name"));
 		query.addAggregations(queryTypeSpec, anchor);
 		return query;
@@ -26,7 +26,7 @@ public class SPARQLQueryFactory implements QueryFactory {
 
 	@Override
 	public Query generateFacetQuery(JSONObject queryTypeSpec, int facetIndex) {
-		Query query = new SPARQLQuery();
+		Query query = new SPARQLQuery(QueryType.FACET);
 		query.setName(queryTypeSpec.getString("name"));
 		query.addType(queryTypeSpec);
 		query.addKeywords(queryTypeSpec.getJSONObject("query"));

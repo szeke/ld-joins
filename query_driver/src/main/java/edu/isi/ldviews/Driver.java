@@ -75,13 +75,18 @@ public class Driver {
 		JSONObject querySpec = new JSONObject(IOUtils.toString(new File(queryFile).toURI()));
 		QueryFactory queryFactory = QueryFactoryFactory.getQueryFactory(databasetype);
 		
-		int numberOfWorkers = 10;
-		ExecutorService executor = Executors.newFixedThreadPool(numberOfWorkers);
+		int numberOfWorkers = 100;
+		ExecutorService executor = Executors.newFixedThreadPool(100);
 		List<Future<String>> workerResults = new LinkedList<Future<String>>();
 		for(int i =0; i < numberOfWorkers; i++)
 		{
+			long workerSeed = rand.nextLong();
+			
+			{
 			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
-			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, rand.nextLong(), 0.3)));
+		
+			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3)));
+			}
 		
 		}
 		

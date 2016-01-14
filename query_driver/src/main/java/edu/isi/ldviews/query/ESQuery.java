@@ -12,6 +12,18 @@ public class ESQuery implements Query {
 	String name;
 	String routing = null;
 	Integer size = null;
+	
+	private QueryType queryType;
+	public ESQuery(QueryType queryType)
+	{
+		this.queryType = queryType;
+	}
+	
+	public QueryType getQueryType()
+	{
+		return queryType;
+	}
+	
 	public void setRouting(String routing)
 	{
 		this.routing = routing;

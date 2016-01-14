@@ -32,6 +32,17 @@ public class SPARQLQuery implements Query {
 	private String facet;
 	private String limit;
 	private SPARQLPathElement root = new SPARQLPathElement("x", true);
+	private QueryType queryType;
+	public SPARQLQuery(QueryType queryType)
+	{
+		this.queryType = queryType;
+	}
+	
+	public QueryType getQueryType()
+	{
+		return queryType;
+	}
+	
 	public void addType(JSONObject querySpec) {
 		type = querySpec.getString("type");
 		StringBuilder typeBuilder = new StringBuilder();

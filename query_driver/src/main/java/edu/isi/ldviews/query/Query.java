@@ -12,4 +12,5 @@ public interface Query {
 	void addFields(JSONArray queryFieldsSpec);
 	void addFacets(JSONArray queryFacetsSpec, int facetIndex);
 	void addAggregations(JSONObject queryAggregationsSpec, JSONObject anchor);
+	public QueryType getQueryType();
 }
