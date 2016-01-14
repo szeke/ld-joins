@@ -27,7 +27,7 @@ public class Worker implements Callable<WorkerResultSummary>{
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
 	private QueryExecutor queryExecutor;
-	private int maxQueryDepth = 2;
+	private int maxQueryDepth = 4;
 	private RandomDataGenerator rdg;
 	private double queryRate;
 	private int numberoftraces;
