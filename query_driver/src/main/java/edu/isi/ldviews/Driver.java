@@ -25,7 +25,9 @@ import edu.isi.ldviews.query.QueryExecutor;
 import edu.isi.ldviews.query.QueryExecutorFactory;
 import edu.isi.ldviews.query.QueryFactory;
 import edu.isi.ldviews.query.QueryFactoryFactory;
+import edu.isi.ldviews.query.RunResultSummary;
 import edu.isi.ldviews.query.Worker;
+import edu.isi.ldviews.query.WorkerResultSummary;
 
 public class Driver {
 
@@ -79,7 +81,7 @@ public class Driver {
 		QueryFactory queryFactory = QueryFactoryFactory.getQueryFactory(databasetype);
 		
 		ExecutorService executor = Executors.newFixedThreadPool(concurrentnumberofworkers);
-		List<Future<String>> workerResults = new LinkedList<Future<String>>();
+		List<Future<WorkerResultSummary>> workerResults = new LinkedList<Future<WorkerResultSummary>>();
 		for(int i =0; i < numberofworkers; i++)
 		{
 			long workerSeed = rand.nextLong();
@@ -92,10 +94,20 @@ public class Driver {
 		
 		}
 		
-		for(Future<String>workerResult : workerResults)
+		List<WorkerResultSummary> workerResultSummaries = new LinkedList<WorkerResultSummary>();
+		
+		for(Future<WorkerResultSummary>workerResult : workerResults)
 		{
-			workerResult.get(10, TimeUnit.MINUTES);
+			workerResultSummaries.add(workerResult.get(10, TimeUnit.MINUTES));
 		}
+		
+		for(WorkerResultSummary summary : workerResultSummaries)
+		{
+			System.out.println(summary.toJSONObject().toString());
+		}
+		RunResultSummary runResultSummary = new RunResultSummary(randomseed, workerResultSummaries);
+		
+		System.out.println(runResultSummary.toJSONObject().toString());
 		executor.shutdown();
 	}
 

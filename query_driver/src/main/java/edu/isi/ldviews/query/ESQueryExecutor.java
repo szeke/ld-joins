@@ -24,6 +24,7 @@ public class ESQueryExecutor implements QueryExecutor {
 	}
 
 	public Future<QueryResult> execute(Query query) {
+		final QueryType queryType = query.getQueryType();
 		String routing = query instanceof ESQuery ? ((ESQuery)query).getRouting() : null;
 		String queryURL = "http://" + host + ":" + port + "/" + index + "/"
 				+ query.getName().toLowerCase() + "/_search";
@@ -44,7 +45,7 @@ public class ESQueryExecutor implements QueryExecutor {
 					public QueryResult onCompleted(Response response)
 							throws Exception {
 						// Do something with the Response
-						return new ESQueryResult(response.getResponseBody(), start, System.currentTimeMillis());
+						return new ESQueryResult(response.getResponseBody(), start, System.currentTimeMillis(), queryType) ;
 					}
 
 					@Override

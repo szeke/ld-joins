@@ -15,14 +15,15 @@ import org.json.JSONObject;
 public class SPARQLQueryResult implements QueryResult {
 
 	private CSVParser parser = null;
+	private QueryType queryType;
 	private long start;
 	private long stop;
 	
-	public SPARQLQueryResult(String responseBody, long start, long stop) throws IOException{
+	public SPARQLQueryResult(String responseBody, long start, long stop,QueryType queryType) throws IOException{
 		this.start = start;
 		this.stop = stop;
 			parser = CSVParser.parse(responseBody, CSVFormat.DEFAULT.withHeader());
-		
+			this.queryType = queryType;
 	}
 
 	public long getQueryTime()
@@ -83,6 +84,11 @@ public class SPARQLQueryResult implements QueryResult {
 			anchorsByResults.put(resultWithValues);
 		}
 		return anchorsByResults;
+	}
+
+	@Override
+	public QueryResultStatistics getQueryResultStatistics() {
+		return new QueryResultStatistics(queryType, getQueryTime());
 	}
 
 }

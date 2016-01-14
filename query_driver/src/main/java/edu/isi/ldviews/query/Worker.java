@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Worker implements Callable<String>{
+public class Worker implements Callable<WorkerResultSummary>{
 
 	private static Logger LOG = LoggerFactory.getLogger(Worker.class);
 	private QueryFactory queryFactory;
@@ -49,9 +49,10 @@ public class Worker implements Callable<String>{
 		
 	}
 
-	public String call() throws Exception {
+	public WorkerResultSummary call() throws Exception {
 
 		LOG.info("Worker " + seed + " is starting");
+		List<QueryResultStatistics> queryResultStatistics = new LinkedList<QueryResultStatistics>();
 		for(int tracenumber = 0; tracenumber < numberoftraces; tracenumber++)
 		{
 		JSONObject querySpec =  new JSONObject(this.querySpec.toString());
@@ -90,6 +91,7 @@ public class Worker implements Callable<String>{
 			}
 				
 			QueryResult queryResult = queryResultFuture.get(100, TimeUnit.SECONDS);
+			queryResultStatistics.add(queryResult.getQueryResultStatistics());
 			List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
 		
 			JSONArray aggregationsSpec = queryType.getJSONObject("results").getJSONArray("aggregations");
@@ -112,11 +114,13 @@ public class Worker implements Callable<String>{
 			ArrayList<QueryResult> facetResults = new ArrayList<QueryResult>(facetResultFutures.size());
 			for(Future<QueryResult> facetResultFuture : facetResultFutures)
 			{
-				facetResults.add(facetResultFuture.get(100, TimeUnit.SECONDS));
+				QueryResult facetQueryResult = facetResultFuture.get(100, TimeUnit.SECONDS);
+				facetResults.add(facetQueryResult);
+				queryResultStatistics.add(facetQueryResult.getQueryResultStatistics());
 			}
 			for(Future<QueryResult> aggregationResultFuture : aggregationResultFutures)
 			{
-				aggregationResultFuture.get(100, TimeUnit.SECONDS);
+				queryResultStatistics.add(aggregationResultFuture.get(100, TimeUnit.SECONDS).getQueryResultStatistics());
 			}
 			JSONObject facetValue = getFacetValue(queryType, rand, facetResults);
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
@@ -131,7 +135,9 @@ public class Worker implements Callable<String>{
 		}
 		LOG.info("Worker "+seed+"is finishing");
 		queryExecutor.shutdown();
-		return null;
+		WorkerResultSummary workerResultSummary = new WorkerResultSummary(seed, queryResultStatistics);
+		
+		return workerResultSummary;
 		
 	}
 

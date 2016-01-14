@@ -33,7 +33,7 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 		requestBuilder.addFormParam("query", queryString);
 		requestBuilder.addHeader("Accept", "text/csv");
 		requestBuilder.setRequestTimeout(120000);
-		
+		final QueryType queryType = query.getQueryType();
 		return requestBuilder
 				.execute(new AsyncCompletionHandler<QueryResult>() {
 
@@ -43,15 +43,15 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 							throws Exception {
 						
 						LOG.trace(response.getResponseBody());
-						LOG.info(""+response.getStatusCode());
+						LOG.trace(""+response.getStatusCode());
 						if(response.getStatusCode() == 400)
 						{
 							LOG.error("This request failed : "+ queryString);
 						}
-						LOG.info(response.getStatusText());
+						LOG.trace(response.getStatusText());
 						try
 						{
-						QueryResult queryResult = new SPARQLQueryResult(response.getResponseBody(), timestamp, System.currentTimeMillis());
+						QueryResult queryResult = new SPARQLQueryResult(response.getResponseBody(), timestamp, System.currentTimeMillis(), queryType);
 						LOG.info(""+queryResult.getQueryTime());
 						return queryResult;
 						}

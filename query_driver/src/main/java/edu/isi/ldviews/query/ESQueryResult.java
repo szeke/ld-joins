@@ -13,13 +13,15 @@ public class ESQueryResult implements QueryResult {
 	private JSONObject json;
 	private long start;
 	private long stop;
+	private QueryType queryType;
 	
-	public ESQueryResult(String jsonResponse, long start, long stop)
+	public ESQueryResult(String jsonResponse, long start, long stop, QueryType queryType)
 	{
 		this.start = start;
 		this.stop = stop;
 		LOG.trace(jsonResponse);
 		this.json = new JSONObject(jsonResponse);
+		this.queryType = queryType;
 	}
 
 	public JSONObject getFacetValue(JSONObject facetSpec, Random rand) {
@@ -76,6 +78,10 @@ public class ESQueryResult implements QueryResult {
 		return anchorsByResult;
 	}
 
+	@Override
+	public QueryResultStatistics getQueryResultStatistics() {
+		return new QueryResultStatistics(queryType, getQueryTime());
+	}
 	public long getQueryTime()
 	{
 		return stop - start;
