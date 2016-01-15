@@ -1,9 +1,11 @@
 package edu.isi.ldviews.query;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
@@ -18,38 +20,21 @@ public class WorkerResultSummary {
 	
 	public WorkerResultSummary(long seed, List<QueryResultStatistics> queryResultStatistics) {
 		this.seed = seed;
-		// this would be so much cleaner in scala!!!!
-		List<QueryResultStatistics> searchstats = new LinkedList<QueryResultStatistics>();
-		List<QueryResultStatistics>  facetstats = new LinkedList<QueryResultStatistics>();
-		List<QueryResultStatistics>  aggstats = new LinkedList<QueryResultStatistics>();
-		List<QueryResultStatistics>  combinedstats = new LinkedList<QueryResultStatistics>();
+		Map<QueryType, List<QueryResultStatistics>> queryTypeToStatistics = new HashMap<QueryType, List<QueryResultStatistics>>();
+		
+		for(QueryType queryType : Arrays.asList(QueryType.values()))
+		{
+			queryTypeToStatistics.put(queryType,  new LinkedList<QueryResultStatistics>());
+		}
 		for(QueryResultStatistics statistics : queryResultStatistics)
 		{
-			if(statistics.queryType == QueryType.SEARCH)
-			{
-				searchstats.add(statistics);
-			}
-			else if(statistics.queryType == QueryType.AGGREGATE)
-			{
-				aggstats.add(statistics);
-			}
-			else if(statistics.queryType == QueryType.FACET)
-			{
-				facetstats.add(statistics);
-			}
-			else if(statistics.queryType == QueryType.COMBINED)
-			{
-				combinedstats.add(statistics);
-			}
+			queryTypeToStatistics.get(statistics.queryType).add(statistics);	
+			
 		}
-		WorkerQueryTypeResultSummary aggsummary = new WorkerQueryTypeResultSummary(QueryType.AGGREGATE, aggstats);
-		WorkerQueryTypeResultSummary facetsummary = new WorkerQueryTypeResultSummary(QueryType.FACET, facetstats);
-		WorkerQueryTypeResultSummary searchsummary = new WorkerQueryTypeResultSummary(QueryType.SEARCH, searchstats);
-		WorkerQueryTypeResultSummary combinedsummary = new WorkerQueryTypeResultSummary(QueryType.COMBINED, combinedstats);
-		summaries.put(QueryType.AGGREGATE, aggsummary);
-		summaries.put(QueryType.FACET, facetsummary);
-		summaries.put(QueryType.SEARCH, searchsummary);
-		summaries.put(QueryType.COMBINED, combinedsummary);
+		for(Entry<QueryType, List<QueryResultStatistics>> entry : queryTypeToStatistics.entrySet())
+		{
+			summaries.put(entry.getKey(), new WorkerQueryTypeResultSummary(entry.getKey(), entry.getValue()));
+		}
 		
 	}
 

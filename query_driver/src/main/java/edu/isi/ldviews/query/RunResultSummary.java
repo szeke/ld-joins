@@ -1,9 +1,11 @@
 package edu.isi.ldviews.query;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
@@ -18,28 +20,27 @@ public RunQueryTypeResultSummary getSummaryByType(QueryType queryType)
 	public RunResultSummary(long seed, List<WorkerResultSummary> workerResultSummaries) {
 		
 		this.seed = seed;
-		// this would be so much cleaner in scala!!!!
-		List<WorkerQueryTypeResultSummary> searchstats = new LinkedList<WorkerQueryTypeResultSummary>();
-		List<WorkerQueryTypeResultSummary>  facetstats = new LinkedList<WorkerQueryTypeResultSummary>();
-		List<WorkerQueryTypeResultSummary>  aggstats = new LinkedList<WorkerQueryTypeResultSummary>();
-		List<WorkerQueryTypeResultSummary>  combinedstats = new LinkedList<WorkerQueryTypeResultSummary>();
-		for(WorkerResultSummary workerResultSummary : workerResultSummaries)
+		
+		Map<QueryType, List<WorkerQueryTypeResultSummary>> queryTypeToSummary = new HashMap<QueryType, List<WorkerQueryTypeResultSummary>>();
+		
+		List<QueryType> queryTypes =  Arrays.asList(QueryType.values());
+		for(QueryType queryType : queryTypes)
 		{
-			aggstats.add(workerResultSummary.getSummaryByType(QueryType.AGGREGATE));
-			facetstats.add(workerResultSummary.getSummaryByType(QueryType.FACET));
-			searchstats.add(workerResultSummary.getSummaryByType(QueryType.SEARCH));
-			combinedstats.add(workerResultSummary.getSummaryByType(QueryType.COMBINED));
+			queryTypeToSummary.put(queryType,  new LinkedList<WorkerQueryTypeResultSummary>());
 		}
-		RunQueryTypeResultSummary aggsummary = new RunQueryTypeResultSummary(QueryType.AGGREGATE, aggstats);
-		RunQueryTypeResultSummary facetsummary = new RunQueryTypeResultSummary(QueryType.FACET, facetstats);
-		RunQueryTypeResultSummary searchsummary = new RunQueryTypeResultSummary(QueryType.SEARCH, searchstats);
-		RunQueryTypeResultSummary combinedsummary = new RunQueryTypeResultSummary(QueryType.COMBINED, combinedstats);
-		summaries.put(QueryType.AGGREGATE, aggsummary);
-		summaries.put(QueryType.FACET, facetsummary);
-		summaries.put(QueryType.SEARCH, searchsummary);
-		summaries.put(QueryType.COMBINED, combinedsummary);
+		for(WorkerResultSummary summary : workerResultSummaries)
+		{
+			for(QueryType queryType : queryTypes)
+			{
+				queryTypeToSummary.get(queryType).add(summary.getSummaryByType(queryType));
+			}
+			
+		}
 		
-		
+		for(Entry<QueryType, List<WorkerQueryTypeResultSummary>> entry : queryTypeToSummary.entrySet())
+		{
+			summaries.put(entry.getKey(), new RunQueryTypeResultSummary(entry.getKey(), entry.getValue()));
+		}
 		
 	}
 

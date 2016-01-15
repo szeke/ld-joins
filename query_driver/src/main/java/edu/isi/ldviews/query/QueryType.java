@@ -4,5 +4,6 @@ public enum QueryType {
 	SEARCH,
 	FACET,
 	AGGREGATE,
-	COMBINED
+	COMBINED,
+	USERDELAY
 }

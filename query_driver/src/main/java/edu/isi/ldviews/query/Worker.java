@@ -80,7 +80,7 @@ public class Worker implements Callable<WorkerResultSummary>{
 			double waitTime = rdg.nextExponential(1.0/ queryRate);
 			Thread.sleep((long) (waitTime *1000));
 			Future<QueryResult> queryResultFuture = queryExecutor.execute(query);
-			
+			queryResultStatistics.add(new QueryResultStatistics(QueryType.USERDELAY, (long)(waitTime *1000)));
 			
 			
 			JSONArray facetsSpec = queryType.getJSONArray("facets");
