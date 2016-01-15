@@ -27,7 +27,7 @@ public class Worker implements Callable<WorkerResultSummary>{
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
 	private QueryExecutor queryExecutor;
-	private int maxQueryDepth = 4;
+	private int maxQueryDepth = 3;
 	private RandomDataGenerator rdg;
 	private double queryRate;
 	private int numberoftraces;
@@ -55,6 +55,7 @@ public class Worker implements Callable<WorkerResultSummary>{
 		List<QueryResultStatistics> queryResultStatistics = new LinkedList<QueryResultStatistics>();
 		for(int tracenumber = 0; tracenumber < numberoftraces; tracenumber++)
 		{
+			long traceStart = System.currentTimeMillis();
 		JSONObject querySpec =  new JSONObject(this.querySpec.toString());
 		Set<String> selectedKeywords = new HashSet<String>();
 		while(selectedKeywords.size() < keywordCount && selectedKeywords.size() <= keywords.count())
@@ -123,9 +124,15 @@ public class Worker implements Callable<WorkerResultSummary>{
 				queryResultStatistics.add(aggregationResultFuture.get(100, TimeUnit.SECONDS).getQueryResultStatistics());
 			}
 			JSONObject facetValue = getFacetValue(queryType, rand, facetResults);
+			if(facetValue == null)
+			{
+				break;
+			}
 			query = queryFactory.generateQuery(applyFilter(queryType, facetValue));
 			queryDepth++;
 		}while(queryDepth < maxQueryDepth && rand.nextDouble() < probabilitySearchSatisfied);
+		  QueryResultStatistics qrs = new QueryResultStatistics(QueryType.COMBINED, System.currentTimeMillis() - traceStart);
+		  queryResultStatistics.add(qrs);
 		}
 		catch(Exception e)
 		{
@@ -173,34 +180,63 @@ public class Worker implements Callable<WorkerResultSummary>{
 	
 	public JSONObject getFacetValue(JSONObject queryTypeSpec, Random rand, ArrayList<QueryResult> facetQueryResults) {
 		Set<Integer> facetsEvaluated = new HashSet<Integer>();
-		
+		int emptyFacetResults = 0;
 		JSONArray facetsSpec = queryTypeSpec.getJSONArray("facets");
 		boolean found = false;
 		JSONObject facetSpec = null;
+		JSONArray userfilters = null;
+		if(queryTypeSpec.has("userfilter"))
+		{
+			userfilters = queryTypeSpec.getJSONArray("userfilter");
+		}
 		while(facetsEvaluated.size() < facetsSpec.length() && !found)
 		{
 			Integer facetIndexToEvaluate = rand.nextInt(facetsSpec.length());
 			//System.out.println("random " + facetIndexToEvaluate);
-			if(!facetsEvaluated.add(facetIndexToEvaluate))
+			facetSpec = facetsSpec.getJSONObject(facetIndexToEvaluate);
+			
+			if(!facetsEvaluated.add(facetIndexToEvaluate) || userfilteralreadychosen(userfilters, facetSpec))
 			{
 				continue;
 			}
 		
-			facetSpec = facetsSpec.getJSONObject(facetIndexToEvaluate);
 			QueryResult facetQueryResult = facetQueryResults.get(facetIndexToEvaluate);
 			JSONObject facetValue = facetQueryResult.getFacetValue(facetSpec, rand);
 			if(facetValue == null)
 			{
+				emptyFacetResults++;
 				continue;
 			}
 			
 
 			found = true;
-			//System.out.println("User selected: " + facetValue);
+			
 			return facetValue;
 		}
-			return new JSONObject();
+		LOG.trace("Worker " + seed + " was unable to select a facet from " + facetsSpec);
+		LOG.trace("Worker " + seed + " had " + emptyFacetResults + " empty facets");
+		
+			return null;
 		
 		
+	}
+
+	private boolean userfilteralreadychosen(JSONArray userfilters,
+			JSONObject facetSpec) {
+		if(userfilters == null)
+		{
+			return false;
+		}
+		String facetspecname = facetSpec.getString("name");
+		for(int i = 0; i < userfilters.length(); i++)
+		{
+			JSONObject userfilter = userfilters.getJSONObject(i);
+			if(facetspecname.compareTo(userfilter.getString("name"))== 0)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

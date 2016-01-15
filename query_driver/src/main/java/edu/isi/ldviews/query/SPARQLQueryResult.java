@@ -41,13 +41,13 @@ public class SPARQLQueryResult implements QueryResult {
 			}
 			if(records.size() == 1 && records.get(0).get(0).isEmpty())
 			{
-				System.out.println("skipping !");
 				return null;
 			}
 			int randomIndex = rand.nextInt(records.size());
 		CSVRecord record =records.get(randomIndex);
 		
 		String result = record.get("category");
+		Integer count = Integer.parseInt(record.get("count"));
 		JSONObject facetToFilterOn = new JSONObject();
 		facetToFilterOn.put("path", facetSpec.getString("path"));
 		facetToFilterOn.put("term", result);

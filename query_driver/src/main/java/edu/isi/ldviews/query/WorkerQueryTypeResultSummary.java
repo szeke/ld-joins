@@ -8,7 +8,7 @@ public class WorkerQueryTypeResultSummary {
 
 	QueryType queryType;
 	double min = Double.MAX_VALUE;
-	double max = Double.MIN_VALUE;
+	double max = 0.0;
 	double avg = 0.0;
 	int count = 0;
 	
@@ -23,7 +23,14 @@ public class WorkerQueryTypeResultSummary {
 			avg += result.getQueryTime();
 			
 		}
-		avg = avg / (double)count;
+		if(count != 0)
+		{
+			avg = avg / (double)count;
+		}
+		else
+		{
+			min = 0.0;
+		}
 	}
 
 	public QueryType getQueryType() {

@@ -22,7 +22,15 @@ public class RunQueryTypeResultSummary {
 			avg += result.getAvg()* result.getCount();
 			count += result.getCount();
 		}
-		avg = avg / (double)count;
+
+		if(count != 0)
+		{
+			avg = avg / (double)count;
+		}
+		else
+		{
+			min = 0.0;
+		}
 	}
 
 	public QueryType getQueryType() {

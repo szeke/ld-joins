@@ -22,19 +22,22 @@ public RunQueryTypeResultSummary getSummaryByType(QueryType queryType)
 		List<WorkerQueryTypeResultSummary> searchstats = new LinkedList<WorkerQueryTypeResultSummary>();
 		List<WorkerQueryTypeResultSummary>  facetstats = new LinkedList<WorkerQueryTypeResultSummary>();
 		List<WorkerQueryTypeResultSummary>  aggstats = new LinkedList<WorkerQueryTypeResultSummary>();
+		List<WorkerQueryTypeResultSummary>  combinedstats = new LinkedList<WorkerQueryTypeResultSummary>();
 		for(WorkerResultSummary workerResultSummary : workerResultSummaries)
 		{
 			aggstats.add(workerResultSummary.getSummaryByType(QueryType.AGGREGATE));
 			facetstats.add(workerResultSummary.getSummaryByType(QueryType.FACET));
 			searchstats.add(workerResultSummary.getSummaryByType(QueryType.SEARCH));
+			combinedstats.add(workerResultSummary.getSummaryByType(QueryType.COMBINED));
 		}
 		RunQueryTypeResultSummary aggsummary = new RunQueryTypeResultSummary(QueryType.AGGREGATE, aggstats);
 		RunQueryTypeResultSummary facetsummary = new RunQueryTypeResultSummary(QueryType.FACET, facetstats);
 		RunQueryTypeResultSummary searchsummary = new RunQueryTypeResultSummary(QueryType.SEARCH, searchstats);
-		
+		RunQueryTypeResultSummary combinedsummary = new RunQueryTypeResultSummary(QueryType.COMBINED, combinedstats);
 		summaries.put(QueryType.AGGREGATE, aggsummary);
 		summaries.put(QueryType.FACET, facetsummary);
 		summaries.put(QueryType.SEARCH, searchsummary);
+		summaries.put(QueryType.COMBINED, combinedsummary);
 		
 		
 		

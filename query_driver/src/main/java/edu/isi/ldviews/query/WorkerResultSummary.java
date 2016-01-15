@@ -22,6 +22,7 @@ public class WorkerResultSummary {
 		List<QueryResultStatistics> searchstats = new LinkedList<QueryResultStatistics>();
 		List<QueryResultStatistics>  facetstats = new LinkedList<QueryResultStatistics>();
 		List<QueryResultStatistics>  aggstats = new LinkedList<QueryResultStatistics>();
+		List<QueryResultStatistics>  combinedstats = new LinkedList<QueryResultStatistics>();
 		for(QueryResultStatistics statistics : queryResultStatistics)
 		{
 			if(statistics.queryType == QueryType.SEARCH)
@@ -36,16 +37,19 @@ public class WorkerResultSummary {
 			{
 				facetstats.add(statistics);
 			}
+			else if(statistics.queryType == QueryType.COMBINED)
+			{
+				combinedstats.add(statistics);
+			}
 		}
 		WorkerQueryTypeResultSummary aggsummary = new WorkerQueryTypeResultSummary(QueryType.AGGREGATE, aggstats);
 		WorkerQueryTypeResultSummary facetsummary = new WorkerQueryTypeResultSummary(QueryType.FACET, facetstats);
 		WorkerQueryTypeResultSummary searchsummary = new WorkerQueryTypeResultSummary(QueryType.SEARCH, searchstats);
-		
+		WorkerQueryTypeResultSummary combinedsummary = new WorkerQueryTypeResultSummary(QueryType.COMBINED, combinedstats);
 		summaries.put(QueryType.AGGREGATE, aggsummary);
 		summaries.put(QueryType.FACET, facetsummary);
 		summaries.put(QueryType.SEARCH, searchsummary);
-		
-		
+		summaries.put(QueryType.COMBINED, combinedsummary);
 		
 	}
 

@@ -13,6 +13,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.math3.random.RandomDataGenerator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class Driver {
 	private int numberofworkers;
 	private int concurrentnumberofworkers;
 	private int numberoftraces;
+	private double arrivalrate;
 	
 	public Driver(CommandLine cl)
 	{
@@ -80,10 +82,16 @@ public class Driver {
 		JSONObject querySpec = new JSONObject(IOUtils.toString(new File(queryFile).toURI()));
 		QueryFactory queryFactory = QueryFactoryFactory.getQueryFactory(databasetype);
 		
+		RandomDataGenerator rdg = new RandomDataGenerator();
+		rdg.reSeed(randomseed);
+		
 		ExecutorService executor = Executors.newFixedThreadPool(concurrentnumberofworkers);
 		List<Future<WorkerResultSummary>> workerResults = new LinkedList<Future<WorkerResultSummary>>();
 		for(int i =0; i < numberofworkers; i++)
 		{
+			double waitTime = rdg.nextExponential(1.0/ arrivalrate);
+			Thread.sleep((long) (waitTime *1000));
+			
 			long workerSeed = rand.nextLong();
 			
 			{
@@ -134,6 +142,7 @@ public class Driver {
 		this.numberofworkers = Integer.parseInt((String) cl.getOptionValue("numworkers","1"));
 		this.concurrentnumberofworkers = Integer.parseInt((String) cl.getOptionValue("concurrentnumworkers","1"));
 		this.numberoftraces = Integer.parseInt((String) cl.getOptionValue("numberoftraces","1"));
+		this.arrivalrate = Double.parseDouble((String) cl.getOptionValue("arrivalrate", "0.3"));
 	}
 
 	private static Options createCommandLineOptions() {
@@ -150,6 +159,7 @@ public class Driver {
 		options.addOption(new Option("numworkers", "numworkers", true, "number of workers to execute queries"));
 		options.addOption(new Option("concurrentnumworkers", "concurrentnumworkers", true, "number of workers able to execute concurrently"));
 		options.addOption(new Option("numberoftraces", "numberoftraces", true, "number of query traces each worker should execute"));
+		options.addOption(new Option("arrivalrate", "arrivalrate", true, "worker arrival rate"));
 		options.addOption(new Option("help", "help", false, "print this message"));
 		return options;
 	}
