@@ -8,7 +8,7 @@ public class RunQueryTypeResultSummary {
 
 	QueryType queryType;
 	double min = Double.MAX_VALUE;
-	double max = Double.MIN_VALUE;
+	double max = 0.0;
 	double avg = 0.0;
 	int count = 0;
 	

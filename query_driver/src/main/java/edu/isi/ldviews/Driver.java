@@ -87,6 +87,8 @@ public class Driver {
 		
 		ExecutorService executor = Executors.newFixedThreadPool(concurrentnumberofworkers);
 		List<Future<WorkerResultSummary>> workerResults = new LinkedList<Future<WorkerResultSummary>>();
+		List<WorkerResultSummary> workerResultSummaries = new LinkedList<WorkerResultSummary>();
+		List<Worker> workers = new LinkedList<Worker>();
 		for(int i =0; i < numberofworkers; i++)
 		{
 			double waitTime = rdg.nextExponential(1.0/ arrivalrate);
@@ -97,16 +99,57 @@ public class Driver {
 			{
 			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
 		
-			workerResults.add(executor.submit(new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3, numberoftraces)));
+			Worker worker = new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3, numberoftraces);
+			workers.add(worker);
+			workerResults.add(executor.submit(worker));
 			}
-		
+			boolean ready = true;
+			while(workerResults.size() > 0 && ready)
+			{
+				if(workerResults.get(0).isDone())
+				{
+					Future<WorkerResultSummary> summaryFuture = workerResults.remove(0);
+					Worker worker = workers.remove(0);
+					try{
+						WorkerResultSummary summary = summaryFuture.get();
+						if(null != summary.getException())
+						{
+							while(!workerResults.isEmpty())
+							{
+								workerResults.remove(0).cancel(true);
+							}
+							while(!workers.isEmpty())
+							{
+								workerResultSummaries.add(workers.remove(0).getSummary());
+							}
+							
+							i = numberofworkers;
+						}
+						else
+						{
+							workerResultSummaries.add(summary);
+						}
+					}
+					catch (Exception e)
+					{
+						logger.error("Unable to complete worker", e);
+					}
+						
+				}
+				else
+				{
+					ready = false;
+				}
+			}
 		}
 		
-		List<WorkerResultSummary> workerResultSummaries = new LinkedList<WorkerResultSummary>();
+		
 		
 		for(Future<WorkerResultSummary>workerResult : workerResults)
 		{
-			workerResultSummaries.add(workerResult.get(10, TimeUnit.MINUTES));
+			WorkerResultSummary summary = workerResult.get(10, TimeUnit.MINUTES);
+			workerResultSummaries.add(summary);
+			
 		}
 		
 		for(WorkerResultSummary summary : workerResultSummaries)

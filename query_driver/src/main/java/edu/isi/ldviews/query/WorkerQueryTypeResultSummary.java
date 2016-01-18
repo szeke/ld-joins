@@ -10,29 +10,32 @@ public class WorkerQueryTypeResultSummary {
 	double min = Double.MAX_VALUE;
 	double max = 0.0;
 	double avg = 0.0;
+	double sum = 0.0;
 	int count = 0;
 	
+	WorkerQueryTypeResultSummary(QueryType queryType)
+	{
+		this.queryType = queryType;
+		
+	}
 	WorkerQueryTypeResultSummary(QueryType queryType, List<QueryResultStatistics> results)
 	{
 		this.queryType = queryType;
-		count = results.size();
 		for(QueryResultStatistics result : results )
 		{
-			max = Math.max(max, result.getQueryTime());
-			min = Math.min(min, result.getQueryTime());
-			avg += result.getQueryTime();
+			addStatistics(result);
 			
-		}
-		if(count != 0)
-		{
-			avg = avg / (double)count;
-		}
-		else
-		{
-			min = 0.0;
 		}
 	}
 
+	
+	public void addStatistics(QueryResultStatistics statistics)
+	{
+		count++;
+		max = Math.max(max, statistics.getQueryTime());
+		min = Math.min(min, statistics.getQueryTime());
+		sum += statistics.getQueryTime();
+	}
 	public QueryType getQueryType() {
 		return queryType;
 	}
@@ -42,6 +45,10 @@ public class WorkerQueryTypeResultSummary {
 	}
 
 	public double getMin() {
+		if(count == 0)
+		{
+			return 0;
+		}
 		return min;
 	}
 
@@ -58,7 +65,11 @@ public class WorkerQueryTypeResultSummary {
 	}
 
 	public double getAvg() {
-		return avg;
+		if(count != 0)
+		{
+			return sum / (double)count;
+		}
+		return 0.0;
 	}
 
 	public void setAvg(double avg) {

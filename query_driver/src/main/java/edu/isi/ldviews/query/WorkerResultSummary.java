@@ -13,37 +13,42 @@ public class WorkerResultSummary {
 
 	Map<QueryType, WorkerQueryTypeResultSummary> summaries= new HashMap<QueryType, WorkerQueryTypeResultSummary>();
 	private long seed;
+	private Exception e = null;
+	
+	public WorkerResultSummary(long seed) {
+		this.seed = seed;
+		initializeSummaries();
+		
+	}
+
+	public void initializeSummaries()
+	{
+		for(QueryType queryType : Arrays.asList(QueryType.values()))
+		{
+			summaries.put(queryType, new WorkerQueryTypeResultSummary(queryType));
+		}
+	}
+	
+	public void addStatistic(QueryResultStatistics statistics)
+	{
+		summaries.get(statistics.queryType).addStatistics(statistics);
+	}
+	
+	
+	
 	public WorkerQueryTypeResultSummary getSummaryByType(QueryType queryType)
 	{
 		return summaries.get(queryType);
 	}
 	
-	public WorkerResultSummary(long seed, List<QueryResultStatistics> queryResultStatistics) {
-		this.seed = seed;
-		Map<QueryType, List<QueryResultStatistics>> queryTypeToStatistics = new HashMap<QueryType, List<QueryResultStatistics>>();
-		
-		for(QueryType queryType : Arrays.asList(QueryType.values()))
-		{
-			queryTypeToStatistics.put(queryType,  new LinkedList<QueryResultStatistics>());
-		}
-		for(QueryResultStatistics statistics : queryResultStatistics)
-		{
-			queryTypeToStatistics.get(statistics.queryType).add(statistics);	
-			
-		}
-		for(Entry<QueryType, List<QueryResultStatistics>> entry : queryTypeToStatistics.entrySet())
-		{
-			summaries.put(entry.getKey(), new WorkerQueryTypeResultSummary(entry.getKey(), entry.getValue()));
-		}
-		
-	}
-
-
-	public void addSummary(QueryType queryType, WorkerQueryTypeResultSummary summary)
+	public void setException(Exception e)
 	{
-		this.summaries.put(queryType, summary);
+		this.e = e;
 	}
-	
+	public Exception getException()
+	{
+		return e;
+	}
 	public JSONObject toJSONObject()
 	{
 		JSONObject obj = new JSONObject();
