@@ -90,8 +90,9 @@ public class WorkerQueryTypeResultSummary {
 		obj.put("type", queryType.toString());
 		obj.put("min", min);
 		obj.put("max", max);
-		obj.put("avg", avg);
+		obj.put("avg", getAvg());
 		obj.put("count", count);
+		obj.put("sum", sum);
 		return obj;
 	}
 	

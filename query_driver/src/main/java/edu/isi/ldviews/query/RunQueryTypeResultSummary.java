@@ -11,6 +11,7 @@ public class RunQueryTypeResultSummary {
 	double max = 0.0;
 	double avg = 0.0;
 	int count = 0;
+	double sum = 0.0;
 	
 	RunQueryTypeResultSummary(QueryType queryType, List<WorkerQueryTypeResultSummary> results)
 	{
@@ -19,18 +20,10 @@ public class RunQueryTypeResultSummary {
 		{
 			max = Math.max(max, result.getMax());
 			min = Math.min(min, result.getMin());
-			avg += result.getAvg()* result.getCount();
+			sum += result.getAvg()* result.getCount();
 			count += result.getCount();
 		}
 
-		if(count != 0)
-		{
-			avg = avg / (double)count;
-		}
-		else
-		{
-			min = 0.0;
-		}
 	}
 
 	public QueryType getQueryType() {
@@ -58,7 +51,15 @@ public class RunQueryTypeResultSummary {
 	}
 
 	public double getAvg() {
-		return avg;
+
+		if(count != 0)
+		{
+			return sum / (double)count;
+		}
+		else
+		{
+			return 0.0;
+		}
 	}
 
 	public void setAvg(double avg) {
@@ -80,8 +81,9 @@ public class RunQueryTypeResultSummary {
 		obj.put("type", queryType.toString());
 		obj.put("min", min);
 		obj.put("max", max);
-		obj.put("avg", avg);
+		obj.put("avg", getAvg());
 		obj.put("count", count);
+		obj.put("sum", sum);
 		return obj;
 	}
 }
