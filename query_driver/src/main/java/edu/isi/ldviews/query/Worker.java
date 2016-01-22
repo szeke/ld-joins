@@ -79,16 +79,22 @@ public class Worker implements Callable<WorkerResultSummary> {
 
 				Query query = queryFactory.generateQuery(queryType);
 				int queryDepth = 0;
+				double totalWaitTime = 0.0;
 				try {
 					do {
+						if(queryDepth > 0)
+						{	
 						 double waitTime = rdg.nextExponential(1.0/queryRate);
+						 totalWaitTime += waitTime * 1000;
 						//double waitTime = 0;
 						Thread.sleep((long) (waitTime * 1000));
-						Future<QueryResult> queryResultFuture = queryExecutor
-								.execute(query);
 						workerResultSummary.addStatistic(new QueryResultStatistics(
 								QueryType.USERDELAY, (long) (waitTime * 1000)));
-
+						
+						}
+						Future<QueryResult> queryResultFuture = queryExecutor
+								.execute(query);
+						
 						JSONArray facetsSpec = queryType.getJSONArray("facets");
 						List<Future<QueryResult>> facetResultFutures = new LinkedList<Future<QueryResult>>();
 						for (int j = 0; j < facetsSpec.length(); j++) {
@@ -150,10 +156,14 @@ public class Worker implements Callable<WorkerResultSummary> {
 						queryDepth++;
 					} while (queryDepth < maxQueryDepth
 							&& rand.nextDouble() < probabilitySearchSatisfied);
-					QueryResultStatistics qrs = new QueryResultStatistics(
+					QueryResultStatistics combinedQRS = new QueryResultStatistics(
 							QueryType.COMBINED, System.currentTimeMillis()
 									- traceStart);
-					workerResultSummary.addStatistic(qrs);
+					workerResultSummary.addStatistic(combinedQRS);
+					QueryResultStatistics combinedNoUserDelayQRS = new QueryResultStatistics(
+							QueryType.COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
+									- traceStart) - totalWaitTime));
+					workerResultSummary.addStatistic(combinedNoUserDelayQRS);
 				} catch (Exception e) {
 					LOG.error(
 							"Worker " + seed + " unable to complete queries.",
