@@ -157,8 +157,13 @@ public class Driver {
 			System.out.println(summary.toJSONObject().toString());
 		}
 		RunResultSummary runResultSummary = new RunResultSummary(randomseed, workerResultSummaries);
-		
+		runResultSummary.setArrivalRate(arrivalrate);
+		runResultSummary.setDatabaseType(databasetype);
+		runResultSummary.setMaxConcurrency(concurrentnumberofworkers);
+		runResultSummary.setNumWorkers(numberofworkers);
+		runResultSummary.setNumTraces(numberoftraces);
 		System.out.println(runResultSummary.toJSONObject().toString());
+		System.out.println(runResultSummary.toCSV());
 		executor.shutdown();
 	}
 

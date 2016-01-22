@@ -12,7 +12,15 @@ public class RunQueryTypeResultSummary {
 	double avg = 0.0;
 	int count = 0;
 	double sum = 0.0;
-	
+	RunQueryTypeResultSummary(JSONObject object)
+	{
+		this.queryType = QueryType.valueOf(object.getString("type"));
+		this.min = object.getDouble("min");
+		this.max = object.getDouble("max");
+		this.avg = object.getDouble("avg");
+		this.count = object.getInt("count");
+		this.sum = object.getDouble("sum");
+	}
 	RunQueryTypeResultSummary(QueryType queryType, List<WorkerQueryTypeResultSummary> results)
 	{
 		this.queryType = queryType;
@@ -74,7 +82,6 @@ public class RunQueryTypeResultSummary {
 		this.count = count;
 	}
 	
-	
 	public JSONObject toJSONObject()
 	{
 		JSONObject obj = new JSONObject();
@@ -85,5 +92,21 @@ public class RunQueryTypeResultSummary {
 		obj.put("count", count);
 		obj.put("sum", sum);
 		return obj;
+	}
+
+	public void toCSV(StringBuilder sb) {
+		sb.append(",");
+		sb.append(queryType.toString());
+		sb.append(",");
+		sb.append(getAvg());
+		sb.append(",");
+		sb.append(min);
+		sb.append(",");
+		sb.append(max);
+		sb.append(",");
+		sb.append(count);
+		sb.append(",");
+		sb.append(sum);
+		
 	}
 }
