@@ -27,8 +27,10 @@ import edu.isi.ldviews.query.QueryExecutorFactory;
 import edu.isi.ldviews.query.QueryFactory;
 import edu.isi.ldviews.query.QueryFactoryFactory;
 import edu.isi.ldviews.query.RunResultSummary;
+import edu.isi.ldviews.query.RunTimestampedStatisticsSummary;
 import edu.isi.ldviews.query.Worker;
 import edu.isi.ldviews.query.WorkerResultSummary;
+import edu.isi.ldviews.query.WorkerTimestampedStatisticsSummary;
 
 public class Driver {
 
@@ -88,6 +90,7 @@ public class Driver {
 		ExecutorService executor = Executors.newFixedThreadPool(concurrentnumberofworkers);
 		List<Future<WorkerResultSummary>> workerResults = new LinkedList<Future<WorkerResultSummary>>();
 		List<WorkerResultSummary> workerResultSummaries = new LinkedList<WorkerResultSummary>();
+		List<WorkerTimestampedStatisticsSummary> workerTimestampedStatisticsSummaries = new LinkedList<WorkerTimestampedStatisticsSummary>();
 		List<Worker> workers = new LinkedList<Worker>();
 		for(int i =0; i < numberofworkers; i++)
 		{
@@ -120,7 +123,9 @@ public class Driver {
 							}
 							while(!workers.isEmpty())
 							{
-								workerResultSummaries.add(workers.remove(0).getSummary());
+								Worker cancelledWorker = workers.remove(0);
+								workerResultSummaries.add(cancelledWorker.getSummary());
+								workerTimestampedStatisticsSummaries.add(cancelledWorker.getTimestampedStatisticsSummary());
 							}
 							
 							i = numberofworkers;
@@ -128,6 +133,7 @@ public class Driver {
 						else
 						{
 							workerResultSummaries.add(summary);
+							workerTimestampedStatisticsSummaries.add(worker.getTimestampedStatisticsSummary());
 						}
 					}
 					catch (Exception e)
@@ -149,6 +155,7 @@ public class Driver {
 		{
 			WorkerResultSummary summary = workerResult.get(10, TimeUnit.MINUTES);
 			workerResultSummaries.add(summary);
+			workerTimestampedStatisticsSummaries.add(workers.remove(0).getTimestampedStatisticsSummary());
 			
 		}
 		
@@ -164,6 +171,14 @@ public class Driver {
 		runResultSummary.setNumTraces(numberoftraces);
 		System.out.println(runResultSummary.toJSONObject().toString());
 		System.out.println(runResultSummary.toCSV());
+		
+		RunTimestampedStatisticsSummary runTimestampedStatisticsSummary = new RunTimestampedStatisticsSummary(randomseed, workerTimestampedStatisticsSummaries);
+		runTimestampedStatisticsSummary.setArrivalRate(arrivalrate);
+		runTimestampedStatisticsSummary.setDatabaseType(databasetype);
+		runTimestampedStatisticsSummary.setMaxConcurrency(concurrentnumberofworkers);
+		runTimestampedStatisticsSummary.setNumWorkers(numberofworkers);
+		runTimestampedStatisticsSummary.setNumTraces(numberoftraces);
+		System.out.println(runTimestampedStatisticsSummary.toCSV());
 		executor.shutdown();
 	}
 

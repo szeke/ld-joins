@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.json.JSONArray;
@@ -34,7 +35,10 @@ public class Worker implements Callable<WorkerResultSummary> {
 	//private List<QueryResultStatistics> queryResultStatistics = new LinkedList<QueryResultStatistics>();
 	private Exception queryException = null;
 	private WorkerResultSummary workerResultSummary  = new WorkerResultSummary(seed);
-
+	private static AtomicInteger concurrentWorkers = new AtomicInteger(0);
+	private static AtomicInteger queuedWorkers = new AtomicInteger(0);
+	private WorkerTimestampedStatisticsSummary workerTimestampedStatisticsSummary = new WorkerTimestampedStatisticsSummary(seed);
+	private TimestampedStatistic queuedStatistic;
 	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory,
 			JSONObject querySpec, Keywords keywords, long seed,
 			double queryRate, int numberoftraces) {
@@ -50,14 +54,24 @@ public class Worker implements Callable<WorkerResultSummary> {
 		this.queryRate = queryRate;
 		this.seed = seed;
 		this.numberoftraces = numberoftraces;
-
+		int numberOfQueuedWorkers = queuedWorkers.incrementAndGet();
+		queuedStatistic = new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_QUEUED_USERS, System.currentTimeMillis(), numberOfQueuedWorkers);
+		
 	}
 
 	public WorkerResultSummary call() throws Exception {
 
 		LOG.info("Worker " + seed + " is starting");
+		int completedTraces = 0;
 		try {
-
+			int numberOfQueuedWorkers = queuedWorkers.decrementAndGet();
+			if(System.currentTimeMillis() -queuedStatistic.getTimestamp() > 1000L)
+			{
+				workerTimestampedStatisticsSummary.addStatistic(queuedStatistic);
+			workerTimestampedStatisticsSummary.addStatistic(new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_QUEUED_USERS, System.currentTimeMillis(), numberOfQueuedWorkers));
+			}
+			int numberOfConcurrentWorkers = concurrentWorkers.incrementAndGet();
+			workerTimestampedStatisticsSummary.addStatistic(new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_CONCURRENT_USERS, System.currentTimeMillis(), numberOfConcurrentWorkers));
 			for (int tracenumber = 0; tracenumber < numberoftraces; tracenumber++) {
 				long traceStart = System.currentTimeMillis();
 				JSONObject querySpec = new JSONObject(this.querySpec.toString());
@@ -164,11 +178,13 @@ public class Worker implements Callable<WorkerResultSummary> {
 							QueryType.COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
 									- traceStart) - totalWaitTime));
 					workerResultSummary.addStatistic(combinedNoUserDelayQRS);
+					completedTraces++;
 				} catch (Exception e) {
 					LOG.error(
 							"Worker " + seed + " unable to complete queries.",
 							e);
 					queryException = e;
+					workerTimestampedStatisticsSummary.addStatistic(new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_COMPLETED_TRACES_AT_FAILURE, System.currentTimeMillis(), completedTraces));
 					break;
 				}
 			}
@@ -179,6 +195,8 @@ public class Worker implements Callable<WorkerResultSummary> {
 			
 		}
 		LOG.info("Worker " + seed + "is finishing");
+		int numberOfConcurrentWorkers = concurrentWorkers.decrementAndGet();
+		workerTimestampedStatisticsSummary.addStatistic(new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_CONCURRENT_USERS, System.currentTimeMillis(), numberOfConcurrentWorkers));
 		return workerResultSummary;
 
 	}
@@ -271,5 +289,10 @@ public class Worker implements Callable<WorkerResultSummary> {
 		}
 
 		return false;
+	}
+	
+	public WorkerTimestampedStatisticsSummary getTimestampedStatisticsSummary()
+	{
+		return workerTimestampedStatisticsSummary;
 	}
 }
