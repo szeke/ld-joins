@@ -30,6 +30,10 @@ public class ESQueryResult implements QueryResult {
 		String facetName = null;
 		String facetNameSpec = null;
 	
+		if(!this.json.has("aggregations"))
+		{
+			throw new NullPointerException("No aggregations in query response: " + json.toString());
+		}
 			facetNameSpec = facetSpec.getString("name");
 			facetName = facetNameSpec+ "_facet";
 			facetResults  = json.getJSONObject("aggregations").getJSONObject(facetName);
@@ -57,6 +61,10 @@ public class ESQueryResult implements QueryResult {
 
 	@Override
 	public JSONArray getAnchorsFromResults(String path) {
+		if(!this.json.has("hits"))
+		{
+			return null;
+		}
 		JSONObject outerHits = this.json.getJSONObject("hits");
 		JSONArray hits = outerHits.getJSONArray("hits");
 		JSONArray anchorsByResult = new JSONArray();
