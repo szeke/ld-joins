@@ -1,7 +1,10 @@
 % abstract from pedro's email reproposing paper
 Scalability and efficient query answering are key challenges for RDF stores.
-Web portals like amazon.com providing keyword search, faceted browsing and analytic results are an important class of applications that require sub-second query response on very large datasets.
-We present an analysis of the query requirements of these applications, a query benchmark based on a deployed application, and an approach to store RDF graphs in document-oriented NoSQL stores to support these applications.
-Our evaluations show that a NoSQL store outperforms a triple store by a factor of XXX. 
+Web portals such as amazon.com, which provide keyword search, faceted browsing and analytic results, are an important class of applications that require sub-second query response on very large datasets.
+We present LD-VIEWS, an approach based on JSON-LD to define views of RDF graphs for these applications to support thousands of queries per second in NoSQL stores.
+%Our evaluations show that a NoSQL store outperforms a triple store by a factors between 10 and 1,000 in a benchmark for this class of applications.
 %\emph{abstract} environment.
 %\keywords{We would like to encourage you to list your keywords within the abstract section}
+%analysis of the query requirements of this class of applications, a query benchmark based on a deployed application, 
+Our evaluations show that LD-VIEWS outperforms SPARQL on response time by a factor of 10 in a single node and by a factor of 100 on a cluster, and LD-VIEWS supports 100 times more simultaneous users.
+
