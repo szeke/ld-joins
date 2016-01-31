@@ -157,6 +157,10 @@ public class ESQuery implements Query {
 		{
 			query.put("size", size);
 		}
+		else if(QueryType.SEARCH == this.queryType)
+		{
+			query.put("size", 20);
+		}
 		return query.toString(4);
 	}
 
