@@ -169,6 +169,10 @@ public class Worker implements Callable<WorkerResultSummary> {
 									.get(100, TimeUnit.SECONDS)
 									.getQueryResultStatistics());
 						}
+						QueryResultStatistics combinedNoAggsQRS = new QueryResultStatistics(
+								QueryType.COMBINED_NO_AGGREGATIONS, (long)((System.currentTimeMillis()
+										- traceStart) - totalWaitTime));
+						workerResultSummary.addStatistic(combinedNoAggsQRS);
 						for (Future<QueryResult> aggregationResultFuture : aggregationResultFutures) {
 							workerResultSummary.addStatistic(aggregationResultFuture
 									.get(100, TimeUnit.SECONDS)
