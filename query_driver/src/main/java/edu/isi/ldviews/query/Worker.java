@@ -95,16 +95,18 @@ public class Worker implements Callable<WorkerResultSummary> {
 				Query query = queryFactory.generateQuery(queryType);
 				int queryDepth = 0;
 				double totalWaitTime = 0.0;
+				long totalCombinedNoAggregationsTime = 0;
 				try {
 					do {
-						if(queryDepth > 0)
+						long clickStartTime = System.currentTimeMillis();
+						double waitTime = 0.0;
+						//if(queryDepth > 0)
 						{	
-						 double waitTime = rdg.nextExponential(1.0/queryRate);
-						 totalWaitTime += waitTime * 1000;
-						//double waitTime = 0;
-						Thread.sleep((long) (waitTime * 1000));
+						 waitTime = rdg.nextExponential(1.0/queryRate) * 1000;
+						 totalWaitTime += waitTime ;
+						Thread.sleep((long) (waitTime));
 						workerResultSummary.addStatistic(new QueryResultStatistics(
-								QueryType.USERDELAY, (long) (waitTime * 1000)));
+								QueryType.USERDELAY, (long) (waitTime)));
 						
 						}
 						Future<QueryResult> queryResultFuture = queryExecutor
@@ -169,9 +171,11 @@ public class Worker implements Callable<WorkerResultSummary> {
 									.get(100, TimeUnit.SECONDS)
 									.getQueryResultStatistics());
 						}
+						long combinedNoAggregationsTime = (long)((System.currentTimeMillis()
+								- clickStartTime) - waitTime);
 						QueryResultStatistics combinedNoAggsQRS = new QueryResultStatistics(
-								QueryType.COMBINED_NO_AGGREGATIONS, (long)((System.currentTimeMillis()
-										- traceStart) - totalWaitTime));
+								QueryType.COMBINED_NO_AGGREGATIONS, combinedNoAggregationsTime);
+						totalCombinedNoAggregationsTime += combinedNoAggregationsTime;
 						workerResultSummary.addStatistic(combinedNoAggsQRS);
 						for (Future<QueryResult> aggregationResultFuture : aggregationResultFutures) {
 							workerResultSummary.addStatistic(aggregationResultFuture
@@ -183,19 +187,30 @@ public class Worker implements Callable<WorkerResultSummary> {
 						if (facetValue == null) {
 							break;
 						}
+						QueryResultStatistics combinedQRS = new QueryResultStatistics(
+								QueryType.COMBINED, System.currentTimeMillis()
+										- clickStartTime);
+						workerResultSummary.addStatistic(combinedQRS);
+						QueryResultStatistics combinedNoUserDelayQRS = new QueryResultStatistics(
+								QueryType.COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
+										- clickStartTime) - waitTime));
+						workerResultSummary.addStatistic(combinedNoUserDelayQRS);
 						query = queryFactory.generateQuery(applyFilter(
 								queryType, facetValue));
 						queryDepth++;
 					} while (queryDepth < maxQueryDepth
 							&& rand.nextDouble() < probabilitySearchSatisfied);
 					QueryResultStatistics combinedQRS = new QueryResultStatistics(
-							QueryType.COMBINED, System.currentTimeMillis()
+							QueryType.TRACE_COMBINED, System.currentTimeMillis()
 									- traceStart);
 					workerResultSummary.addStatistic(combinedQRS);
 					QueryResultStatistics combinedNoUserDelayQRS = new QueryResultStatistics(
-							QueryType.COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
+							QueryType.TRACE_COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
 									- traceStart) - totalWaitTime));
 					workerResultSummary.addStatistic(combinedNoUserDelayQRS);
+					QueryResultStatistics combinedNoAggsQRS = new QueryResultStatistics(
+							QueryType.TRACE_COMBINED_NO_AGGREGATIONS, totalCombinedNoAggregationsTime);
+					workerResultSummary.addStatistic(combinedNoAggsQRS);
 					completedTraces++;
 				} catch (Exception e) {
 					LOG.error(
