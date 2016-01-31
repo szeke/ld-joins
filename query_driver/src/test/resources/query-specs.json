@@ -579,7 +579,7 @@
             "comment": "Show a sparkline of offers by sellers using this phone number.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?date .",
+            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -624,7 +624,7 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a :AdultService ; :personAge ?category .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:personAge ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
