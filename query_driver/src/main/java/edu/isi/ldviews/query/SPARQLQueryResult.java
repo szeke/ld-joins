@@ -2,6 +2,7 @@ package edu.isi.ldviews.query;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class SPARQLQueryResult implements QueryResult {
 	private QueryType queryType;
 	private long start;
 	private long stop;
-	
+	private List<CSVRecord> records = new LinkedList<CSVRecord>();
 	public SPARQLQueryResult(String responseBody, long start, long stop,QueryType queryType) throws IOException{
 		this.start = start;
 		this.stop = stop;
@@ -64,15 +65,21 @@ public class SPARQLQueryResult implements QueryResult {
 	public JSONArray getAnchorsFromResults(String field) {
 		JSONArray anchorsByResults = new JSONArray();
 		Set<String> uniqueURIs = new HashSet<String>();
-		try {
-			for(CSVRecord record : parser.getRecords())
-			{
-				record.get(0);
-				uniqueURIs.add(record.get(0));
+		if(records.isEmpty())
+		{
+			try {
+				for(CSVRecord record : parser.getRecords())
+				{
+					records.add(record);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		for(CSVRecord record : records)
+		{
+			uniqueURIs.add(record.get(0));
 		}
 		for(String uri : uniqueURIs)
 		{
