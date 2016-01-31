@@ -210,9 +210,7 @@
                       "format": "dateOptionalTime"
                     },
                     "description": {
-                      "type": "string",
-                      "index": "no",
-                      "store": false
+                      "type": "string"
                     },
                     "identifier": {
                       "type": "string",
@@ -515,9 +513,7 @@
                   "format": "dateOptionalTime"
                 },
                 "description": {
-                  "type": "string",
-                  "index": "no",
-                  "store": false
+                  "type": "string"
                 },
                 "identifier": {
                   "type": "string",
@@ -1262,9 +1258,7 @@
               "format": "dateOptionalTime"
             },
             "description": {
-              "type": "string",
-              "index": "no",
-              "store": false
+              "type": "string"
             },
             "identifier": {
               "type": "string",
@@ -1653,9 +1647,7 @@
                   "format": "dateOptionalTime"
                 },
                 "description": {
-                  "type": "string",
-                  "index": "no",
-                  "store": false
+                  "type": "string"
                 },
                 "identifier": {
                   "type": "string",
