@@ -55,52 +55,76 @@ public class ESQuery implements Query {
 		}
 	}
 
+	public void addMissingFacet(JSONArray queryFacetsSpec, int facetIndex) {
+
+		addFacets(queryFacetsSpec, facetIndex, true);
+	}
+	
 	public void addFacets(JSONArray queryFacetsSpec, int facetIndex) {
-		//for(int i = 0; i < queryFacetsSpec.length(); i++)
+		addFacets(queryFacetsSpec, facetIndex, false);
+	}
+	public void addFacets(JSONArray queryFacetsSpec, int facetIndex, boolean missing) {
+
+		JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(facetIndex);
+		String queryFacetName = queryFacetSpec.getString("name");
+		if(missing)
+			queryFacetName += "_missing";
+		String queryFacetPath = queryFacetSpec.getString("path");
+		if(queryFacetSpec.has("userfilter"))
 		{
-			JSONObject queryFacetSpec = queryFacetsSpec.getJSONObject(facetIndex);
-			String queryFacetName = queryFacetSpec.getString("name");
-			String queryFacetPath = queryFacetSpec.getString("path");
-			if(queryFacetSpec.has("userfilter"))
+			JSONObject facetWithFilter = new JSONObject();
+			JSONObject filter = new JSONObject();
+			JSONArray shouldStatements = new JSONArray();
+			JSONArray userFilters = queryFacetSpec.getJSONArray("userfilter");
+			for(int j = 0; j < userFilters.length(); j++)
 			{
-				JSONObject facetWithFilter = new JSONObject();
-				JSONObject filter = new JSONObject();
-				JSONArray shouldStatements = new JSONArray();
-				JSONArray userFilters = queryFacetSpec.getJSONArray("userfilter");
-				for(int j = 0; j < userFilters.length(); j++)
-				{
-					JSONObject userFilter = userFilters.getJSONObject(j);
-					JSONObject termFilter = new JSONObject();
-					termFilter.put(userFilter.getString("path"), userFilter.getString("term"));
-					JSONObject termFilterWrapper = new JSONObject();
-					termFilterWrapper.put("term", termFilter);
-					shouldStatements.put(termFilterWrapper);
-				}
-				JSONObject shouldStatementWrapper = new JSONObject();
-				shouldStatementWrapper.put("should", shouldStatements);
-				filter.put("bool", shouldStatementWrapper);
-				facetWithFilter.put("filter", filter);
-				JSONObject nestedAgg = new JSONObject();
-				JSONObject termsFacet = new JSONObject();
-				termsFacet.put("field", queryFacetPath);
-				termsFacet.put("size", 20);
-				JSONObject termsFacetWrapper = new JSONObject();
-				termsFacetWrapper.put("terms", termsFacet);
-				nestedAgg.put(queryFacetName+"_facet", termsFacetWrapper);
-				facetWithFilter.put("aggs",nestedAgg);
-				aggregations.put(queryFacetName+"_facet", facetWithFilter);
-				
+				JSONObject userFilter = userFilters.getJSONObject(j);
+				JSONObject termFilter = new JSONObject();
+				termFilter.put(userFilter.getString("path"), userFilter.getString("term"));
+				JSONObject termFilterWrapper = new JSONObject();
+				termFilterWrapper.put("term", termFilter);
+				shouldStatements.put(termFilterWrapper);
+			}
+			JSONObject shouldStatementWrapper = new JSONObject();
+			shouldStatementWrapper.put("should", shouldStatements);
+			filter.put("bool", shouldStatementWrapper);
+			facetWithFilter.put("filter", filter);
+			JSONObject nestedAgg = new JSONObject();
+			JSONObject termsFacet = new JSONObject();
+			termsFacet.put("field", queryFacetPath);
+			
+			JSONObject termsFacetWrapper = new JSONObject();
+			if(missing)
+			{
+				termsFacetWrapper.put("missing", termsFacet);
 			}
 			else
 			{
-				JSONObject facet = new JSONObject();
-				JSONObject termsFacet = new JSONObject();
-				termsFacet.put("field", queryFacetPath);
+				termsFacetWrapper.put("terms", termsFacet);
+				termsFacet.put("size", 20);
+			}
+			nestedAgg.put(queryFacetName+"_facet", termsFacetWrapper);
+			facetWithFilter.put("aggs",nestedAgg);
+			aggregations.put(queryFacetName+"_facet", facetWithFilter);
+			
+		}
+		else
+		{
+			JSONObject facet = new JSONObject();
+			JSONObject termsFacet = new JSONObject();
+			termsFacet.put("field", queryFacetPath);
+			if(missing)
+			{
+				facet.put("missing", termsFacet);
+			}
+			else
+			{
 				termsFacet.put("size", 20);
 				facet.put("terms", termsFacet);
-				aggregations.put(queryFacetName + "_facet", facet);
 			}
+			aggregations.put(queryFacetName + "_facet", facet);
 		}
+	
 		size = 0;
 	}
 

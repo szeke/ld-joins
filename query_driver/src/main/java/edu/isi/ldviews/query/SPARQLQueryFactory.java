@@ -34,4 +34,14 @@ public class SPARQLQueryFactory implements QueryFactory {
 		return query;
 	}
 
+	@Override
+	public Query generateMissingFacetQuery(JSONObject queryTypeSpec, int facetIndex) {
+		Query query = new SPARQLQuery(QueryType.FACET_MISSING);
+		query.setName(queryTypeSpec.getString("name"));
+		query.addType(queryTypeSpec);
+		query.addKeywords(queryTypeSpec.getJSONObject("query"));
+		query.addMissingFacet(queryTypeSpec.getJSONArray("facets"), facetIndex);
+		return query;
+	}
+
 }

@@ -31,5 +31,15 @@ public class ESQueryFactory implements QueryFactory{
 		return query;
 	}
 
+	@Override
+	public Query generateMissingFacetQuery(JSONObject queryTypeSpec, int j) {
+		Query query = new ESQuery(QueryType.FACET_MISSING);
+		query.setName(queryTypeSpec.getString("name"));
+		query.addType(queryTypeSpec);
+		query.addKeywords(queryTypeSpec.getJSONObject("query"));
+		query.addMissingFacet(queryTypeSpec.getJSONArray("facets"), j);
+		return query;
+	}
+
 	
 }

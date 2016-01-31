@@ -96,6 +96,11 @@ public class SPARQLQuery implements Query {
 	}
 
 	public void addFacets(JSONArray queryFacetsSpec, int facetIndex) {
+		addFacets(queryFacetsSpec, facetIndex, false);
+	
+	}
+
+	public void addFacets(JSONArray queryFacetsSpec, int facetIndex, boolean filter) {
 		
 		selectStatement = "select ?facet str(?category) as ?category count(distinct(?x)) as ?count where \n";
 		StringBuilder facetBuilder = new StringBuilder();
@@ -126,15 +131,20 @@ public class SPARQLQuery implements Query {
 				facetBuilder.append("\"");
 				facetBuilder.append(queryFacetName);
 				facetBuilder.append("\") as ?facet)\n");
-				facetBuilder.append("\t\t\t?x ");
+				facetBuilder.append("\t\t\t");
+				if(filter)
+					facetBuilder.append("filter not exists { ");
+				facetBuilder.append("?x ");
 				facetBuilder.append(sparqlPath);
-				facetBuilder.append(" ?category .\n");
+				facetBuilder.append(" ?category .");
+				if(filter)
+					facetBuilder.append(" }");
+				facetBuilder.append("\n");
 				facetBuilder.append("\t\t\t}\n");
 			
 			
 		}
 		this.facet = facetBuilder.toString();
-		//this.groupOrder = "group by ?facet ?category\norder by desc(?count)\n";
 		this.groupOrder = "group by ?facet ?category\norder by desc(?count) ?category\n";
 		this.limit = "\nlimit 20\n";
 	}
@@ -309,6 +319,11 @@ public class SPARQLQuery implements Query {
 		}
 		return sb.toString();
 		
+	}
+
+	@Override
+	public void addMissingFacet(JSONArray queryFacetsSpec, int facetIndex) {
+		this.addFacets(queryFacetsSpec, facetIndex, true);		
 	}
 
 }

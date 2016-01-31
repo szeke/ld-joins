@@ -112,11 +112,16 @@ public class Worker implements Callable<WorkerResultSummary> {
 						
 						JSONArray facetsSpec = queryType.getJSONArray("facets");
 						List<Future<QueryResult>> facetResultFutures = new LinkedList<Future<QueryResult>>();
+						List<Future<QueryResult>> missingFacetResultFutures = new LinkedList<Future<QueryResult>>();
 						for (int j = 0; j < facetsSpec.length(); j++) {
 							Query facetQuery = queryFactory.generateFacetQuery(
 									queryType, j);
 							facetResultFutures.add(queryExecutor
 									.execute(facetQuery));
+							Query missingFacetQuery = queryFactory.generateMissingFacetQuery(queryType, j);
+							missingFacetResultFutures.add(queryExecutor
+									.execute(missingFacetQuery));
+							
 						}
 
 						QueryResult queryResult = queryResultFuture.get(100,
@@ -157,6 +162,11 @@ public class Worker implements Callable<WorkerResultSummary> {
 									.get(100, TimeUnit.SECONDS);
 							facetResults.add(facetQueryResult);
 							workerResultSummary.addStatistic(facetQueryResult
+									.getQueryResultStatistics());
+						}
+						for (Future<QueryResult> missingFacetResultFuture : missingFacetResultFutures) {
+							workerResultSummary.addStatistic(missingFacetResultFuture
+									.get(100, TimeUnit.SECONDS)
 									.getQueryResultStatistics());
 						}
 						for (Future<QueryResult> aggregationResultFuture : aggregationResultFutures) {

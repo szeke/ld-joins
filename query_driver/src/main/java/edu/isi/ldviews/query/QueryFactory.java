@@ -7,4 +7,5 @@ public interface QueryFactory {
 	Query generateQuery(JSONObject queryTypeSpec);
 	Query generateAggregateQuery(JSONObject queryTypeSpec, JSONObject anchor);
 	Query generateFacetQuery(JSONObject queryTypeSpec, int facetIndex);
+	Query generateMissingFacetQuery(JSONObject queryType, int j);
 }
