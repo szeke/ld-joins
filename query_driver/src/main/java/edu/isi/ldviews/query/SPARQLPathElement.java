@@ -110,4 +110,75 @@ public class SPARQLPathElement {
 		}
 	}
 
+	public void serializeWithOptional(StringBuilder sb) {
+		if(children.isEmpty())
+		{
+			sb.append(value);
+			sb.append(" .");
+		}
+		else if(children.size() == 1)
+		{
+			if(isRoot)
+			{
+				sb.append("optional { ");
+				sb.append("?");
+			}
+			sb.append(value);
+			SPARQLPathElement child = children.values().iterator().next();
+			if(!isRoot && (child.hasAChild() || child.hasChildren()))
+			{
+				sb.append("/");
+			}
+			else
+			{
+				sb.append(" ");
+			}
+			child.serializeWithOptional(sb);
+			if(isRoot)
+				sb.append(" }");
+		}
+		else
+		{
+			String subjectVar = "";
+			if(isRoot)
+			{
+				subjectVar = value;
+			}
+			else
+			{
+				//random!
+				sb.append(" ");
+				sb.append(value);
+				sb.append(" ");
+				if(!children.containsKey("?wp"))
+				{
+				subjectVar = "_" + sb.length();
+				}
+				else
+				{
+					subjectVar = "wp";
+				}
+				sb.append(" ?");
+				sb.append(subjectVar);
+				
+				
+				sb.append(" .\n");
+			}
+			
+			for(SPARQLPathElement child: children.values())
+			{
+			
+				if(subjectVar.compareTo("wp") != 0 )
+				{
+					sb.append("optional { ");
+				sb.append("?");
+				sb.append(subjectVar);
+				sb.append(" ");
+				child.serializeWithOptional(sb);
+				sb.append(" }\n");
+				}
+			}
+		}
+	}
+
 }

@@ -84,6 +84,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 				JSONArray queryTypes = querySpec.getJSONArray("types");
 				JSONObject queryType = queryTypes.getJSONObject(rand
 						.nextInt(queryTypes.length()));
+				//LOG.info(seed + " " + queryType);
 				JSONObject queryKeywordSpec = queryType.getJSONObject("query");
 				JSONArray queryKeywords = queryKeywordSpec
 						.getJSONArray("keywords");
@@ -133,7 +134,10 @@ public class Worker implements Callable<WorkerResultSummary> {
 									.getString("anchor_path");
 							JSONArray anchors = queryResult
 									.getAnchorsFromResults(anchorPath);
-
+							if(anchors == null)
+							{
+								throw new Exception("No anchors from query: " + query.toString());
+							}
 							for (int i = 0; i < anchors.length(); i++) {
 								JSONObject anchor = anchors.getJSONObject(i);
 								Query aggregationQuery = queryFactory

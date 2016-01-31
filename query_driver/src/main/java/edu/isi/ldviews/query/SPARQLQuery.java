@@ -32,6 +32,7 @@ public class SPARQLQuery implements Query {
 	private String facet;
 	private String limit;
 	private SPARQLPathElement root = new SPARQLPathElement("x", true);
+	private SPARQLPathElement fieldsRoot = new SPARQLPathElement("x", true);
 	private QueryType queryType;
 	public SPARQLQuery(QueryType queryType)
 	{
@@ -79,31 +80,19 @@ public class SPARQLQuery implements Query {
 			
 			JSONObject queryField = queryFieldsSpec.getJSONObject(i);
 			if(queryField.getString("path").compareTo("uri") == 0) continue;
-			fields.append("\toptional { ?x ");
-			String path = queryField.getString("path");
-			String[] pathElements = path.split("\\.");
-			for(int j = 0; j < pathElements.length; j++)
-			{
-				if(!memexPrefixed.contains(pathElements[j]))
-				fields.append("s:");
-				else
-					fields.append("m:");
-				fields.append(pathElements[j]);
-				if(j != pathElements.length-1)
-				{
-					fields.append("/");
-				}
-			}
-			fields.append(" ?");
-			fields.append(queryField.getString("name"));
+			List<String> fieldPath = translateToSPARQLPathList(queryField.getString("path"));
+			
+			fieldPath.add("?"+queryField.getString("name"));
+			fieldsRoot.addValues(fieldPath);
 			selectStatementBuilder.append(" ?");
 			selectStatementBuilder.append(queryField.getString("name"));
-			fields.append(" . }\n");
 			
 		}
 		selectStatementBuilder.append(" where\n ");
 		selectStatement = selectStatementBuilder.toString();
-		optionalFields = fields.toString();
+		StringBuilder fieldsRootBuilder = new StringBuilder();
+		fieldsRoot.serializeWithOptional(fieldsRootBuilder);
+		optionalFields = fieldsRootBuilder.toString();
 	}
 
 	public void addFacets(JSONArray queryFacetsSpec, int facetIndex) {
