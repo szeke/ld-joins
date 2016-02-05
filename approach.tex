@@ -16,6 +16,26 @@
 % d. indexing documents
 % describe the operations we need to perform over the doucments
 \end{verbatim}
+
+LD-VIEWS are designed to enable end users to efficiently query a collection of entities of the same type and their RDF neighborhood in a prescriptive way.   
+This is accomplished by leveraging the concept of SQL views.  
+Views in SQL are used for many reasons: restricting data access, abstracting complexity, and, of course, efficiency. 
+When a view is the product of many joins, it is often materialized, or pre-computed, to avoid having to pay the enormous expense of the join operations.  
+Joins are troublesome when the data involved no longer fits in the working memory of a single machine and has to spill to disk.  
+Even worse is when the join involves data so large it needs to be distributed across many machines.  
+When joins are the primary operation, like a SPARQL query taking full advantage of the language's expressivity, the issue is compounded many times over.         
+
+LD-VIEWS aims to alleviate this issue and avoid expensive join operations by creating a materialized view for each collection tailored to the query needs of the end users.  A view is materialized by iterating over a collection and pre-computing certain joins against other entities in each entity's RDF neighborhood along prescribed predicate paths.  The view is then serialized as a collection of denormalized JSON-LD documents containing the entity and the triples in the neighborhood relevant to the desired queries.  
+
+The amount of data that necessitates the LD-VIEWS approach means it requires a distributed store and query engine.   In memory key value stores like Redis or Riak and column family-stores like HBase or Cassandra meet the distributed requirement, but lack native indexing and full text search support.  Developers instead resort to complex schemes for mitigating the need for joins and managing consistency between secondary indexes and data, which is a maintenance disaster, and empirical results have demonstrated that they cannot achieve the necessary response times.   
+
+Massively parallel processing databases like Impala, SparkSQL, and Druid might be able to achieve our desired response times. Since they are required to scan entire datasets on the execution of every query, though, they are not designed for many parallel users.   To put a final nail in the coffin for our application, they don't have support for full text search.  
+
+The candidates with strong indexing capabilities and scalable query performance that remain fall in to the family of document-oriented databases like MongoDB, Couchbase, Solr, and Elasticsearch.  
+
+
+%Each query against the view applies one or more filters to the collection of entities aand then either retrieves entities or aggreperforms a number of set operations on the entities in the collection.    
+
 For generality, our approach to generating views for efficient RDF query processing assumes we begin with an RDF graph in N-Triples, aligned to a common vocabulary, as input.  
 A common vocabulary is not a hard requirement, but, rather, a rule of thumb to keep the number of combinations of possible types and properties for the views to support manageable.
 It can be achieved through a variety of means, including, but not limited to, mapping from legacy sources to RDF using R2RML, executing SPARQL construct queries, etc. 
@@ -179,4 +199,3 @@ An implementation of the algorithm in Apache Spark provided much quicker results
 
 % need to talk about indexing here
 \subsection{Indexing}
-
