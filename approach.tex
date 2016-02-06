@@ -25,11 +25,18 @@ Joins are troublesome when the data involved no longer fits in the working memor
 Even worse is when the join involves data so large it needs to be distributed across many machines.  
 When joins are the primary operation, like a SPARQL query taking full advantage of the language's expressivity, the issue is compounded many times over.         
 
-LD-VIEWS aims to alleviate this issue and avoid expensive join operations by creating a materialized view for each collection tailored to the query needs of the end users.  A view is materialized by iterating over a collection and pre-computing certain joins against other entities in each entity's RDF neighborhood along prescribed predicate paths.  The view is then serialized as a collection of denormalized JSON-LD documents containing the entity and the triples in the neighborhood relevant to the desired queries.  
+LD-VIEWS aims to alleviate this issue and avoid expensive join operations by creating a materialized view for each collection tailored to the query needs of the end users.  
+A view is materialized by iterating over a collection and pre-computing certain joins against other entities in each entity's RDF neighborhood along prescribed predicate paths.  
+The view is then serialized as a collection of denormalized JSON-LD documents containing the entity and the triples in the neighborhood relevant to the desired queries.  
 
-The amount of data that necessitates the LD-VIEWS approach means it requires a distributed store and query engine.   In memory key value stores like Redis or Riak and column family-stores like HBase or Cassandra meet the distributed requirement, but lack native indexing and full text search support.  Developers instead resort to complex schemes for mitigating the need for joins and managing consistency between secondary indexes and data, which is a maintenance disaster, and empirical results have demonstrated that they cannot achieve the necessary response times.   
+The amount of data that necessitates the LD-VIEWS approach means it requires a distributed store and query engine.   
+In memory key value stores like Redis or Riak and column family-stores like HBase or Cassandra meet the distributed requirement, but lack native indexing and full text search support.  
+Developers instead resort to schemes for mitigating the need for joins and managing consistency between secondary indexes and data, driving up the complexity of the application, but empirical results have demonstrated that they still cannot achieve the necessary response times.   
 
-Massively parallel processing databases like Impala, SparkSQL, and Druid might be able to achieve our desired response times. Since they are required to scan entire datasets on the execution of every query, though, they are not designed for many parallel users.   To put a final nail in the coffin for our application, they don't have support for full text search.  
+Massively parallel processing databases like Impala, SparkSQL, and Druid might be able to achieve our desired response times without indexing. 
+They achieve their response times by being able to quickly scan entire datasets on the execution of every query by storing the data in memory across many machines.  
+Because they are required to scan entire datasets, however, they are relatively inefficient when the result set is orders of magnitude smaller than the dataset, i.e. looking for a needle in the haystack.  
+Smart partitioning strategies can help manage the size of the subset needed to evaluate the query, but truly avoiding having to scan an entire dataset requires indexes. 
 
 The candidates with strong indexing capabilities and scalable query performance that remain fall in to the family of document-oriented databases like MongoDB, Couchbase, Solr, and Elasticsearch.  
 
