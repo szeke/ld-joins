@@ -7,12 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
 import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
 import com.ning.http.client.Response;
 
 public class ESQueryExecutor implements QueryExecutor {
 	private static final Logger LOG = LoggerFactory.getLogger(ESQueryExecutor.class); 
-	AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+	AsyncHttpClient asyncHttpClient = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setReadTimeout(120000).setRequestTimeout(120000).setConnectTimeout(120000).build());
 	private String host;
 	private int port;
 	private String index;
@@ -37,7 +38,7 @@ public class ESQueryExecutor implements QueryExecutor {
 		final String  queryString = query.toString();
 		LOG.trace(queryString);
 		requestBuilder.setBody(queryString);
-
+		requestBuilder.setRequestTimeout(120000);
 		return requestBuilder
 				.execute(new AsyncCompletionHandler<QueryResult>() {
 					long start = System.currentTimeMillis();
