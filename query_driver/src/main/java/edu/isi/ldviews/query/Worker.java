@@ -1,6 +1,5 @@
 package edu.isi.ldviews.query;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +26,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 	private long seed;
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
+	private static long timeout = 120000;
 	private QueryExecutor queryExecutor;
 	private int maxQueryDepth = 3;
 	private RandomDataGenerator rdg;
@@ -34,6 +34,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 	private int numberoftraces;
 	//private List<QueryResultStatistics> queryResultStatistics = new LinkedList<QueryResultStatistics>();
 	private Exception queryException = null;
+	private boolean timeoutOccurred = false;
 	private WorkerResultSummary workerResultSummary  = new WorkerResultSummary(seed);
 	private static AtomicInteger concurrentWorkers = new AtomicInteger(0);
 	private static AtomicInteger queuedWorkers = new AtomicInteger(0);
@@ -96,127 +97,59 @@ public class Worker implements Callable<WorkerResultSummary> {
 				int queryDepth = 0;
 				double totalWaitTime = 0.0;
 				long totalCombinedNoAggregationsTime = 0;
+				
 				try {
 					do {
 						long clickStartTime = System.currentTimeMillis();
-						double waitTime = 0.0;
-						//if(queryDepth > 0)
-						{	
-						 waitTime = rdg.nextExponential(1.0/queryRate) * 1000;
-						 totalWaitTime += waitTime ;
-						Thread.sleep((long) (waitTime));
-						workerResultSummary.addStatistic(new QueryResultStatistics(
-								QueryType.USERDELAY, (long) (waitTime)));
+						double waitTime = waitForUserDecision();
+						totalWaitTime += waitTime ;
 						
-						}
 						Future<QueryResult> queryResultFuture = queryExecutor
 								.execute(query);
 						
-						JSONArray facetsSpec = queryType.getJSONArray("facets");
-						List<Future<QueryResult>> facetResultFutures = new LinkedList<Future<QueryResult>>();
-						List<Future<QueryResult>> missingFacetResultFutures = new LinkedList<Future<QueryResult>>();
-						for (int j = 0; j < facetsSpec.length(); j++) {
-							Query facetQuery = queryFactory.generateFacetQuery(
-									queryType, j);
-							facetResultFutures.add(queryExecutor
-									.execute(facetQuery));
-							Query missingFacetQuery = queryFactory.generateMissingFacetQuery(queryType, j);
-							missingFacetResultFutures.add(queryExecutor
-									.execute(missingFacetQuery));
-							
-						}
-
-						QueryResult queryResult = queryResultFuture.get(100,
-								TimeUnit.SECONDS);
-						workerResultSummary.addStatistic(queryResult
-								.getQueryResultStatistics());
+						List<Future<QueryResult>> facetResultFutures = issueFacetQueries(
+								queryType);
+						List<Future<QueryResult>> missingFacetResultFutures = issueFacetMissingQueries(
+								queryType);
+						QueryResult queryResult =
+								collectAndRecordResultAndStatistics(QueryType.SEARCH, queryResultFuture);
 						List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
+						if(queryResult != null)
+						{
+							aggregationResultFutures = issueAggregationQueries(
+								queryType, query, queryResult);
+						}
+						List<QueryResult> facetResults =
+								collectAndRecordResultsAndStatistics(facetResultFutures, QueryType.FACET);
+						collectAndRecordResultsAndStatistics(missingFacetResultFutures, QueryType.FACET_MISSING);
+						
+						totalCombinedNoAggregationsTime = recordCombinedNoAggregationStatistics(
+								totalCombinedNoAggregationsTime,
+								clickStartTime, waitTime);
+						
+						collectAndRecordResultsAndStatistics(aggregationResultFutures, QueryType.AGGREGATE);
 
-						JSONArray aggregationsSpec = queryType.getJSONObject(
-								"results").getJSONArray("aggregations");
-						for (int j = 0; j < aggregationsSpec.length(); j++) {
-							JSONObject aggregationSpec = aggregationsSpec
-									.getJSONObject(j);
-							String anchorPath = aggregationSpec
-									.getString("anchor_path");
-							JSONArray anchors = queryResult
-									.getAnchorsFromResults(anchorPath);
-							if(anchors == null)
-							{
-								throw new Exception("No anchors from query: " + query.toString());
-							}
-							for (int i = 0; i < anchors.length(); i++) {
-								JSONObject anchor = anchors.getJSONObject(i);
-								Query aggregationQuery = queryFactory
-										.generateAggregateQuery(
-												aggregationSpec, anchor);
-								aggregationResultFutures.add(queryExecutor
-										.execute(aggregationQuery));
-							}
-						}
-
-						// the results should be populated in the same order as
-						// the facet spec
-						ArrayList<QueryResult> facetResults = new ArrayList<QueryResult>(
-								facetResultFutures.size());
-						for (Future<QueryResult> facetResultFuture : facetResultFutures) {
-							QueryResult facetQueryResult = facetResultFuture
-									.get(100, TimeUnit.SECONDS);
-							facetResults.add(facetQueryResult);
-							workerResultSummary.addStatistic(facetQueryResult
-									.getQueryResultStatistics());
-						}
-						for (Future<QueryResult> missingFacetResultFuture : missingFacetResultFutures) {
-							workerResultSummary.addStatistic(missingFacetResultFuture
-									.get(100, TimeUnit.SECONDS)
-									.getQueryResultStatistics());
-						}
-						long combinedNoAggregationsTime = (long)((System.currentTimeMillis()
-								- clickStartTime) - waitTime);
-						QueryResultStatistics combinedNoAggsQRS = new QueryResultStatistics(
-								QueryType.COMBINED_NO_AGGREGATIONS, combinedNoAggregationsTime);
-						totalCombinedNoAggregationsTime += combinedNoAggregationsTime;
-						workerResultSummary.addStatistic(combinedNoAggsQRS);
-						for (Future<QueryResult> aggregationResultFuture : aggregationResultFutures) {
-							workerResultSummary.addStatistic(aggregationResultFuture
-									.get(100, TimeUnit.SECONDS)
-									.getQueryResultStatistics());
-						}
+						recordCombinedStatistics(clickStartTime, waitTime);
+						
 						JSONObject facetValue = getFacetValue(queryType, rand,
 								facetResults);
-						if (facetValue == null) {
+						if (facetValue == null || queryResult == null) {
 							break;
 						}
-						QueryResultStatistics combinedQRS = new QueryResultStatistics(
-								QueryType.COMBINED, System.currentTimeMillis()
-										- clickStartTime);
-						workerResultSummary.addStatistic(combinedQRS);
-						QueryResultStatistics combinedNoUserDelayQRS = new QueryResultStatistics(
-								QueryType.COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
-										- clickStartTime) - waitTime));
-						workerResultSummary.addStatistic(combinedNoUserDelayQRS);
+
 						query = queryFactory.generateQuery(applyFilter(
 								queryType, facetValue));
 						queryDepth++;
 					} while (queryDepth < maxQueryDepth
-							&& rand.nextDouble() < probabilitySearchSatisfied);
-					QueryResultStatistics combinedQRS = new QueryResultStatistics(
-							QueryType.TRACE_COMBINED, System.currentTimeMillis()
-									- traceStart);
-					workerResultSummary.addStatistic(combinedQRS);
-					QueryResultStatistics combinedNoUserDelayQRS = new QueryResultStatistics(
-							QueryType.TRACE_COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
-									- traceStart) - totalWaitTime));
-					workerResultSummary.addStatistic(combinedNoUserDelayQRS);
-					QueryResultStatistics combinedNoAggsQRS = new QueryResultStatistics(
-							QueryType.TRACE_COMBINED_NO_AGGREGATIONS, totalCombinedNoAggregationsTime);
-					workerResultSummary.addStatistic(combinedNoAggsQRS);
+ 							&& rand.nextDouble() < probabilitySearchSatisfied && !timeoutOccurred);
+					recordTraceStatistics(traceStart, totalWaitTime,
+							totalCombinedNoAggregationsTime);
 					completedTraces++;
 				} catch (Exception e) {
 					LOG.error(
 							"Worker " + seed + " unable to complete queries.",
 							e);
-					queryException = e;
+					workerResultSummary.setException(e);
 					workerTimestampedStatisticsSummary.addStatistic(new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_COMPLETED_TRACES_AT_FAILURE, System.currentTimeMillis(), completedTraces));
 					break;
 				}
@@ -232,6 +165,152 @@ public class Worker implements Callable<WorkerResultSummary> {
 		workerTimestampedStatisticsSummary.addStatistic(new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_CONCURRENT_USERS, System.currentTimeMillis(), numberOfConcurrentWorkers));
 		return workerResultSummary;
 
+	}
+
+	private void recordTraceStatistics(long traceStart, double totalWaitTime,
+			long totalCombinedNoAggregationsTime) {
+		QueryResultStatistics traceCombinedQRS = new QueryResultStatistics(
+				QueryType.TRACE_COMBINED, System.currentTimeMillis()
+						- traceStart);
+		workerResultSummary.addStatistic(traceCombinedQRS);
+		QueryResultStatistics traceCombinedNoUserDelayQRS = new QueryResultStatistics(
+				QueryType.TRACE_COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
+						- traceStart) - totalWaitTime));
+		workerResultSummary.addStatistic(traceCombinedNoUserDelayQRS);
+		QueryResultStatistics traceCombinedNoAggsQRS = new QueryResultStatistics(
+				QueryType.TRACE_COMBINED_NO_AGGREGATIONS, totalCombinedNoAggregationsTime);
+		workerResultSummary.addStatistic(traceCombinedNoAggsQRS);
+	}
+
+	private long recordCombinedNoAggregationStatistics(
+			long totalCombinedNoAggregationsTime, long clickStartTime,
+			double waitTime) {
+		long combinedNoAggregationsTime = (long)((System.currentTimeMillis()
+				- clickStartTime) - waitTime);
+		QueryResultStatistics combinedNoAggsQRS = new QueryResultStatistics(
+				QueryType.COMBINED_NO_AGGREGATIONS, combinedNoAggregationsTime);
+		totalCombinedNoAggregationsTime += combinedNoAggregationsTime;
+		workerResultSummary.addStatistic(combinedNoAggsQRS);
+		return totalCombinedNoAggregationsTime;
+	}
+
+	private List<Future<QueryResult>> issueAggregationQueries(
+			JSONObject queryType, Query query, QueryResult queryResult)
+			throws Exception {
+		List<Future<QueryResult>> aggregationResultFutures = new LinkedList<Future<QueryResult>>();
+
+		JSONArray aggregationsSpec = queryType.getJSONObject(
+				"results").getJSONArray("aggregations");
+		for (int j = 0; j < aggregationsSpec.length(); j++) {
+			JSONObject aggregationSpec = aggregationsSpec
+					.getJSONObject(j);
+			String anchorPath = aggregationSpec
+					.getString("anchor_path");
+			JSONArray anchors = queryResult
+					.getAnchorsFromResults(anchorPath);
+			if(anchors == null)
+			{
+				throw new Exception("No anchors from query: " + query.toString());
+			}
+			for (int i = 0; i < anchors.length(); i++) {
+				JSONObject anchor = anchors.getJSONObject(i);
+				Query aggregationQuery = queryFactory
+						.generateAggregateQuery(
+								aggregationSpec, anchor);
+				aggregationResultFutures.add(queryExecutor
+						.execute(aggregationQuery));
+			}
+		}
+		return aggregationResultFutures;
+	}
+
+
+	private double waitForUserDecision() throws InterruptedException {
+		double waitTime = 0.0;
+			
+		 waitTime = rdg.nextExponential(1.0/queryRate) * 1000;
+		 
+		Thread.sleep((long) (waitTime));
+		workerResultSummary.addStatistic(new QueryResultStatistics(
+				QueryType.USERDELAY, (long) (waitTime)));
+		return waitTime;
+	}
+
+	private List<Future<QueryResult>> issueFacetMissingQueries(
+			JSONObject queryType) {
+
+		JSONArray facetsSpec = queryType.getJSONArray("facets");
+		List<Future<QueryResult>> missingFacetResultFutures = new LinkedList<Future<QueryResult>>();
+		for (int j = 0; j < facetsSpec.length(); j++) {
+
+			Query missingFacetQuery = queryFactory.generateMissingFacetQuery(queryType, j);
+			missingFacetResultFutures.add(queryExecutor
+					.execute(missingFacetQuery));
+		}
+		return missingFacetResultFutures;
+	}
+
+	private List<Future<QueryResult>> issueFacetQueries(JSONObject queryType) {
+
+		JSONArray facetsSpec = queryType.getJSONArray("facets");
+		List<Future<QueryResult>> facetResultFutures = new LinkedList<Future<QueryResult>>();
+		for (int j = 0; j < facetsSpec.length(); j++) {
+			Query facetQuery = queryFactory.generateFacetQuery(
+					queryType, j);
+			facetResultFutures.add(queryExecutor
+					.execute(facetQuery));
+			
+		}
+		return facetResultFutures;
+	}
+
+	private void recordCombinedStatistics(long clickStartTime,
+			double waitTime) {
+		QueryResultStatistics combinedQRS = new QueryResultStatistics(
+				QueryType.COMBINED, System.currentTimeMillis()
+						- clickStartTime);
+		workerResultSummary.addStatistic(combinedQRS);
+		QueryResultStatistics combinedNoUserDelayQRS = new QueryResultStatistics(
+				QueryType.COMBINED_NO_USERDELAY, (long)((System.currentTimeMillis()
+						- clickStartTime) - waitTime));
+		workerResultSummary.addStatistic(combinedNoUserDelayQRS);
+	}
+
+	private List<QueryResult> collectAndRecordResultsAndStatistics(
+			List<Future<QueryResult>> resultFutures, QueryType type)
+			throws Exception {
+		List<QueryResult> results = new LinkedList<QueryResult>();
+		for (Future<QueryResult> resultFuture : resultFutures) {
+			QueryResult qr = collectAndRecordResultAndStatistics(type,
+					resultFuture);
+			if(qr != null)
+			{
+				results.add(qr);
+			}
+		}
+		return results;
+	}
+
+	private QueryResult collectAndRecordResultAndStatistics(
+			QueryType type, Future<QueryResult> resultFuture)
+			throws Exception {
+		try{
+			QueryResult queryResult = resultFuture
+				.get(120, TimeUnit.SECONDS);
+			workerResultSummary.addStatistic(queryResult
+					.getQueryResultStatistics());
+			return (queryResult);
+		}
+		catch (java.util.concurrent.TimeoutException timeoutException)
+		{
+			workerResultSummary.addStatistic(new QueryResultStatistics(type,  timeout));
+			timeoutOccurred= true;
+			return null;
+		}
+		catch (Exception otherException)
+		{
+			throw otherException;
+		}
 	}
 	
 	public WorkerResultSummary getSummary()
@@ -266,10 +345,16 @@ public class Worker implements Callable<WorkerResultSummary> {
 	}
 
 	public JSONObject getFacetValue(JSONObject queryTypeSpec, Random rand,
-			ArrayList<QueryResult> facetQueryResults) {
+			List<QueryResult> facetQueryResults) {
 		Set<Integer> facetsEvaluated = new HashSet<Integer>();
 		int emptyFacetResults = 0;
 		JSONArray facetsSpec = queryTypeSpec.getJSONArray("facets");
+		if(facetQueryResults.size() != facetsSpec.length())
+		{
+			LOG.trace("Worker " + seed + " was missing facet results "
+					+ facetsSpec);
+			return null;
+		}
 		boolean found = false;
 		JSONObject facetSpec = null;
 		JSONArray userfilters = null;
