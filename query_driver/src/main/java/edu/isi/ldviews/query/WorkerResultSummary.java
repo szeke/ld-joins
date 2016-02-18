@@ -60,4 +60,9 @@ public class WorkerResultSummary {
 		}
 		return obj;
 	}
+	public long getSeed()
+	{
+		return seed;
+		
+	}
 }

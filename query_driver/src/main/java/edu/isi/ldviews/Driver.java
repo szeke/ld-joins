@@ -19,8 +19,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ning.http.client.AsyncHttpClient;
-
 import edu.isi.ldviews.query.Keywords;
 import edu.isi.ldviews.query.QueryExecutor;
 import edu.isi.ldviews.query.QueryExecutorFactory;
@@ -88,11 +86,14 @@ public class Driver {
 		rdg.reSeed(randomseed);
 		
 		ExecutorService executor = Executors.newFixedThreadPool(concurrentnumberofworkers);
+		List<QueryExecutor> queryExecutors = new LinkedList<QueryExecutor>();
 		List<Future<WorkerResultSummary>> workerResults = new LinkedList<Future<WorkerResultSummary>>();
 		List<WorkerResultSummary> workerResultSummaries = new LinkedList<WorkerResultSummary>();
 		List<WorkerTimestampedStatisticsSummary> workerTimestampedStatisticsSummaries = new LinkedList<WorkerTimestampedStatisticsSummary>();
 		List<Worker> workers = new LinkedList<Worker>();
-		for(int i =0; i < numberofworkers; i++)
+		try
+		{
+ 		for(int i =0; i < numberofworkers; i++)
 		{
 			double waitTime = rdg.nextExponential(1.0/ arrivalrate);
 			Thread.sleep((long) (waitTime *1000));
@@ -101,7 +102,7 @@ public class Driver {
 			
 			{
 			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
-		
+			queryExecutors.add(queryExecutor);
 			Worker worker = new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3, numberoftraces);
 			workers.add(worker);
 			workerResults.add(executor.submit(worker));
@@ -111,12 +112,15 @@ public class Driver {
 			{
 				if(workerResults.get(0).isDone())
 				{
+					
 					Future<WorkerResultSummary> summaryFuture = workerResults.remove(0);
 					Worker worker = workers.remove(0);
+					logger.info("Driver has collected " + worker.getSeed());
 					try{
 						WorkerResultSummary summary = summaryFuture.get();
-						if(null != summary.getException())
+						if(null != summary.getException() && !(summary.getException() instanceof java.util.concurrent.TimeoutException))
 						{
+							logger.error("Cancelling execution because of exception from worker " + summary.getSeed(),summary.getException());
 							while(!workerResults.isEmpty())
 							{
 								workerResults.remove(0).cancel(true);
@@ -150,19 +154,42 @@ public class Driver {
 		}
 		
 		
-		
+		try
+		{
 		for(Future<WorkerResultSummary>workerResult : workerResults)
 		{
-			WorkerResultSummary summary = workerResult.get(10, TimeUnit.MINUTES);
+			WorkerResultSummary summary = workerResult.get(1, TimeUnit.HOURS);
 			workerResultSummaries.add(summary);
+			logger.info("Driver has collected " + summary.getSeed());
 			workerTimestampedStatisticsSummaries.add(workers.remove(0).getTimestampedStatisticsSummary());
 			
 		}
-		
+		}
+		catch(Exception e)
+		{
+			logger.error("Unable to collect remaining worker results ", e);
+		}
+		}
+		finally{
+			executor.shutdownNow();
+			
+			for(QueryExecutor queryExecutor : queryExecutors)
+			{
+				try{
+				queryExecutor.shutdown();
+				}
+				catch (Exception e)
+				{
+					
+				}
+			}
+		}
 		for(WorkerResultSummary summary : workerResultSummaries)
 		{
 			System.out.println(summary.toJSONObject().toString());
 		}
+		
+		
 		RunResultSummary runResultSummary = new RunResultSummary(randomseed, workerResultSummaries);
 		runResultSummary.setArrivalRate(arrivalrate);
 		runResultSummary.setDatabaseType(databasetype);
@@ -179,7 +206,7 @@ public class Driver {
 		runTimestampedStatisticsSummary.setNumWorkers(numberofworkers);
 		runTimestampedStatisticsSummary.setNumTraces(numberoftraces);
 		System.out.println(runTimestampedStatisticsSummary.toCSV());
-		executor.shutdown();
+		
 	}
 
 	protected void parseCommandLineOptions(CommandLine cl) {

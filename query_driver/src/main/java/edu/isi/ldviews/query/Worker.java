@@ -35,7 +35,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 	//private List<QueryResultStatistics> queryResultStatistics = new LinkedList<QueryResultStatistics>();
 	private Exception queryException = null;
 	private boolean timeoutOccurred = false;
-	private WorkerResultSummary workerResultSummary  = new WorkerResultSummary(seed);
+	private WorkerResultSummary workerResultSummary;
 	private static AtomicInteger concurrentWorkers = new AtomicInteger(0);
 	private static AtomicInteger queuedWorkers = new AtomicInteger(0);
 	private WorkerTimestampedStatisticsSummary workerTimestampedStatisticsSummary = new WorkerTimestampedStatisticsSummary(seed);
@@ -54,6 +54,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 		rdg.reSeed(seed);
 		this.queryRate = queryRate;
 		this.seed = seed;
+		workerResultSummary = new WorkerResultSummary(seed);
 		this.numberoftraces = numberoftraces;
 		int numberOfQueuedWorkers = queuedWorkers.incrementAndGet();
 		queuedStatistic = new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_QUEUED_USERS, System.currentTimeMillis(), numberOfQueuedWorkers);
@@ -133,18 +134,23 @@ public class Worker implements Callable<WorkerResultSummary> {
 						
 						JSONObject facetValue = getFacetValue(queryType, rand,
 								facetResults);
-						if (facetValue == null || queryResult == null) {
+						if ((facetValue == null || queryResult == null) && !this.timeoutOccurred) {
 							break;
 						}
-
-						query = queryFactory.generateQuery(applyFilter(
+						if(!timeoutOccurred)
+						{
+							query = queryFactory.generateQuery(applyFilter(
 								queryType, facetValue));
+						}
 						queryDepth++;
 					} while (queryDepth < maxQueryDepth
- 							&& rand.nextDouble() < probabilitySearchSatisfied && !timeoutOccurred);
+ 						//	&& rand.nextDouble() < probabilitySearchSatisfied && !timeoutOccurred);
+							&& rand.nextDouble() < probabilitySearchSatisfied);
 					recordTraceStatistics(traceStart, totalWaitTime,
 							totalCombinedNoAggregationsTime);
+					
 					completedTraces++;
+					LOG.info("Worker " + seed + " completed trace " + completedTraces);
 				} catch (Exception e) {
 					LOG.error(
 							"Worker " + seed + " unable to complete queries.",
@@ -307,8 +313,21 @@ public class Worker implements Callable<WorkerResultSummary> {
 			timeoutOccurred= true;
 			return null;
 		}
+		catch (java.util.concurrent.ExecutionException executionException)
+		{
+			if(executionException.getCause() instanceof java.util.concurrent.TimeoutException ||
+					executionException.getCause() instanceof java.net.ConnectException)
+			{
+				workerResultSummary.addStatistic(new QueryResultStatistics(type,  timeout));
+				timeoutOccurred= true;
+				return null;	
+			}
+			LOG.error(this.seed + " got a non timeout exception ", executionException);
+			throw executionException;
+		}
 		catch (Exception otherException)
 		{
+			LOG.error(this.seed + " got a non timeout exception ", otherException);
 			throw otherException;
 		}
 	}
@@ -412,5 +431,9 @@ public class Worker implements Callable<WorkerResultSummary> {
 	public WorkerTimestampedStatisticsSummary getTimestampedStatisticsSummary()
 	{
 		return workerTimestampedStatisticsSummary;
+	}
+
+	public long getSeed() {
+		return seed;
 	}
 }
