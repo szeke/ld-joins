@@ -17,10 +17,10 @@ Jason
 % how long does it take display results using a visualization
  \begin{table} 
     \begin{tabular}{ c c c c c }
-        Database & Click Search & Click Viz & Keyword & Facet & Facet (Missing) & Anchored \\ 
-        Virtuoso 7 & 1725 & 1790 & 439 & 1039 & 1008 & 206 \\ 
-        ES 1.7.3 Standalone & 111 & 1351 & 93 & 77 & 76 & 1356 \\ 
-        ES 1.7.3 Cluster & 60 & 156 & 41 & 22 & 21 & 84 \\ 
+        Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
+        Virtuoso 7 & 439 & 1039 & 1008 & 1725 & 206 &  1790 \\ 
+        ES 1.7.3 Standalone & 93 & 77 & 76 & 111 & 1356 & 1351 \\ 
+        ES 1.7.3 Cluster & 41 & 22 & 21 & 60 & 84 & 156 \\ 
     \end{tabular} 
     \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load}
     \label{table:qt_single_user}
