@@ -9,12 +9,20 @@ Jason
 % c. time to execute queries (sparql lots / ld fragments infinity / ld joins litte )
 % d. benchmark explanation
 
+
 % intuition
 % how long does it take to do a keyword search
 % how long does it take to facet
 % how long does it take to assemble an entity
 % how long does it take display results using a visualization
-% for virtuoso queries, we need to parallelize 
-% the driver should generate the sparql queries and write them to a file
-% we can report the results two ways.  queries just create the facets or queries return actual nested entities.
-% need to figure out how to reconstruct the json-ld from the sparql results
+ \begin{table} 
+    \begin{tabular}{ c c c c c }
+        Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
+        Virtuoso 7 & 439 & 1039 & 1008 & 1725 & 206 &  1790 \\ 
+        ES 1.7.3 Standalone & 93 & 77 & 76 & 111 & 1356 & 1351 \\ 
+        ES 1.7.3 Cluster & 41 & 22 & 21 & 60 & 84 & 156 \\ 
+    \end{tabular} 
+    \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load}
+    \label{table:qt_single_user}
+\end{table}
+

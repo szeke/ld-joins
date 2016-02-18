@@ -16,3 +16,193 @@
 % d. indexing documents
 % describe the operations we need to perform over the doucments
 \end{verbatim}
+
+LD-VIEWS are designed to enable end users to efficiently query a collection of entities of the same type and their RDF neighborhood in a prescriptive way.   
+This is accomplished by leveraging the concept of SQL views.  
+Views in SQL are used for many reasons: restricting data access, abstracting complexity, and, of course, efficiency. 
+When a view is the product of many joins, it is often materialized, or pre-computed, to avoid having to pay the enormous expense of the join operations.  
+Joins are troublesome when the data involved no longer fits in the working memory of a single machine and has to spill to disk.  
+Even worse is when the join involves data so large it needs to be distributed across many machines.  
+When joins are the primary operation, like a SPARQL query taking full advantage of the language's expressivity, the issue is compounded many times over.         
+
+LD-VIEWS aims to alleviate this issue and avoid expensive join operations by creating a materialized view for each collection tailored to the query needs of the end users.  
+A view is materialized by iterating over a collection and pre-computing certain joins against other entities in each entity's RDF neighborhood along prescribed predicate paths.  
+The view is then serialized as a collection of denormalized JSON-LD documents containing the entity and the triples in the neighborhood relevant to the desired queries.  
+
+The amount of data that necessitates the LD-VIEWS approach means it requires a distributed store and query engine.   
+In memory key value stores like Redis or Riak and column family-stores like HBase or Cassandra meet the distributed requirement, but lack native indexing and full text search support.  
+Developers instead resort to schemes for mitigating the need for joins and managing consistency between secondary indexes and data, driving up the complexity of the application, but empirical results have demonstrated that they still cannot achieve the necessary response times.   
+
+Massively parallel processing databases like Impala, SparkSQL, and Druid might be able to achieve our desired response times without indexing. 
+They achieve their response times by being able to quickly scan entire datasets on the execution of every query by storing the data in memory across many machines.  
+Because they are required to scan entire datasets, however, they are relatively inefficient when the result set is orders of magnitude smaller than the dataset, i.e. looking for a needle in the haystack.  
+Smart partitioning strategies can help manage the size of the subset needed to evaluate the query, but truly avoiding having to scan an entire dataset requires indexes. 
+
+The candidates with strong indexing capabilities and scalable query performance that remain fall in to the family of document-oriented databases like MongoDB, Couchbase, Solr, and Elasticsearch.  
+
+
+%Each query against the view applies one or more filters to the collection of entities aand then either retrieves entities or aggreperforms a number of set operations on the entities in the collection.    
+
+For generality, our approach to generating views for efficient RDF query processing assumes we begin with an RDF graph in N-Triples, aligned to a common vocabulary, as input.  
+A common vocabulary is not a hard requirement, but, rather, a rule of thumb to keep the number of combinations of possible types and properties for the views to support manageable.
+It can be achieved through a variety of means, including, but not limited to, mapping from legacy sources to RDF using R2RML, executing SPARQL construct queries, etc. 
+The output of the approach will be a serialization of the RDF graph as denormalized, nested JSON-LD documents with corresponding indexes loaded into a NoSQL store needed to support querying the views. 
+
+The JSON-LD standard has an algorithm, called framing, for translating an RDF graph into a collection of trees so it can be serialized as JSON-LD documents. %insert citation
+The instructions for translating the RDF graph are captured in a JSON document called a frame.  
+LD-VIEWS requires a frame for each view.  
+We wrote a frame to create a view for each of our major classes: WebPage, Offer, AdultService, Seller, Phone, and Email.  
+An example frame for our Offer view is in figure blarg.  
+Depending on the application's query needs, more than one frame and view can be created for each class.  
+
+\subsection{View Definition}
+\subsubsection{Nesting}
+%Here I need to talk about why we need nesting
+\subsubsection{Facets}
+%Here I need to talk about why we need facets
+\subsubsection{Multiple views}
+%Here I need to talk about why we need multiple views
+
+\subsection{Framing}
+To construct the Offer view, the source RDF N-Triples and the view's corresponding frame are fed into our implementation of the JSON-LD framing algorithm.  
+
+\subsubsection{Flattened JSON-LD Documents}
+The implementation takes the unordered collection of N-Triples, sorts them by subject URI to create an N-Triples document for each subject, and then uses the open source JSON-LD Java library to translate the N-Triples documents into flattened JSON-LD documents, which contain a JSON object representing each subject and all its triples.
+Sample flattened JSON-LD documents for Offer and WebPage are seen in figure blorg along with their triples in figure blyrg.
+
+\subsubsection{Partitioning JSON-LD Documents By Frame Types}
+Once we have flattened JSON-LD documents, we can start processing the frame. 
+Each JSON object in the frame corresponds to a collection of flattened JSON-LD documents with subjects that have the same type as specified in the JSON object's @type field.
+Each JSON object field's name corresponds to the predicate of a triple.
+In the Offer view frame, for the JSON Object with the @type "PhoneNumber", the "name" field corresponds to the predicate schema:name.
+This means that the framer expects to find triples for subjects with the RDF type "PhoneNumber" that have the predicate schema:name.
+
+The algorithm enumerates all the @types found in the frame and then partitions the flattened JSON-LD documents into collections, one for each @type, according to each document's subject's type.
+A document can be in multiple collections if it's subject has multiple matching @types.  
+This facilitates nesting the subjects' JSON documents as specified by the frame.
+
+\subsubsection{Frame Leaf Nodes}
+For a given frame, its JSON objects are organized into a tree where each object is either an internal or leaf node.
+Any JSON object in the frame that only has fields with literal or empty JSON object values is considered a leaf object.
+The frame's leaf objects, e.g. PhoneNumber, EmailAddress, PostalAddress, GeoCoordinates, AdultService, PersonOrOrganization, and PriceSpecification for the Offer view, are loaded directly from their respective collections by type.
+
+\subsubsection{Frame Internal Nodes}
+A frame's tree's internal nodes have fields with JSON object values which have a defined @type field, e.g. Offer, PersonOrOrganization, Place, WebPage for our Offer view.
+A field's name is a directed labeled edge between internal node and child and corresponds to the predicate of a triple.
+PersonOrOrganization has two children, PhoneNumber and EmailAddress, which are connected by "telephone" and "email" predicates respectively.
+The PersonOrOrganization documents will contain triples for its subjects with the telephone predicate and objects which correspond to subjects in the PhoneNumber collection.
+Similarly for the email predicate and EmailAddress collection.
+
+\subsubsection{Frame Special Processing}
+The @explicit option is a JSON-LD convention which allows the user to indicate which triples should be included in the serialized output by property name.
+Any triples with properties not explicitly included in the frame for subjects of that type will be excluded.
+This becomes important when nesting objects with many triples that are not relevant to the view.  
+For example, without the @explicit option, an EmailAddress object, when nested in an offer, would contain a schema:owner triple for every seller that used the EmailAddress.
+For some EmailAddress subjects, there are thousands of seller owners, which can drastically increase the size of the object and the amount of indexing required.
+For our algorithm, empty JSON objects mean that the corresponding triples should be included but not evaluated any further.
+@explicit can be applied to both internal and leaf nodes.
+
+\subsubsection{Framing Algorithm}
+The algorithm now nests objects by recursively traversing the frame's tree in a depth-first order.  
+For each leaf node, no nesting is required, but we apply any JSON-LD processing options, like @explicit as indicated in PhoneNumber and EmailAddress, to the original document collection specified by the node's @type field, and make available the processed collection of documents to its parent, in this case PersonOrOrganization.  
+For each internal node, we apply any processing options as needed and then the algorithm attempts to nest the documents from its children.  
+The Offer view frame doesn't specify any processing options for PersonOrOrganization, so it just nests its children.
+For each child node, the algorithm iterates over the documents corresponding to the internal node's type, i.e. PersonOrOrganization and, for triples with the predicate corresponding to that child, it replaces object URI strings with the corresponding JSON-LD document from the child collection.  
+Once an internal node has completed nesting its children's documents, the new nested collection is made available for its parent node to nest.
+This continues until the root node has finished nesting its children.
+This algorithm is then applied to each view's frame, resulting in a collection of denormalized JSON-LD documents with documents nested as deep as required by the frame ready to be indexed for each view.
+An example framed document for the Offer view is shown in Figure blurgh.
+
+It is worth mentioning that indiscriminately denormalizing and nesting JSON-LD documents can quickly lead to an explosion of data.  For example, if a user wanted to define a view on emails by nesting all the sellers that used that email and then the other emails those sellers use, you could get a giant expansion if the network of sellers and email addresses is not sparse.    
+
+\subsubsection{Framing Algorithm Implementation}
+While the recursive algorithm for traversing the frame is straight forward, it belies the enormous computational resources nesting requires to join child documents on URIs.
+Previously, the only available implementation of the framing algorithm is in the official JSON-LD libraries.  %insert citation
+While efficient, they are of limited use because they are single threaded and require the triples and subsequent documents to fit in memory.
+The sheer size of our input dataset and the number of joins necessitated a parallel implementation that could either spill intermediate results to disk or take advantage of the memory available across many machines. 
+Initial attempts at implementing the algorithm using Apache Hive were prohibitively slow due to its poor distributed join performance and the excessive IO required by Apache MapReduce.  
+An implementation of the algorithm in Apache Spark provided much quicker results, due to its ability to efficiently perform joins in memory.   
+
+\begin{verbatim}
+{ 
+  "@type" : "Offer",
+  "seller" : {
+    "@type" : "PersonOrOrganization",
+    "telephone": {
+      "@type": "PhoneNumber",
+      "@explicit": true,
+      "name": {},
+      "uri": {},
+      "a": {}
+    },
+    "email": {
+      "@type": "EmailAddress",
+      "@explicit": true,
+      "name": {},
+      "uri": {},
+      "a": {}
+    }
+  },
+  "availableAtOrFrom": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress"
+    },
+    "geo": {
+      "@type":"GeoCoordinates"
+    }
+  },
+  "itemOffered": {
+    "@type": "AdultService"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "publisher": {
+      "@type": "Organization"
+    }
+  },
+  "priceSpecification": {
+    "@type": "PriceSpecification"
+  }
+}
+
+\end{verbatim}
+
+\begin{verbatim}
+{
+"title": "Live Escort Reviews - 210-624-8357 - Pretty Brown Brown - 20",
+"validFrom": "2015-05-26T23:10:00",
+"seller": {
+  "uri": "http://dig.isi.edu/ht/data/72D0784D5294673A759DF829F15E21601BB67B87/personororganization",
+  "telephone": [
+     {
+        "name": [
+           "2106248357"
+        ]
+     }
+  ]
+},
+"uri": "http://dig.isi.edu/ht/data/62688523/offer",
+"mainEntityOfPage": {
+  "description": [
+     "Pretty Brown Brown - 20\\n"
+  ],
+  "publisher": {
+     "name": [
+        "liveescortreviews.com"
+     ]
+  }
+},
+"availableAtOrFrom": {
+  "address": [
+     {
+        "addressLocality": "San Diego",
+        "addressRegion": "California"
+     }
+  ]
+}
+}
+\end{verbatim}
+
+% need to talk about indexing here
+\subsection{Indexing}
