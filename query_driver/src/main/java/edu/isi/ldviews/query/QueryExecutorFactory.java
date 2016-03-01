@@ -2,7 +2,7 @@ package edu.isi.ldviews.query;
 
 public class QueryExecutorFactory {
 	
-	public static QueryExecutor getQueryExecutor(String databaseType, String host, int port, String index)
+	public static QueryExecutor getQueryExecutor(String databaseType, String host, int port, String index, int timeout)
 	{
 		if(databaseType.compareTo("ES") == 0)
 		{
@@ -10,7 +10,7 @@ public class QueryExecutorFactory {
 		}
 		if(databaseType.compareTo("SPARQL") == 0)
 		{
-			return new SPARQLQueryExecutor(host, port);
+			return new SPARQLQueryExecutor(host, port, timeout);
 		}
 		return null;
 	}

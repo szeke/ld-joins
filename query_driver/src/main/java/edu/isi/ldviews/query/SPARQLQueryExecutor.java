@@ -14,14 +14,16 @@ import com.ning.http.client.Response;
 
 public class SPARQLQueryExecutor implements QueryExecutor {
 	private static final Logger LOG = LoggerFactory.getLogger(SPARQLQueryExecutor.class); 
-	AsyncHttpClient asyncHttpClient = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setReadTimeout(120000).setRequestTimeout(120000).setConnectTimeout(120000).build());
+	AsyncHttpClient asyncHttpClient;
 	private String host;
 	private int port;
-	
-	public SPARQLQueryExecutor(String host, int port)
+	private int timeout;
+	public SPARQLQueryExecutor(String host, int port, int timeout)
 	{
 		this.host = host;
 		this.port = port;
+		this.timeout = timeout;
+		asyncHttpClient =  new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setReadTimeout(timeout).setRequestTimeout(timeout).setConnectTimeout(timeout).build());
 	}
 	public Future<QueryResult> execute(Query query) {
 		
@@ -32,7 +34,7 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 		LOG.trace(queryString);
 		requestBuilder.addFormParam("query", queryString);
 		requestBuilder.addHeader("Accept", "text/csv");
-		requestBuilder.setRequestTimeout(120000);
+		requestBuilder.setRequestTimeout(timeout);
 		final QueryType queryType = query.getQueryType();
 		return requestBuilder
 				.execute(new AsyncCompletionHandler<QueryResult>() {

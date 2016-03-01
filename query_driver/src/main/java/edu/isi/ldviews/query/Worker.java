@@ -26,7 +26,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 	private long seed;
 	private int keywordCount = 2;
 	private double probabilitySearchSatisfied = 0.9;
-	private static long timeout = 120000;
+	private long timeout;
 	private QueryExecutor queryExecutor;
 	private int maxQueryDepth = 3;
 	private RandomDataGenerator rdg;
@@ -42,7 +42,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 	private TimestampedStatistic queuedStatistic;
 	public Worker(QueryExecutor queryExecutor, QueryFactory queryFactory,
 			JSONObject querySpec, Keywords keywords, long seed,
-			double queryRate, int numberoftraces) {
+			double queryRate, int numberoftraces, int timeout) {
 		this.queryExecutor = queryExecutor;
 		this.queryFactory = queryFactory;
 		// each worker is going to modify the spec to insert filters and stuff
@@ -58,6 +58,7 @@ public class Worker implements Callable<WorkerResultSummary> {
 		this.numberoftraces = numberoftraces;
 		int numberOfQueuedWorkers = queuedWorkers.incrementAndGet();
 		queuedStatistic = new TimestampedStatistic(TimestampedStatisticType.NUMBER_OF_QUEUED_USERS, System.currentTimeMillis(), numberOfQueuedWorkers);
+		this.timeout = timeout;
 		
 	}
 

@@ -46,7 +46,7 @@ public class Driver {
 	private int concurrentnumberofworkers;
 	private int numberoftraces;
 	private double arrivalrate;
-	
+	private int timeout = 120000;
 	public Driver(CommandLine cl)
 	{
 		parseCommandLineOptions(cl);	
@@ -101,9 +101,9 @@ public class Driver {
 			long workerSeed = rand.nextLong();
 			
 			{
-			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname);
+			QueryExecutor queryExecutor = QueryExecutorFactory.getQueryExecutor(databasetype, hostname, portnumber, indexname, timeout);
 			queryExecutors.add(queryExecutor);
-			Worker worker = new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3, numberoftraces);
+			Worker worker = new Worker(queryExecutor, queryFactory, querySpec, keywords, workerSeed, 0.3, numberoftraces, timeout);
 			workers.add(worker);
 			workerResults.add(executor.submit(worker));
 			}
