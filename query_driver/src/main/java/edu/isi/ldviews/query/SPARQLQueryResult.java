@@ -59,6 +59,11 @@ public class SPARQLQueryResult implements QueryResult {
 		{
 			return null;
 		}
+		catch(java.lang.IllegalArgumentException e)
+		{
+			
+			return null;
+		}
 	}
 
 	@Override
