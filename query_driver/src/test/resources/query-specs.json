@@ -225,14 +225,6 @@
           "path": "age"
         },
         {
-          "name": "Eyes",
-          "path": "eyeColor"
-        },
-        {
-          "name": "Hair",
-          "path": "hairColor"
-        },
-        {
           "name": "Weight",
           "path": "weight"
         },
@@ -271,16 +263,6 @@
           {
             "name": "Age",
             "path": "age",
-            "can_be_null": "true"
-          },
-          {
-            "name": "Eyes",
-            "path": "eyeColor",
-            "can_be_null": "true"
-          },
-          {
-            "name": "Hair",
-            "path": "hairColor",
             "can_be_null": "true"
           },
           {
@@ -427,16 +409,6 @@
           {
             "name": "Age",
             "path": "makesOffer.itemOffered.age",
-            "can_be_null": "true"
-          },
-          {
-            "name": "Eyes",
-            "path": "makesOffer.itemOffered.eyeColor",
-            "can_be_null": "true"
-          },
-          {
-            "name": "Hair",
-            "path": "makesOffer.itemOffered.hairColor",
             "can_be_null": "true"
           },
           {
