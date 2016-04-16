@@ -222,7 +222,7 @@
         },
         {
           "name": "Age",
-          "path": "personAge"
+          "path": "age"
         },
         {
           "name": "Eyes",
@@ -270,7 +270,7 @@
           },
           {
             "name": "Age",
-            "path": "personAge",
+            "path": "age",
             "can_be_null": "true"
           },
           {
@@ -426,7 +426,7 @@
           },
           {
             "name": "Age",
-            "path": "makesOffer.itemOffered.personAge",
+            "path": "makesOffer.itemOffered.age",
             "can_be_null": "true"
           },
           {
@@ -624,7 +624,7 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:personAge ?category .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:age ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -635,7 +635,7 @@
               "aggs": {
                 "phone--associated-ages": {
                   "terms": {
-                    "field": "personAge"
+                    "field": "age"
                   }
                 }
               }
@@ -775,7 +775,7 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this email.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:personAge ?category .",
+            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:age ?category .",
             "anchor_path": "name",
             "elastic": {
               "filter": {
@@ -786,7 +786,7 @@
               "aggs":{
                 "email--associated-ages":{
                   "terms": {
-                    "field": "personAge"
+                    "field": "age"
                   }
                 }
               }
