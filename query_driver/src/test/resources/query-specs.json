@@ -164,7 +164,7 @@
             "comment": "Show a sparkline of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "ANCHOR s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category) .",
+            "sparql": " ?item a s:Offer ; s:seller ANCHOR ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category) .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -187,7 +187,7 @@
             "comment": "Show a sparkchart of cities of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "ANCHOR s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "sparql": "?item a s:Offer ; s:seller ANCHOR ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -333,7 +333,7 @@
             "name": "seller",
             "query": "anchored_facet",
             "sparql": "?common_phone a m:PhoneNumber ; s:name ANCHOR . ?seller a m:PersonOrOrganization ; s:telephone ?common_phone ; s:telephone ?item . ?item s:name ?category .",
-            "anchor_path": "offers.seller.telephone.name",
+            "anchor_path": "offers.seller.telephone.name" ,
             "anchor_type": "literal",
             "elastic": {
               
@@ -469,12 +469,13 @@
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
             "name": "seller",
             "query": "anchored_facet",
-            "sparql": "ANCHOR s:telephone ?ph . ?item a s:Seller ; s:telephone ?ph ; s:telephone ?category .",
-            "anchor_path": "telephone.uri",
+            "sparql": "?common_phone a m:PhoneNumber ; s:name ANCHOR . ?seller a m:PersonOrOrganization ; s:telephone ?common_phone ; s:telephone ?item . ?item s:name ?category .",
+            "anchor_path": "telephone.name",
+            "anchor_type": "literal",
             "elastic": {
               "filter": {
                 "terms": {
-                  "telephone.uri": "ANCHOR"
+                  "telephone.name": "ANCHOR"
                 }
               },
                "aggs":{
