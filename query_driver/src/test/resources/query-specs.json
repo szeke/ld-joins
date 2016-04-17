@@ -69,7 +69,7 @@
                 "page--revisions" : {
                 "date_histogram": {
                   "field": "dateCreated",
-                  "interval": "week"
+                  "interval": "month"
                 }
                 }
               }
@@ -164,7 +164,7 @@
             "comment": "Show a sparkline of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "ANCHOR s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:validFrom ?category .",
+            "sparql": "ANCHOR s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category) .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -176,7 +176,7 @@
                 "offer--offers-by-this-seller":{
                   "date_histogram": {
                     "field": "validFrom",
-                    "interval": "week"
+                    "interval": "month"
                   }
                 }
               }
@@ -288,7 +288,7 @@
             "comment": "Show a sparkline of other offers for this adult service.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "ANCHOR s:offers ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "sparql": "ANCHOR s:offers ?item . ?item a s:Offer ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category)  .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -300,7 +300,7 @@
                 "adultservice--offers-for-this-service":{
               "date_histogram": {
                 "field": "validFrom",
-                "interval": "week"
+                "interval": "month"
               }
             }
             }
@@ -423,7 +423,7 @@
             "comment": "Show a sparkline of other offers from this seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "ANCHOR s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "sparql": "ANCHOR s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category)  .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -435,7 +435,7 @@
                 "seller--offers-from-this-seller":{
               "date_histogram": {
                 "field": "validFrom",
-                "interval": "week"
+                "interval": "month"
               }
             }}
             }
@@ -552,7 +552,7 @@
             "comment": "Show a sparkline of offers by sellers using this phone number.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category) .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -564,7 +564,7 @@
                 "phone--offers-for-this-phone-number": {
                   "date_histogram": {
                     "field": "validFrom",
-                    "interval": "week"
+                    "interval": "month"
                   }
                 }
               }
@@ -703,7 +703,7 @@
             "comment": "Show a sparkline of offers by sellers using this email.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category) .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -715,7 +715,7 @@
                 "email--offers-for-this-email": {
                   "date_histogram": {
                     "field": "validFrom",
-                    "interval": "week"
+                    "interval": "month"
                   }
                 }
               }
