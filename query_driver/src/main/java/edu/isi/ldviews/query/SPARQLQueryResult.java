@@ -87,17 +87,25 @@ public class SPARQLQueryResult implements QueryResult {
 		}
 		String field =null;
 		int fieldIndex = -1;
+		if(path.compareTo("uri") == 0)
+		{
+			fieldIndex = 0;
+		}
+		else
+		{
 		for (int i = 0; i < resultsFieldsSpec.length(); i++)
 		{
 			JSONObject fieldSpec = resultsFieldsSpec.getJSONObject(i);
+			
 			if(fieldSpec.getString("path").compareTo(path) ==0)
 			{
 				field = fieldSpec.getString("name");
-				fieldIndex = i;
+				Map<String,Integer> headerMap = parser.getHeaderMap();
+				fieldIndex =headerMap.get(field);
 				break;
 			}
 		}
-			
+		}
 		for(CSVRecord record : records)
 		{
 			String uri = record.get(0);
@@ -117,7 +125,20 @@ public class SPARQLQueryResult implements QueryResult {
 				resultWithValues = uniqueResultsWithValues.get(uri);
 				anchors = resultWithValues.getJSONArray("anchors");
 			}
-			anchors.put(record.get(fieldIndex));
+			String anchorValue = record.get(fieldIndex);
+			boolean duplicated = false;
+			for(int i = 0; i < anchors.length(); i++)
+			{
+				if(anchorValue.compareTo(anchors.getString(i))== 0)
+				{
+					duplicated = true;
+					break;
+				}
+			}
+			if(!duplicated)
+			{
+				anchors.put(anchorValue);
+			}
 			
 		}
 		return new JSONArray(uniqueResultsWithValues.values());
