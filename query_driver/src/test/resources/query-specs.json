@@ -56,8 +56,9 @@
             "comment": "Show a sparkline when other WebPage with the same url were posted.",
             "name": "webpage",
             "query": "anchored_timeline",
-            "sparql": "URI s:url ?url . ?item a s:WebPage ; s:url ?url ; s:dateCreated ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category)",
-              "anchor_path": "url",
+            "sparql": "?item a s:WebPage ; s:url ANCHOR ; s:dateCreated ?value . bind (strdt(?value, xsd:dateTime) as ?date) bind (concat(year(?date), \"-\", month(?date)) as ?category)",
+            "anchor_path": "url",
+            "anchor_type": "literal", 
             "elastic": {
               "filter": {
                 "terms": {
@@ -163,7 +164,7 @@
             "comment": "Show a sparkline of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:validFrom ?category .",
+            "sparql": "ANCHOR s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:validFrom ?category .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -186,7 +187,7 @@
             "comment": "Show a sparkchart of cities of other offers by the same seller.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "sparql": "ANCHOR s:seller ?seller . ?item a s:Offer ; s:seller ?seller ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "seller.uri",
             "elastic": {
               "filter": {
@@ -287,7 +288,7 @@
             "comment": "Show a sparkline of other offers for this adult service.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI s:offers ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "sparql": "ANCHOR s:offers ?item . ?item a s:Offer ; s:validFrom ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -310,7 +311,7 @@
             "comment": "Show a sparkchart of cities of other offers for the same service.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI s:offers ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "sparql": "ANCHOR s:offers ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -331,13 +332,13 @@
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
             "name": "seller",
             "query": "anchored_facet",
-            "sparql": "URI s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
-            "anchor_path": "offers.seller.telephone.name",
+            "sparql": "ANCHOR s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
+            "anchor_path": "offers.seller.telephone.uri",
             "elastic": {
               
               "filter": {
                 "terms": {
-                  "telephone.name": "ANCHOR"
+                  "telephone.uri": "ANCHOR"
                 }
               },
               "aggs":{"adultservice--associated-phone-numbers":{
@@ -422,7 +423,7 @@
             "comment": "Show a sparkline of other offers from this seller.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "sparql": "ANCHOR s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -444,7 +445,7 @@
             "comment": "Show a sparkchart of cities of other offers from this seller.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "sparql": "ANCHOR s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
             "anchor_path": "uri",
             "elastic": {
               "filter": {
@@ -467,12 +468,12 @@
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller.",
             "name": "seller",
             "query": "anchored_facet",
-            "sparql": "URI s:telephone ?ph . ?item a s:Seller ; s:telephone ?ph ; s:telephone ?category .",
-            "anchor_path": "telephone.name",
+            "sparql": "ANCHOR s:telephone ?ph . ?item a s:Seller ; s:telephone ?ph ; s:telephone ?category .",
+            "anchor_path": "telephone.uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "telephone.name": "ANCHOR"
+                  "telephone.uri": "ANCHOR"
                 }
               },
                "aggs":{
@@ -551,12 +552,12 @@
             "comment": "Show a sparkline of offers by sellers using this phone number.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.telephone.name": "ANCHOR"
+                  "seller.telephone.uri": "ANCHOR"
                 }
               },
               "aggs":{
@@ -574,12 +575,12 @@
             "comment": "Show a sparkchart of cities of offers by sellers using this phone number.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.telephone.name": "ANCHOR"
+                  "seller.telephone.uri": "ANCHOR"
                 }
               },
               "aggs":{
@@ -596,12 +597,12 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:age ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:age ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.telephone.name": "ANCHOR"
+                  "offers.seller.telephone.uri": "ANCHOR"
                 }
               },
               "aggs": {
@@ -618,13 +619,13 @@
             "comment": "Show a sparkchart names of adult services by sellers using this phone number.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item . ?item a m:AdultService ; s:name ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer/s:itemOffered ?item . ?item a m:AdultService ; s:name ?category .",
+            "anchor_path": "uri",
             "elastic": {
               
               "filter": {
                 "terms": {
-                  "offers.seller.telephone.name": "ANCHOR"
+                  "offers.seller.telephone.uri": "ANCHOR"
                 }
               },
               "aggs": {
@@ -702,12 +703,12 @@
             "comment": "Show a sparkline of offers by sellers using this email.",
             "name": "offer",
             "query": "anchored_timeline",
-            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:validFrom ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.email.name": "ANCHOR"
+                  "seller.email.uri": "ANCHOR"
                 }
               },
               "aggs":{
@@ -725,12 +726,12 @@
             "comment": "Show a sparkchart of cities of offers by sellers using this email.",
             "name": "offer",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer ?item . ?item a s:Offer ; s:availableAtOrFrom/s:address/s:addressLocality ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "seller.email.name": "ANCHOR"
+                  "seller.email.uri": "ANCHOR"
                 }
               },
               "aggs":{
@@ -747,12 +748,12 @@
             "comment": "Show a sparkchart ages of adult services by sellers using this email.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:age ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer/s:itemOffered ?item. ?item a m:AdultService ; m:age ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.email.name": "ANCHOR"
+                  "offers.seller.email.uri": "ANCHOR"
                 }
               },
               "aggs":{
@@ -769,12 +770,12 @@
             "comment": "Show a sparkchart names of adult services by sellers using this email.",
             "name": "adultservice",
             "query": "anchored_facet",
-            "sparql": "URI m:owner/s:makesOffer/s:itemOffered ?item . ?item a m:AdultService ; s:name ?category .",
-            "anchor_path": "name",
+            "sparql": "ANCHOR m:owner/s:makesOffer/s:itemOffered ?item . ?item a m:AdultService ; s:name ?category .",
+            "anchor_path": "uri",
             "elastic": {
               "filter": {
                 "terms": {
-                  "offers.seller.email.name": "ANCHOR"
+                  "offers.seller.email.uri": "ANCHOR"
                 }
               },
               "aggs":{"email--associated-names":{

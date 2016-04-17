@@ -260,12 +260,21 @@ public class SPARQLQuery implements Query {
 	public void addAggregations(JSONObject queryAggregationsSpec,
 			JSONObject anchor) {
 		// TODO Auto-generated method stub
-		selectStatement = "select sample(?uri) as ?uri ?category count(?item) as ?count where \n";
+		selectStatement = "select sample(?anchor) as ?anchor ?category count(?item) as ?count where \n";
 		JSONArray anchors = anchor.getJSONArray("anchors");
 		
-		String bind = "BIND (iri(<" + anchors.getString(0) +">) as ?uri) .\n";
+		String anchorValue = anchors.getString(0);
+		if(queryAggregationsSpec.has("anchor_type") && queryAggregationsSpec.getString("anchor_type").compareTo("literal") == 0)
+		{
+			anchorValue = "str(\"" + anchorValue + "\")";
+		}
+		else
+		{
+			anchorValue = "iri(<" + anchorValue + ">)";
+		}
+		String bind = "BIND ("+ anchorValue + " as ?anchor) .\n";
 		// TODO replace URI with ?uri in query spec
-		 aggSparql = bind + queryAggregationsSpec.getString("sparql").replaceFirst("URI", "?uri");
+		 aggSparql = bind + queryAggregationsSpec.getString("sparql").replaceFirst("ANCHOR", "?anchor");
 		
 		this.groupOrder = "group by ?category\norder by desc(?count)\n";
 	}

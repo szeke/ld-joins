@@ -1,9 +1,11 @@
 package edu.isi.ldviews.query;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -67,9 +69,10 @@ public class SPARQLQueryResult implements QueryResult {
 	}
 
 	@Override
-	public JSONArray getAnchorsFromResults(String field) {
+	public JSONArray getAnchorsFromResults(String path, JSONArray resultsFieldsSpec) {
 		JSONArray anchorsByResults = new JSONArray();
 		Set<String> uniqueURIs = new HashSet<String>();
+		Map<String, JSONObject> uniqueResultsWithValues = new HashMap<String, JSONObject>();
 		if(records.isEmpty())
 		{
 			try {
@@ -82,20 +85,42 @@ public class SPARQLQueryResult implements QueryResult {
 				e.printStackTrace();
 			}
 		}
+		String field =null;
+		int fieldIndex = -1;
+		for (int i = 0; i < resultsFieldsSpec.length(); i++)
+		{
+			JSONObject fieldSpec = resultsFieldsSpec.getJSONObject(i);
+			if(fieldSpec.getString("path").compareTo(path) ==0)
+			{
+				field = fieldSpec.getString("name");
+				fieldIndex = i;
+				break;
+			}
+		}
+			
 		for(CSVRecord record : records)
 		{
-			uniqueURIs.add(record.get(0));
+			String uri = record.get(0);
+			JSONObject resultWithValues = null;
+			JSONArray anchors= null;
+			if(!uniqueResultsWithValues.containsKey(uri))
+			{
+				resultWithValues = new JSONObject();
+				resultWithValues.put("uri", uri);
+				anchors =  new JSONArray();
+				resultWithValues.put("anchors", anchors);
+				uniqueResultsWithValues.put(uri, resultWithValues);
+				
+			}
+			else
+			{
+				resultWithValues = uniqueResultsWithValues.get(uri);
+				anchors = resultWithValues.getJSONArray("anchors");
+			}
+			anchors.put(record.get(fieldIndex));
+			
 		}
-		for(String uri : uniqueURIs)
-		{
-			JSONArray anchors= new JSONArray();
-			JSONObject resultWithValues = new JSONObject();
-			resultWithValues.put("uri", uri);
-			anchors.put(uri);
-			resultWithValues.put("anchors", anchors);
-			anchorsByResults.put(resultWithValues);
-		}
-		return anchorsByResults;
+		return new JSONArray(uniqueResultsWithValues.values());
 	}
 
 	@Override

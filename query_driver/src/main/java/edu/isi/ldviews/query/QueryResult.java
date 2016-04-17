@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public interface QueryResult {
 
 	JSONObject getFacetValue(JSONObject queryType, Random rand);
-	public JSONArray  getAnchorsFromResults(String field);
+	public JSONArray  getAnchorsFromResults(String field, JSONArray resultsFieldsSpec);
 	public long getQueryTime();
 	public QueryResultStatistics getQueryResultStatistics();
 }

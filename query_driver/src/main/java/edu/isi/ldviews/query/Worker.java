@@ -208,13 +208,15 @@ public class Worker implements Callable<WorkerResultSummary> {
 
 		JSONArray aggregationsSpec = queryType.getJSONObject(
 				"results").getJSONArray("aggregations");
+		JSONArray fieldsSpec = queryType.getJSONObject(
+				"results").getJSONArray("fields");
 		for (int j = 0; j < aggregationsSpec.length(); j++) {
 			JSONObject aggregationSpec = aggregationsSpec
 					.getJSONObject(j);
 			String anchorPath = aggregationSpec
 					.getString("anchor_path");
 			JSONArray anchors = queryResult
-					.getAnchorsFromResults(anchorPath);
+					.getAnchorsFromResults(anchorPath, fieldsSpec);
 			if(anchors == null)
 			{
 				throw new Exception("No anchors from query: " + query.toString());

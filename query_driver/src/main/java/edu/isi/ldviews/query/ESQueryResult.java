@@ -60,7 +60,7 @@ public class ESQueryResult implements QueryResult {
 	}
 
 	@Override
-	public JSONArray getAnchorsFromResults(String path) {
+	public JSONArray getAnchorsFromResults(String path, JSONArray fieldsSpec) {
 		if(!this.json.has("hits"))
 		{
 			return null;
