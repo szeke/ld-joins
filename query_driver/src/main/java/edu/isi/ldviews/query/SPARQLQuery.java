@@ -74,7 +74,7 @@ public class SPARQLQuery implements Query {
 	public void addFields(JSONArray queryFieldsSpec) {
 		StringBuilder selectStatementBuilder = new StringBuilder();
 		StringBuilder fields = new StringBuilder();
-		selectStatementBuilder.append("select ?x ");
+		selectStatementBuilder.append("select distinct ?x ");
 		for(int i = 0; i < queryFieldsSpec.length(); i++)
 		{
 			
