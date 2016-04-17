@@ -156,7 +156,8 @@ public class SPARQLQuery implements Query {
 		List<String> fieldsList = new ArrayList<String>(fields.length);
 		for(String field : fields)
 		{
-			fieldsList.add(prependPrefix(field));
+			if(field.compareTo("uri") != 0)
+				fieldsList.add(prependPrefix(field));
 		}
 		return fieldsList;
 			

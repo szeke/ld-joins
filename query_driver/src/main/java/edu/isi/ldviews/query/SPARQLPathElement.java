@@ -150,14 +150,20 @@ public class SPARQLPathElement {
 				sb.append(" ");
 				sb.append(value);
 				sb.append(" ");
-				if(!children.containsKey("?wp"))
+				boolean isChildReturned = false;
+				for(String child : children.keySet())
+				{
+					if(child.startsWith("?"))
+					{
+						isChildReturned = true;
+						subjectVar = child.substring(1);
+					}
+				}
+				if(!isChildReturned)
 				{
 				subjectVar = "_" + sb.length();
 				}
-				else
-				{
-					subjectVar = "wp";
-				}
+				
 				sb.append(" ?");
 				sb.append(subjectVar);
 				
@@ -168,7 +174,7 @@ public class SPARQLPathElement {
 			for(SPARQLPathElement child: children.values())
 			{
 			
-				if(subjectVar.compareTo("wp") != 0 )
+				if(subjectVar.compareTo("wp") != 0 && ("?"+ subjectVar).compareTo(child.value) != 0)
 				{
 					sb.append("optional { ");
 				sb.append("?");
