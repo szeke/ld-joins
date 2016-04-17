@@ -531,7 +531,7 @@
           },
           {
             "name": "Email",
-            "path": "seller.email.name",
+            "path": "owner.email.name",
             "can_be_null": "true"
           },
           {
@@ -683,7 +683,7 @@
           },
           {
             "name": "Phone",
-            "path": "seller.telephone.name"
+            "path": "owner.telephone.name"
           },
           {
             "name": "Name",
