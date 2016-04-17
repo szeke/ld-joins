@@ -263,18 +263,20 @@ public class SPARQLQuery implements Query {
 		selectStatement = "select sample(?anchor) as ?anchor ?category count(?item) as ?count where \n";
 		JSONArray anchors = anchor.getJSONArray("anchors");
 		
-		String anchorValue = anchors.getString(0);
-		if(queryAggregationsSpec.has("anchor_type") && queryAggregationsSpec.getString("anchor_type").compareTo("literal") == 0)
+		boolean isLiteral = queryAggregationsSpec.has("anchor_type") && queryAggregationsSpec.getString("anchor_type").compareTo("literal") == 0;
+		
+		StringBuilder sb = new StringBuilder("VALUES ?anchor {");
+		for(int i = 0; i < anchors.length(); i++)
 		{
-			anchorValue = "str(\"" + anchorValue + "\")";
+			sb.append(isLiteral? "\"": "<");
+			sb.append(anchors.getString(i));
+			sb.append(isLiteral? "\"": ">");
+			sb.append(" ");
 		}
-		else
-		{
-			anchorValue = "iri(<" + anchorValue + ">)";
-		}
-		String bind = "BIND ("+ anchorValue + " as ?anchor) .\n";
+		sb.append("}");
+		String values = sb.toString(); 
 		// TODO replace URI with ?uri in query spec
-		 aggSparql = bind + queryAggregationsSpec.getString("sparql").replaceFirst("ANCHOR", "?anchor");
+		 aggSparql = values + queryAggregationsSpec.getString("sparql").replaceFirst("ANCHOR", "?anchor");
 		
 		this.groupOrder = "group by ?category\norder by desc(?count)\n";
 	}
