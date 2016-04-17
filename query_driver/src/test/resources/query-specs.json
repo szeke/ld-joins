@@ -332,13 +332,14 @@
             "comment": "Show a sparkchart of phone numbers of any seller who has the same phone number as the seller of this service.",
             "name": "seller",
             "query": "anchored_facet",
-            "sparql": "ANCHOR s:offers/s:seller/s:telephone/m:owner ?item . ?item s:telephone ?category .",
-            "anchor_path": "offers.seller.telephone.uri",
+            "sparql": "?common_phone a m:PhoneNumber ; s:name ANCHOR . ?seller a m:PersonOrOrganization ; s:telephone ?common_phone ; s:telephone ?item . ?item s:name ?category .",
+            "anchor_path": "offers.seller.telephone.name",
+            "anchor_type": "literal",
             "elastic": {
               
               "filter": {
                 "terms": {
-                  "telephone.uri": "ANCHOR"
+                  "telephone.name": "ANCHOR"
                 }
               },
               "aggs":{"adultservice--associated-phone-numbers":{
