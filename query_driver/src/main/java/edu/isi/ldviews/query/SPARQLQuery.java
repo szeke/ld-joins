@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 public class SPARQLQuery implements Query {
 
-	private static final String PREFIXES = "prefix s: <http://schema.org/>\nprefix m: <http://memexproxy.com/ontology/>\nprefix xsd: <http://www.w3.org/2001/XMLSchema#>\n";
+	private static final String PREFIXES = "prefix s: <http://schema.org/>\nprefix m: <http://schema.dig.isi.edu/ontology/>\nprefix xsd: <http://www.w3.org/2001/XMLSchema#>\n";
 	private static final Set<String> memexPrefixed = new HashSet<String>();
 	static {
 		memexPrefixed.add("owner");
