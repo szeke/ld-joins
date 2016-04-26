@@ -124,25 +124,27 @@ Initial attempts at implementing the algorithm using Apache Hive were prohibitiv
 An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in half an hour, due to its ability to cache intermediate results and perform joins in memory.   
 
 \begin{verbatim}
-{ 
-  "@type" : "Offer",
-  "seller" : {
-    "@type" : "PersonOrOrganization",
-    "telephone": { "@type": "PhoneNumber" },
-    "email": { "@type": "EmailAddress" }
-  },
-  "availableAtOrFrom": {
-    "@type": "Place",
-    "address": { "@type": "PostalAddress" },
-    "geo": { "@type":"GeoCoordinates" }
-  },
-  "itemOffered": { "@type": "AdultService" },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "publisher": { "@type": "Organization" }
-  },
-  "priceSpecification": { "@type": "PriceSpecification"}
-}
+
+{
+  "@type": "WebPage",
+  "url": {},
+  "publisher": {"@type": "Organization"},
+  "mainEntity": {
+    "@type": "Offer",
+    "seller": {
+      "@type": "PersonOrOrganization",
+      "telephone": {"@type": "PhoneNumber"},
+      "email": {"@type": "EmailAddress"}
+    },
+    "availableAtOrFrom": {
+      "@type": "Place",
+      "address": {"@type": "PostalAddress",},
+      "geo": {"@type": "GeoCoordinates",}
+    },
+    "itemOffered": {"@type": "AdultService"},
+    "priceSpecification": {"@type": "PriceSpecification"}
+  }
+
 
 \end{verbatim}
 
