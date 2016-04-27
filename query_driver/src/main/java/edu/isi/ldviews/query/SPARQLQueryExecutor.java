@@ -39,11 +39,19 @@ public class SPARQLQueryExecutor implements QueryExecutor {
 		return requestBuilder
 				.execute(new AsyncCompletionHandler<QueryResult>() {
 
-					long timestamp =  System.currentTimeMillis();
+					@Override
+					public STATE onHeaderWriteCompleted() {
+						
+						this.timestamp = System.currentTimeMillis();
+						return STATE.CONTINUE;
+						
+					}
+					
+					long createdTimestamp =  System.currentTimeMillis();
+					long timestamp;
 					@Override
 					public QueryResult onCompleted(Response response)
 							throws Exception {
-						
 						LOG.trace(response.getResponseBody());
 						LOG.trace(""+response.getStatusCode());
 						if(response.getStatusCode() == 400)

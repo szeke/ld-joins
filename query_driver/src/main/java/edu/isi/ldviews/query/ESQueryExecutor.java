@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.AsyncHandler.STATE;
 import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
 import com.ning.http.client.Response;
 
@@ -41,12 +42,23 @@ public class ESQueryExecutor implements QueryExecutor {
 		requestBuilder.setRequestTimeout(120000);
 		return requestBuilder
 				.execute(new AsyncCompletionHandler<QueryResult>() {
-					long start = System.currentTimeMillis();
+					
+
+					@Override
+					public STATE onHeaderWriteCompleted() {
+						
+						this.timestamp = System.currentTimeMillis();
+						return STATE.CONTINUE;
+						
+					}
+					
+					long createdTimestamp =  System.currentTimeMillis();
+					long timestamp;
 					@Override
 					public QueryResult onCompleted(Response response)
 							throws Exception {
 						// Do something with the Response
-						return new ESQueryResult(response.getResponseBody(), start, System.currentTimeMillis(), queryType) ;
+						return new ESQueryResult(response.getResponseBody(), timestamp, System.currentTimeMillis(), queryType) ;
 					}
 
 					@Override
