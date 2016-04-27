@@ -205,7 +205,9 @@ As such, the chapter describes the handful indexes that can be built by permutin
 These indexes can either contain references to triples in unclustered indexes, or materialize them in clustered indexes, trading performance for space.
 Virtuoso can create bitmaps for predicate object pairs to speed subject lookups, which can be quickly combined to satisfy multiple constraints, which is analogous to how Elasticsearch applies many filters. 
 The important distinction in Virtuoso is that these bitmaps only enable filtering properties immediate to a subject, not property paths.
-If the property paths are many steps away, the joins must still be computed.  
+If the property paths are many steps away, the joins along the property paths must still be computed in a triple store.
+By creating so many indexes in Elasticsearch on a per document root basis, they are readily available to prune the candidate search results.
+
 
 
  
