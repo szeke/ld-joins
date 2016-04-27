@@ -3,11 +3,29 @@
 Jason
 %3.5 pages 
 % explain that elasticsearch is one way to support these queries
+
+
 % we need to map queries to elasticsearch
 % a. time to preprocess (sparql none / ld fragments a little / ld joins a lot
 % b. time to load (sparql some / ld fragments none / ld joins some
 % c. time to execute queries (sparql lots / ld fragments infinity / ld joins litte )
 % d. benchmark explanation
+
+Our benchmark is designed to simulate some number of users searching for evidence of human trafficking and connections between the web page ads, phone numbers, emails, adult services, sellers, and offers found in our knowledge graph.  
+User arrival is modeled as a Poisson process with a rate that follows the exponential distribution.  
+In our evaluation, the mean arrival time is varied to simulate different levels of query load.  
+We vary the mean arrival time from one user every ten seconds (a light load) to one user every second (a medium load) to ten users every one second (a heavy load).
+The benchmark also allows for artificially limiting the number of concurrent users searching the knowledge graph so that we can explore their interactive effects without overwhelming the server.  
+We run the benchmark with at three concurrency levels: a single user, at most ten users, and at most one hundred users.
+If a user arrives when the maximum level of concurrent users has been reached, the user will be placed in a queue until a slot is available.  
+We always run the benchmark with 100 users.
+
+
+Since triple stores do not have an inherent way to measure the quality of free text search results, query result ranking will not be evaluated in this paper, even though it is one of the most compelling reasons to use a NoSQL database, specifically a search engine, like Elasticsearch over a triple store like Virtuoso.
+Instead, we will focus solely on query response time under varying levels of load.
+Query response time will also be subject to meeting quality of service measures outlined in the Motivation section and driven by \cite{nielsen1994usability}.
+This means queries wil
+
 
 
 % intuition
