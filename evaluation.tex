@@ -29,6 +29,14 @@ In addition, to avoid unfairly penalizing Virtuoso because the SPARQL standard o
 This enables Virtuoso to take advantage of its text index.  
 Without it, the evaluation of even simple regular expression queries is incredibly expensive.  
 
+\subection{Benchmark Machines}
+For our evaluation we used the Virtuoso 7.2 Enterprise PAGO Edition\cite{virtuosopago} available on AWS on r3.2xlarge which has 8 CPUs and 61 GB of RAM and RHEL 7 installed.  
+The data was stored on EBS volumes backed by SSDs with the maximum provisioned IOPs available. 
+We also ran Elasticsearch using CentOS with the same instance type.  
+For our query driver, we used an Amazon Linux AMI 2015-09.2 on an instance type of m4.xlarge to ensure we had the best networking performance possible in the us-west-2 region.    
+For Virtuoso, we reused the configuration published by the Berlin SPARQL Benchmark V7 \cite{bsbmv7}.
+For Elasticsearch we made no configuration changes except to increase the size of thread pools so that new queries were not rejected when the pending search queue was full. 
+
 \subsection{Benchmark Execution}
 User arrival is modeled as a Poisson process with an arrival rate that follows a configurable exponential distribution.  
 In our evaluation, the mean arrival time is varied to simulate different levels of query load.  
