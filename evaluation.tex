@@ -11,20 +11,53 @@ Jason
 % c. time to execute queries (sparql lots / ld fragments infinity / ld joins litte )
 % d. benchmark explanation
 
-Our benchmark is designed to simulate some number of users searching for evidence of human trafficking and connections between the web page ads, phone numbers, emails, adult services, sellers, and offers found in our knowledge graph.  
-User arrival is modeled as a Poisson process with a rate that follows the exponential distribution.  
+For our evaluation, we designed a benchmark to simulate some number of users iteratively refining searches for evidence of human trafficking by exploring connections between web pages containing ads and the entities extract from them, namely phone numbers, emails, adult services, sellers, and offers, against databases serving the knowledge graph.
+The benchmark measured query response time under varying levels of load.
+Query response time was also subject to meeting quality of service measures outlined in the Motivation section and driven by \cite{nielsen1994usability}.
+Although query result ranking is one of the most compelling metrics to measure for an application like this, it was not evaluated in this paper, because most triple stores do not have an inherent way to rank the quality of keyword search results based on relevance.
+
+\subsection{Database Considerations}
+To test our benchmark, we chose Virtuoso 7 as our triple store and Elasticsearch as our search engine, so we could compare SPARQL performance against an implementation of LD-VIEWS on a NoSQL database.  
+There are many alternatives available.  
+
+We did not make an attempt to automatically translate queries from SPARQL like the examples in the motivation to Elasticsearch's query and aggregation API.  
+Instead, we wrote a specification and interpreter to compose the elements of the queries as necessary and apply filters as searches are iteratively refined in the benchmark.  
+The property paths in SPARQL became document field names in Elasticsearch.  
+The SPARQL group by and aggregation methods became Elasticsearch aggs. 
+
+In addition, to avoid unfairly penalizing Virtuoso because the SPARQL standard only has support for regular expression matching to handle keyword searches, the SPARQL queries for the benchmark are written using the Virtuoso specific bif:contains function.
+This enables Virtuoso to take advantage of its text index.  
+Without it, the evaluation of even simple regular expression queries is incredibly expensive.  
+
+\subsection{Benchmark Execution}
+User arrival is modeled as a Poisson process with an arrival rate that follows a configurable exponential distribution.  
 In our evaluation, the mean arrival time is varied to simulate different levels of query load.  
 We vary the mean arrival time from one user every ten seconds (a light load) to one user every second (a medium load) to ten users every one second (a heavy load).
 The benchmark also allows for artificially limiting the number of concurrent users searching the knowledge graph so that we can explore their interactive effects without overwhelming the server.  
 We run the benchmark with at three concurrency levels: a single user, at most ten users, and at most one hundred users.
 If a user arrives when the maximum level of concurrent users has been reached, the user will be placed in a queue until a slot is available.  
-We always run the benchmark with 100 users.
+We always run the benchmark with 100 users attempting to query the database over the course of the benchmark.
 
+Each user will complete five different searches. 
+The user first selects an entity type to search, for example, web pages.
+As the search results come back, the user will iteratively refine their search based on the results.
+After each result, the user has a probability alpha, set to 0.1, that their search is satisfied, after which they won't search any more.
+The user will not refine their search more than three times.
+If the search results are empty, the user will give up on the search and move on to their next search.
 
-Since triple stores do not have an inherent way to measure the quality of free text search results, query result ranking will not be evaluated in this paper, even though it is one of the most compelling reasons to use a NoSQL database, specifically a search engine, like Elasticsearch over a triple store like Virtuoso.
-Instead, we will focus solely on query response time under varying levels of load.
-Query response time will also be subject to meeting quality of service measures outlined in the Motivation section and driven by \cite{nielsen1994usability}.
-This means queries wil
+Each search starts by the user selecting two keywords.  
+These keywords are selected from a list of the top 2,000 most common words found in the content of the crawled web pages that go in to the knowledge graph, minus stop words. 
+The database will then return 20 web pages related to those keywords, and gather the relevant information from the RDF graph neighborhood surrounding them, including any offers made on the web page, any information gathered about the seller, including extracted phone numbers and emails, etc.  
+
+When the keyword search is issued, a series of separate facet queries appropriate for web pages are issued against the all web pages related to those keywords in parallel.
+To meet the quality of service standards, the search query and the facet queries should return with 1 second.
+
+When the keyword search returns, a series of anchored queries based on the 20 web pages will also be issued to populate the appropriate visualizations. 
+To meet the quality of service standards, search query, facet queries, and the anchored queries should all return with 10 seconds.  
+
+After all the queries have returned, the user waits some time based on an exponential distribution, with a mean of 3 seconds, to simulate the user making a decision, and selects one of the facet values to refine their search with.
+The user then continues to iterate over their search until they are satisfied.  
+
 
 
 
@@ -33,6 +66,8 @@ This means queries wil
 % how long does it take to facet
 % how long does it take to assemble an entity
 % how long does it take display results using a visualization
+\subsection{Benchmark Response Times}
+
  \begin{table} 
     \begin{tabular}{ c c c c c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
