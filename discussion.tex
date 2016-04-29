@@ -1,10 +1,13 @@
 \section{Discussion}
 \label{sec:discussion}
 % 1.5 pages (including references)
-
-
-% initial work on materializing views.  
-\cite{castillo2010rdfmatview}
+In this paper we proposed an approach to materialize views over an RDF graph to support the scalability and performance demands of a domain-specific knowledge graph application.  
+To achieve this performance, we frame the graph as a collection of search entity rooted trees, precompute joins along the property paths that make up the application's queries, denormalize and nest as needed, serialize the trees as JSON-LD and then build indexes for each field in the JSON-LD documents in a NoSQL store.  
+Our evaluation demonstrated speed ups of up to one hundred times and and the ability to support a hundred times the number of concurrent workers over the current state of the art.
 
 % evaluate using siren 
-\cite{delbru2010node}
+An important extension to this work would involve evaluating alternative indexing strategies for managing nested documents over the Lucene Blockjoin implementation like found in Siren\cite{delbru2010node}.  
+% initial work on materializing views.  
+This approach could also build on the attempts to create materialized views in triple stores\cite{castillo2010rdfmatview} by taking advantage of their existing indexing capabilities.  
+Instead of creating explicit indexes, however, new triples can be created by concatenating the important property paths to form new properties that enable short circuiting the expensive join expansion to filter candidates quickly.  
+
