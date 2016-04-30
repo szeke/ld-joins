@@ -52,7 +52,7 @@ The JSON-LD standard has an algorithm, called framing, for translating an RDF gr
 The instructions for translating the RDF graph are captured in a JSON document called a frame.  
 LD-VIEWS requires a frame for each view.  
 We wrote a frame to create a view for each of our major classes: WebPage, Offer, AdultService, Seller, Phone, and Email.  
-An example frame for our Offer view is in figure blarg.  
+An example frame for our WebPage view is in figure ~\ref{fig:json_ld_webpage_view}.  
 Depending on the application's query needs, more than one frame and view can be created for each class.  
 
 \subsection{View Definition}
@@ -65,64 +65,12 @@ Depending on the application's query needs, more than one frame and view can be 
 
 \subsection{Framing}
 To construct the Offer view, the source RDF N-Triples and the view's corresponding frame are fed into our implementation of the JSON-LD framing algorithm.  
-
-\subsubsection{Flattened JSON-LD Documents}
-The implementation takes the unordered collection of N-Triples, sorts them by subject URI to create an N-Triples document for each subject, and then uses the open source JSON-LD Java library to translate the N-Triples documents into flattened JSON-LD documents, which contain a JSON object representing each subject and all its triples.
-Sample flattened JSON-LD documents for Offer and WebPage are seen in figure blorg along with their triples in figure blyrg.
-
-\subsubsection{Partitioning JSON-LD Documents By Frame Types}
-Once we have flattened JSON-LD documents, we can start processing the frame. 
-Each JSON object in the frame corresponds to a collection of flattened JSON-LD documents with subjects that have the same type as specified in the JSON object's @type field.
-Each JSON object field's name corresponds to the predicate of a triple.
-In the Offer view frame, for the JSON Object with the @type "PhoneNumber", the "name" field corresponds to the predicate schema:name.
-This means that the framer expects to find triples for subjects with the RDF type "PhoneNumber" that have the predicate schema:name.
-
-The algorithm enumerates all the @types found in the frame and then partitions the flattened JSON-LD documents into collections, one for each @type, according to each document's subject's type.
-A document can be in multiple collections if it's subject has multiple matching @types.  
-This facilitates nesting the subjects' JSON documents as specified by the frame.
-
-\subsubsection{Frame Leaf Nodes}
-For a given frame, its JSON objects are organized into a tree where each object is either an internal or leaf node.
-Any JSON object in the frame that only has fields with literal or empty JSON object values is considered a leaf object.
-The frame's leaf objects, e.g. PhoneNumber, EmailAddress, PostalAddress, GeoCoordinates, AdultService, PersonOrOrganization, and PriceSpecification for the Offer view, are loaded directly from their respective collections by type.
-
-\subsubsection{Frame Internal Nodes}
-A frame's tree's internal nodes have fields with JSON object values which have a defined @type field, e.g. Offer, PersonOrOrganization, Place, WebPage for our Offer view.
-A field's name is a directed labeled edge between internal node and child and corresponds to the predicate of a triple.
-PersonOrOrganization has two children, PhoneNumber and EmailAddress, which are connected by "telephone" and "email" predicates respectively.
-The PersonOrOrganization documents will contain triples for its subjects with the telephone predicate and objects which correspond to subjects in the PhoneNumber collection.
-Similarly for the email predicate and EmailAddress collection.
-
-\subsubsection{Frame Special Processing}
-The @explicit option is a JSON-LD convention which allows the user to indicate which triples should be included in the serialized output by property name.
-Any triples with properties not explicitly included in the frame for subjects of that type will be excluded.
-This becomes important when nesting objects with many triples that are not relevant to the view.  
-For example, without the @explicit option, an EmailAddress object, when nested in an offer, would contain a schema:owner triple for every seller that used the EmailAddress.
-For some EmailAddress subjects, there are thousands of seller owners, which can drastically increase the size of the object and the amount of indexing required.
-For our algorithm, empty JSON objects mean that the corresponding triples should be included but not evaluated any further.
-@explicit can be applied to both internal and leaf nodes.
-
-\subsubsection{Framing Algorithm}
-The algorithm now nests objects by recursively traversing the frame's tree in a depth-first order.  
-For each leaf node, no nesting is required, but we apply any JSON-LD processing options, like @explicit as indicated in PhoneNumber and EmailAddress, to the original document collection specified by the node's @type field, and make available the processed collection of documents to its parent, in this case PersonOrOrganization.  
-For each internal node, we apply any processing options as needed and then the algorithm attempts to nest the documents from its children.  
-The Offer view frame doesn't specify any processing options for PersonOrOrganization, so it just nests its children.
-For each child node, the algorithm iterates over the documents corresponding to the internal node's type, i.e. PersonOrOrganization and, for triples with the predicate corresponding to that child, it replaces object URI strings with the corresponding JSON-LD document from the child collection.  
-Once an internal node has completed nesting its children's documents, the new nested collection is made available for its parent node to nest.
-This continues until the root node has finished nesting its children.
-This algorithm is then applied to each view's frame, resulting in a collection of denormalized JSON-LD documents with documents nested as deep as required by the frame ready to be indexed for each view.
-An example framed document for the Offer view is shown in Figure blurgh.
-
-It is worth mentioning that indiscriminately denormalizing and nesting JSON-LD documents can quickly lead to an explosion of data.  For example, if a user wanted to define a view on emails by nesting all the sellers that used that email and then the other emails those sellers use, you could get a giant expansion if the network of sellers and email addresses is well connected.    
-
-\subsubsection{Framing Algorithm Implementation}
-The recursive depth-first algorithm for traversing the frame is intuitive, but it belies the enormous computational resources required to nest child documents by joining on identifiers.
 Previously, the only available implementation of the framing algorithm is in the official JSON-LD libraries.  %insert citation
 While efficient, it is of limited use because it  is single threaded and requires the triples and subsequent documents to fit in memory.
 The sheer size of our input dataset and the number of joins necessitated a parallel implementation that could either spill intermediate results to disk or take advantage of the memory available across many machines. 
 Initial attempts at implementing the algorithm using Apache Hive were prohibitively slow due to its poor distributed join performance and the excessive IO required by Apache MapReduce.  Applying a single frame on a billion triples took over a day.  
 An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in half an hour, due to its ability to cache intermediate results and perform joins in memory.   
-
+\begin{figure}
 \begin{verbatim}
 
 {
@@ -147,7 +95,9 @@ An implementation of the algorithm in Apache Spark can apply a frame to a billio
 
 
 \end{verbatim}
-
+\caption{JSON-LD Frame for WebPage View}
+\label{fig:json_ld_webpage_view}
+\end{figure}
 \begin{verbatim}
 {
     "a": "http://schema.org/WebPage",
