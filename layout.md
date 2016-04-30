@@ -17,5 +17,6 @@ figures/architecture-v1/architecture-v1.png
 Figure_ref_fig_architecture_shows__.tex
 evaluation.tex
 figures/200m_10c_100c_runtime/200m_10c_100c_runtime.png
+figures/200m_10c_100c_search/200m_10c_100c_search.png
 related-work.tex
 discussion.tex
