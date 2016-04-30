@@ -29,6 +29,7 @@ In addition, to avoid unfairly penalizing Virtuoso because the SPARQL standard o
 This enables Virtuoso to take advantage of its text index.  
 Without it, the evaluation of even simple regular expression queries is incredibly expensive.  
 
+
 \subection{Benchmark Machines}
 For our evaluation we used the Virtuoso 7.2 Enterprise PAGO Edition\cite{virtuosopago} available on AWS on r3.2xlarge which has 8 CPUs and 61 GB of RAM and RHEL 7 installed.  
 The data was stored on EBS volumes backed by SSDs with the maximum provisioned IOPs available. 
@@ -80,10 +81,23 @@ The user then continues to iterate over their search until they are satisfied.
     \begin{tabular}{ c c c c c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
         Virtuoso 7 & 439 & 1039 & 1008 & 1725 & 206 &  1790 \\ 
+        Virtuoso 7 + nginx & 161 & 321 & 240 & 658 & 29 &  673 \\ 
+        Virtuoso 7 Cluster & 28923 & 25880 & 28346 & 30503 & 4539 & 35650\\
         ES 1.7.3 Standalone & 93 & 77 & 76 & 111 & 1356 & 1351 \\ 
-        ES 1.7.3 Cluster & 41 & 22 & 21 & 60 & 84 & 156 \\ 
+        ES 1.7.3 Cluster (5) & 41 & 22 & 21 & 60 & 84 & 156 \\ 
     \end{tabular} 
-    \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load}
-    \label{table:qt_single_user}
+    \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load for 200 million triples}
+    \label{table:qt_single_user_200m}
 \end{table}
 
+\begin{table} 
+    \begin{tabular}{ c c c c c }
+        Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
+        Virtuoso 7 & 4649 & 13368 & 12402 & 25891 & 6778 &  27452 \\ 
+        ES 1.7.3 Standalone & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+        ES 1.7.3 Cluster (5) & 469 & 366 & 363 & 496 & 850 & 1415 \\ 
+        ES 1.7.3 Cluster (20) & 108 & 105 & 106 & 148 & 1413 & 1510 \\ 
+    \end{tabular} 
+    \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load for 1.2 billion triples}
+    \label{table:qt_single_user_1b}
+\end{table}
