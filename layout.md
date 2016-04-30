@@ -20,5 +20,6 @@ figures/200million_legend/200million_legend.png
 figures/200m_10c_100c_runtime/200m_10c_100c_runtime.png
 figures/200m_10c_100c_search/200m_10c_100c_search.png
 figures/200m_10c_100c_viz/200m_10c_100c_viz.png
+figures/1billion_legend/1billion_legend.png
 related-work.tex
 discussion.tex
