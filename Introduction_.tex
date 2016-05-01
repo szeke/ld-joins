@@ -12,14 +12,4 @@ Application developers often spend a substantial amount of time optimizing queri
 In addition, it is challenging for maintainers of SPARQL endpoints to guarantee the levels availability required in production applications such as the ones listed above.
 For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.
 
-Common approaches to address the performance and availability challenges involve restricting the types of queries that can be submitted to the SPARQL endpoint.
-We can think of the different approaches as defining views over an RDF graph.
-A simple approach is to define views of the graph as a parameterized SPARQL queries, similar to views in a relational database.
-Open PHACTS uses this approach, exposing the parameterized queries to clients using a Web API.
-The approach is very conservative as it limits clients to a small number of queries.
-%
-Triple Pattern Fragments \cite{Verborgh2014} provides simple views of an RDF graph, where each view is defined in terms of a triple pattern, where any of the subject, predicate or object roles can be a variable.
-Queries consist of a single triple pattern, so servers can answer them with minimal computational resources.
-The approach provides a client-side library that implements a subset of SPARQL in terms of Triple Pattern Fragments, thereby exposing a rich query language for clients, implemented on top of the simple views.
-The approach guarantees high availability, but each query generates multiple requests to the server, resulting in significant data transfer between servers and clients and performance degraded below the advocated user interface guidelines. 
 
