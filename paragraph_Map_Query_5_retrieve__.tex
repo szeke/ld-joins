@@ -1,12 +1,11 @@
 \paragraph{Map Query (5):} retrieve the number of instances of a class associated with a geographical location.
 The following example illustrates the query to count the number of phones associated with each city\footnote{Details for handling coordinated omitted.}. 
 Sellers can post offers in multiple locations and multiple sellers can post offers on the same location:
-\begin{quote}
 {\footnotesize
+\begin{center}
 \begin{verbatim}
 select ?locality count(?phone)
-   ?phone a Phone ; 
-      owner/availableAt/locality ?locality .
+   ?phone a Phone ; owner/availableAt/locality ?locality .
 group by ?locality
-\end{verbatim}}
-\end{quote}
+\end{verbatim}
+\end{center}}
