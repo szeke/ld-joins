@@ -22,6 +22,6 @@ figures/200m_10c_100c_search/200m_10c_100c_search.png
 figures/200m_10c_100c_viz/200m_10c_100c_viz.png
 subsubsection_Concurrent_User_Interaction_against__.tex
 figures/1b_10c_100c_search/200m_10c_100c_search_legend.png
-figures/1b_10c_100c_viz1/1b_10c_100c_viz1.png
+figures/1b_10c_100c_viz1/1b_10c_100c_viz_legend.png
 related-work.tex
 discussion.tex
