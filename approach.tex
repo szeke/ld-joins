@@ -55,11 +55,10 @@ An example frame for our WebPage view is in figure ~\ref{fig:json_ld_webpage_vie
 Depending on the application's query needs, more than one frame and view can be created for each class.  
 
 To construct the WebPage view, the source RDF triples and the view's corresponding frame are fed into our implementation of the JSON-LD framing algorithm.  
-Previously, the only available implementation of the framing algorithm is in the official JSON-LD libraries.  
-While efficient, it is of limited use because it is single threaded and requires the input and output to fit in memory.
-The sheer size of our input dataset and the number of joins necessitated a parallel implementation that could either spill intermediate results to disk or take advantage of the memory available across many machines. 
-Initial attempts at implementing the algorithm using Apache Hive were prohibitively slow due to its poor distributed join performance and the excessive IO required by Apache MapReduce.  Applying a single frame on a billion triples took over a day.  
-An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in fifteen minutes on a large cluster, due to its ability to cache intermediate results and perform joins in memory.   
+Previously, the only available implementation of the framing algorithm is in the official in-memory JSON-LD libraries.  
+The sheer size of our input dataset and the number of joins necessitated a distributed implementation. 
+Initial attempts at implementing the algorithm using Apache Hive on MapReduce resulted in applying a single frame on a billion triples taking over a day.  
+Our implementation of the algorithm in Apache Spark can apply a frame to a billion triples in fifteen minutes on a large cluster.
 \begin{figure}[h]
 \vspace{-0.2cm}
 {\footnotesize
