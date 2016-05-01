@@ -6,7 +6,7 @@ figures/views-01/views-01.png
 Figure_ref_fig_ldviews_shows__.tex
 figures/dig-composite/dig-composite.png
 Figure_ref_fig_ui_presents__.tex
-paragraph_Keyword_Query_1_retrieve__.tex
+begin_wrapfigure_r_0pt_footnotesize__.tex
 paragraph_Anchored_Facet_Query_2__.tex
 paragraph_Missing_Values_Query_3__.tex
 paragraph_Anchored_Timeline_Query_4__.tex
