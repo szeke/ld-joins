@@ -133,7 +133,7 @@ Each document contains the RDF neighborhood around the entity that corresponds t
 To support the end user queries, the documents need to be indexed accordingly.  
 
 For maximum query performance, we create an inverted index for each field and the path associated with each nested field, which the framer has created by pre-computing the joins.  
-For our example web page view,  we index both the schema:dateCreated of the web page in figure \label{fig:json_ld_webpage_view} and the schema:name of the schema:mainEntity/schema:seller/schema:telephone.  
+For our example web page view,  we index both the schema:dateCreated of the web page in figure ~\ref{fig:json_ld_webpage_view} and the schema:name of the schema:mainEntity/schema:seller/schema:telephone.  
 This allows us to find web pages that were crawled on the same day or find web pages that mention a particular telephone.  
 
 Fortunately, Elasticsearch can handle this indexing process efficiently, creating the multitude of indexes simultaneously.  
