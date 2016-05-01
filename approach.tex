@@ -143,7 +143,7 @@ However, the index type chosen can also be informed by the RDFS type of the obje
 % Insert discussion on size of index on discuss versus input size. 
 
 Admittedly, this represents an extreme approach compared to the common indexing approaches normally seen in RDF Triple Stores.  
-According to \cite{luo2012storing}, without insight into the expected query load, the triple store must make a best effort to support ad hoc queries.  
+According to \cite{Luo_Picalausa_Fletcher_Hidders_Vansummeren_2012}, without insight into the expected query load, the triple store must make a best effort to support ad hoc queries.  
 As such, the chapter describes the handful indexes that can be built by permuting the subject, predicate, object, and optional context graph values that make up a triple or quad.
 These indexes can either contain references to triples in unclustered indexes, or materialize them in clustered indexes, trading performance for space.
 Virtuoso can create bitmaps for predicate object pairs to speed subject lookups, which can be quickly combined to satisfy multiple constraints, which is analogous to how Elasticsearch applies many filters. 
