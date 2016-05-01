@@ -63,12 +63,10 @@ To meet the quality of service standards, the search query and the facet queries
 
 When the keyword search returns, a series of anchored queries based on the 20 web pages will also be issued to populate the appropriate visualizations. 
 To meet the quality of service standards, search query, facet queries, and the anchored queries should all return with 10 seconds.  
+If any query takes longer than 120 seconds, the benchmark will timeout they query and record the response time as 120 seconds.  
 
 After all the queries have returned, the user waits some time based on an exponential distribution, with a mean of 3 seconds, to simulate the user making a decision, and selects one of the facet values to refine their search with.
 The user then continues to iterate over their search until they are satisfied.  
-
-
-
 
 % intuition
 % how long does it take to do a keyword search
