@@ -6,8 +6,7 @@ The anchored version of the query includes an additional clause such as the \ver
 \begin{verbatim}
 select distinct ?locality count(?webpage)
    ?webpage a WebPage ;
-       mainEntity/availableAt/locality ?locality .
-   PHONE owner/offer/mainEntityOfPage ?webpage .
+       mainEntity/availableAt/locality ?locality . PHONE owner/offer/mainEntityOfPage ?webpage .
 group by ?locality
 \end{verbatim}}
 \end{quote}
