@@ -68,8 +68,8 @@ The sheer size of our input dataset and the number of joins necessitated a paral
 Initial attempts at implementing the algorithm using Apache Hive were prohibitively slow due to its poor distributed join performance and the excessive IO required by Apache MapReduce.  Applying a single frame on a billion triples took over a day.  
 An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in fifteen minutes on a large cluster, due to its ability to cache intermediate results and perform joins in memory.   
 \begin{figure}
-\begin{verbatim}
 \vspace{-21pt}
+\begin{verbatim}
 {
   "@type": "WebPage",
   "url": {},
