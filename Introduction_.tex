@@ -3,13 +3,13 @@ There are several examples of applications that illustrate the benefits of Seman
 Notable examples include Bio2RDF \cite{callahan2013bio2rdf} with 11 billion triples, Open PHACTS \cite{Groth_Loizou_Gray_Goble_Harland_Pettifer_2014} with 3 billion triples, Event Registry \cite{Leban_Fortuna_Brank_Grobelnik_2014} with 56 million documents and DIG \cite{szekely2015building} with 74 million documents.
 These systems offer rapid response times, with queries and navigation responding within one 1 or 2 seconds.
 Bio2RDF and Open PHACTS integrate RDF datasets, store their data in triple stores and use SPARQL to query the data.
-Event Registry and DIG integrate extractions from Web documents, both adding extractions from over 100,000 new pages every day.
+Event Registry and DIG integrate extractions from over 100,000 new Web documents daily.
 They both use semantic technologies to integrate the data, but neither uses a triple store or SPARQL due to scalability, performance and robustness considerations.
 
-Despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, the computation of query solutions remains a computationally intensive task for large datasets.
+Despite substantial research on optimizing SPARQL query processing \cite{Pham2013}, answering user queries remains a computationally intensive task for large datasets.
 As a result, it is challenging for application developers to achieve query response times of 1 or 2 seconds as users expect and as advocated in user interface guidelines \cite{nielsen1994usability}, especially when serving large numbers of users.
 Application developers often spend a substantial amount of time optimizing queries to support interactive applications \cite{Loizou_Angles_Groth_2014}.
 In addition, it is challenging for maintainers of SPARQL endpoints to guarantee the levels availability required in production applications such as the ones listed above.
-For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.
+For example, a recent survey \cite{buil2013sparql} revealed that less than half of the public endpoints reach an availability of 95\%.  To address this, Triple Pattern Fragments\cite{Verborgh2014} attempts to increase availability by offloading the work from the server on to the client. 
 
 
