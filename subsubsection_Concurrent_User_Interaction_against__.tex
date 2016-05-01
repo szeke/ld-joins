@@ -1,0 +1,10 @@
+\subsubsection{Concurrent User Interaction against a Large Graph}
+The following charts illustrate the performance of Elasticsearch in various cluster configurations under concurrent user workloads with different arrival rates for a graph on the order of 1 billion triples. 
+The bars correspond to the different database configurations: a 5-node Elasticsearch cluster and a 20-node Elasticsearch clusted. 
+The bars are grouped again along the X-axis into categories for different user arrival rates. 
+We ran the experiment against each configuration with user arrival rates of 0.1, 1, and 10 users per second. 
+The Y-axis presents the response time in seconds on a log scale.  
+The graphs on the left allow for a maximum of ten concurrent users while the graphs on the right allow for a maximum of one hundred concurrent users.  
+The twenty-node cluster can meet the user interface requirements for response times in every case except for user's click to search result time.  
+What is not obvious from the log scale chart, however, is that we are achieving near linear speed up with the number of nodes added to the cluster, showing the Elasticsearch is horizontally scalable for this application.
+Most importantly, we can serve 10x more simultaneous clients on a large graph easily within the user interface guidelines and up to 100x more clients with degraded performance that only meets some requirements in the worst case.  
