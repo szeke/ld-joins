@@ -9,9 +9,10 @@ A simple approach is to define views of the graph as a parameterized SPARQL quer
 Open PHACTS\cite{Loizou_Angles_Groth_2014} uses this approach, exposing the parameterized queries to clients using a Web API.
 The approach is very conservative as it limits clients to a small number of queries.
 
-Triple Pattern Fragments \cite{Verborgh2014} provides simple views of an RDF graph, where each view is defined in terms of a triple pattern, where any of the subject, predicate or object roles can be a variable.
-Queries consist of a single triple pattern, so servers can answer them with minimal computational resources.
-The approach provides a client-side library that implements a subset of SPARQL in terms of Triple Pattern Fragments.
-It guarantees high availability, but each query generates multiple requests to the server, resulting in significant data transfer between servers and clients and the published performance metrics are degraded below the advocated user interface guidelines. 
+Triple Pattern Fragments \cite{Verborgh2014} provides simple views of an RDF graph defined in terms of a triple pattern, where any of the subject, predicate or object roles can be a variable.
+Queries consist of a single pattern, so servers can answer them with minimal computational resources.
+The approach provides a client-side library that implements a subset of SPARQL in terms of these patterns.
+It guarantees high availability, but each query generates many requests, resulting in significant data transfer between servers and clients. 
+The published performance metrics are below the advocated user interface guidelines. 
 
 One alternative approach suggests replacing the underlying database that powers a triple store by using a column oriented database like MonetDB\cite{Wang_Wang_Du_Feng_2010}.   While it has performance gains, it lacks the rich text search capability that this application requires.
