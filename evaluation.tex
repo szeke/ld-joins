@@ -88,7 +88,7 @@ The user then continues to iterate over their search until they are satisfied.
     \label{table:qt_single_user_200m}
 \end{table}
 We began the evaluation by throttling the workload so that the hundred simulated users' access to the application was limited to one at a time.
-In this set up, Elasticsearch beats Virtuoso across the board, with the exception of the Anchored queries as shown in Table ~\ref{table:qt_single_user_200m}.  
+In this set up, Elasticsearch beats Virtuoso across the board, with the exception of the Anchored queries as shown in Table~\ref{table:qt_single_user_200m}.  
 The Anchored queries do not require free text search nor aggregation over a large amount of data, so Virtuoso should win because it only has to expand a a small amount of the graph from a single subject URI.
 A single Elasticsearch instance must query every shard and aggregate the results, but when the work is split over many machines, there is much speed up from distributing the workload and lower resource usage pressure.   
 With only two hundred million triples, Virtuoso has the additional benefit that the graph and its indexes easily fit inside RAM.
