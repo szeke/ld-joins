@@ -6,8 +6,7 @@ The following example illustrates an anchored query to compute the timeline of o
 \begin{verbatim}
 select count(?offer)
    PHONE owner/offer ?offer .
-   ?offer a Offer ;
-      startDate ?date .
+   ?offer a Offer ; startDate ?date .
 group by week(?date)
 \end{verbatim}}
 \end{quote}
