@@ -6,10 +6,8 @@ The following query illustrates retrieval of web pages and fields to populate th
 \begin{verbatim}
 select ?title ?date ?locality ?phone
   ?wp a WebPage ; 
-      contains(description, KEYWORDS) ;   
-      title ?title ; created ?date ;
-      mainEntity/availableAt ?locality ;
-      mainEntity/seller/telephone/name ?phone .
+      contains(description, KEYWORDS) ; title ?title ; created ?date ;
+      mainEntity/availableAt ?locality ; mainEntity/seller/telephone/name ?phone .
 \end{verbatim}}
 \end{quote}
 
