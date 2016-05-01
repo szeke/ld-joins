@@ -1,9 +1,8 @@
 \subsubsection{Concurrent User Interaction against a Large Graph}
-The following charts, Figures \ref{fig:mcs-1b} and \ref{fig:mcv-1b} illustrate the performance of Elasticsearch in various cluster configurations under concurrent user workloads with different arrival rates for a graph on the order of 1 billion triples. 
-The bars correspond to the different database configurations: a 5-node Elasticsearch cluster and a 20-node Elasticsearch cluster. 
-Otherwise, the graphs are organized the same as in the figures of the previous section.
+The following charts, Figures \ref{fig:mcs-1b} and \ref{fig:mcv-1b} are organized in the same way as Figures \ref{fig:mcs-200m} and \ref{fig:mcv-200m} 
+The bars correspond to the different database configurations, a 5-node Elasticsearch cluster and a 20-node Elasticsearch cluster, for a graph on the order of 1 billion triples. 
 
-The 20-node cluster can meet the user interface requirements for response times in every case except for user's click to search result time as seen in the right chart in Figure \ref{fig:mcs-1b} where up to 100 users are allowed to execute simultaneously.  
+The 20-node cluster can meet the user interface requirements in every case except for search result time as seen in the right chart in Figure \ref{fig:mcs-1b} where up to 100 users are allowed to execute simultaneously.  
 What is not obvious from the log scale chart, however, is that we are achieving near linear speed up with the number of nodes added to the cluster, showing the Elasticsearch is horizontally scalable for this application.
 It is reasonable to extrapolate that additional sharding across more nodes should enable the cluster to handle this workload.
 Most importantly, Figure \ref{fig:mcv-1b} shows that we can serve 10x more simultaneous clients on a large graph easily within the user interface guidelines and up to 100x more clients with degraded performance against some requirements in the worst case.  
