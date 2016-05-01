@@ -4,6 +4,7 @@ The bars correspond to the different database configurations: a 5-node Elasticse
 The bars are grouped on along the X-axis into categories for different user arrival rates.
 We ran the experiment against each configuration with user arrival rates of 0.1, 1, and 10 users per second.
 The Y-axis presents the response time in seconds on a log scale.  
+The graphs on the left allow for a maximum of ten concurrent users while the graphs on the right allow for a maximum of one hundred concurrent users.  
 
 Figure ~\ref{fig:mcs} shows the response time of the application from the user's click until the keyword search and facet queries return.  Anything above the 1 second mark means it does not meet the user interface requirements.  
 The standalone database configurations fail this requirement, although Elasticsearch can almost keep up under a load of 10 concurrent users.
