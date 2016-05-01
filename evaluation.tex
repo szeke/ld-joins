@@ -90,7 +90,7 @@ The user then continues to iterate over their search until they are satisfied.
     \centering
     \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load for 200 million triples}
     \label{table:qt_single_user_200m}
-    
+    \vspace{-0.2cm}
 \end{table}
 We began the evaluation by throttling the workload so that the hundred simulated users' access to the application was limited to one at a time.
 In this set up, Elasticsearch beats Virtuoso across the board, with the exception of the Anchored queries as shown in Table~\ref{table:qt_single_user_200m}.  
@@ -118,6 +118,7 @@ The five node Elasticsearch cluster performed the best, outperforming five Virtu
     \centering
     \caption{Avg. Query Times in Milliseconds by Database and Query Type For Single User Query Load for 1.2 billion triples}
     \label{table:qt_single_user_1b}
+    \vspace{-0.2cm}
 \end{table}
 
 We continued the evaluation for a single user with a larger graph on the order of 1 billion triples.  
