@@ -113,7 +113,7 @@ The five node Elasticsearch cluster performed the best, outperforming five Virtu
 
 We continued the evaluation for a single user with a larger graph on the order of 1 billion triples.  
 The graph and indexes were large enough that they no longer fit in working memory for either Elasticsearch nor Virtuoso on a single machine.
-Virtuoso was not able to achieve the required response times of 1 second for Click to Search and 10 seconds for Click to Visualization.
+Virtuoso was not able to achieve the required response times of 1 second for Click to Search and 10 seconds for Click to Visualization as shown in Table ~\ref{table:qt_single_user_1b}.
 A standalone Elasticsearch machine was able to achieve the necessary user interface performance guidelines for a single user, and Elasticsearch with 5 and 20 nodes was easily able to provide the quality of service required.
 It is not immediately clear why search is faster on a standalone cluster.
 It may be that merging results across multiple machines has a significant impact that is not ameliorated until enough servers can process them in parallel. 
