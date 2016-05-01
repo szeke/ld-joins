@@ -10,7 +10,6 @@ paragraph_Keyword_Query_1_retrieve__.tex
 paragraph_Anchored_Facet_Query_2__.tex
 paragraph_Missing_Values_Query_3__.tex
 paragraph_Anchored_Timeline_Query_4__.tex
-paragraph_Map_Query_5_retrieve__.tex
 As_users_interact_with_the__.tex
 approach.tex
 figures/architecture-v1/architecture-v1.png
