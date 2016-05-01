@@ -32,7 +32,7 @@ Our attempt to evaluate the Virtuoso Cluster offering relied on Virtuoso 7.2 Ent
 The data was stored on EBS volumes backed by SSDs with the maximum provisioned IOPs available. 
 We also ran Elasticsearch using CentOS with the same instance type.  
 For our query driver, we used an Amazon Linux AMI 2015-09.2 on an instance type of m4.xlarge to ensure we had the best networking performance possible in the us-west-2 region.    
-For Virtuoso, we reused the configuration published by the Berlin SPARQL Benchmark V7 \cite{bsbmv7}.
+For Virtuoso, we reused the configuration published by the Berlin SPARQL Benchmark V7.
 As an alternative to Virtuoso's cluster option, we attempted to round robin queries to standalone Virtuoso instances with another m4.xlarge server running nginx.
 For Elasticsearch we made no configuration changes except to increase the size of thread pools so that new queries were not rejected when the pending search queue was full. 
 
