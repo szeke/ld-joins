@@ -76,7 +76,7 @@ The user then continues to iterate over their search until they are satisfied.
 \subsection{Benchmark Response Times}
 \subsubsection{Single User Interaction}
  \begin{table}
- \small{
+ \tiny{
     \begin{tabular}{ c c c c c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
         Virtuoso 7 & 439 & 1039 & 1008 & 1725 & 206 &  1790 \\ 
@@ -103,7 +103,7 @@ Every other set up was able to achieve the minimum performance under the user in
 The five node Elasticsearch cluster performed the best, outperforming five Virtuoso nodes serving queries issued in round robin from an nginx server by an order of magnitude and almost two orders of magnitude over a single Virtuoso server on some queries. 
 
 \begin{table} 
-\small{
+\tiny{
     \begin{tabular}{ c c c c c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
         Virtuoso 7 & 4649 & 13368 & 12402 & 25891 & 6778 &  27452 \\ 
