@@ -1,7 +1,6 @@
 \paragraph{(Anchored) Facet Query (2):} retrieve the distinct values and the count of each value for a property path associated with a class.
 The following example illustrates the query to populate the \verb|CITY| facet in Figure \ref{fig:ui}.
 The anchored version of the query includes an additional clause such as the \verb|PHONE| clause to restrict the query to values related to a particular entity:
-\begin{quote}
 {\footnotesize
 \begin{verbatim}
 select distinct ?locality count(?webpage)
@@ -9,4 +8,3 @@ select distinct ?locality count(?webpage)
        mainEntity/availableAt/locality ?locality . PHONE owner/offer/mainEntityOfPage ?webpage .
 group by ?locality
 \end{verbatim}}
-\end{quote}
