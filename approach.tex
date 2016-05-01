@@ -68,7 +68,7 @@ The sheer size of our input dataset and the number of joins necessitated a paral
 Initial attempts at implementing the algorithm using Apache Hive were prohibitively slow due to its poor distributed join performance and the excessive IO required by Apache MapReduce.  Applying a single frame on a billion triples took over a day.  
 An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in fifteen minutes on a large cluster, due to its ability to cache intermediate results and perform joins in memory.   
 \begin{figure}
-\vspace{-1cm}
+\vspace{-0.2cm}
 \begin{verbatim}
 {
   "@type": "WebPage",
@@ -93,10 +93,10 @@ An implementation of the algorithm in Apache Spark can apply a frame to a billio
 \end{verbatim}
 \caption{JSON-LD Frame for WebPage View}
 \label{fig:json_ld_webpage_view}
-\vspace{-1cm}
+\vspace{-0.2cm}
 \end{figure}
 \begin{figure}
-\vspace{-1cm}
+\vspace{-0.2cm}
 \begin{verbatim}
 {
   "a": "http://schema.org/WebPage",
@@ -110,10 +110,7 @@ An implementation of the algorithm in Apache Spark can apply a frame to a billio
   "dateCreated": "2015-03-10T23:24:26",
   "mainEntity": {
     "availableAtOrFrom": {
-      "address": {
-        "addressLocality": "Boston",
-        "addressRegion": "Ma"
-      }
+      "address": {"addressLocality": "Boston","addressRegion": "Ma"}
     },
     "uri": "http://dig.isi.edu/ht/data/offer/...",
     "seller": {
@@ -132,7 +129,7 @@ An implementation of the algorithm in Apache Spark can apply a frame to a billio
   "name": "Live Escort Reviews - 347-471-3027 - arabic princess..."
 }
 \end{verbatim}
-\vspace{-1cm}
+\vspace{-0.2cm}
 \caption{Example framed WebPage document for view}
 \label{fig:framed-webpage}
 \end{figure}
