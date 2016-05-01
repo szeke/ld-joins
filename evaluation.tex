@@ -40,7 +40,7 @@ For Elasticsearch we made no configuration changes except to increase the size o
 User arrival is modeled as a Poisson process with an arrival rate that follows a configurable exponential distribution.  
 In our evaluation, the mean arrival time is varied to simulate different levels of query load.  
 We vary the mean arrival time from one user every ten seconds (a light load) to one user every second (a medium load) to ten users every one second (a heavy load).
-The benchmark also allows for artificially limiting the number of concurrent users searching the knowledge graph so that we can explore their interactive effects without overwhelming the server.  
+The benchmark also allows for artificially limiting the number of concurrent users so that we can explore their interactive effects without overwhelming the servers.  
 We run the benchmark with at three concurrency levels: a single user, at most ten users, and at most one hundred users.
 If a user arrives when the maximum level of concurrent users has been reached, the user will be placed in a queue until a slot is available.  
 We always run the benchmark with 100 users attempting to query the database over the course of the benchmark.
@@ -48,7 +48,7 @@ We always run the benchmark with 100 users attempting to query the database over
 Each user will complete five different searches. 
 The user first selects an entity type to search, e.g. web pages.
 As the search results come back, the user will iteratively refine their search based on the results by selecting one of the facet values.
-After each result, the user has a probability alpha, set to 0.1, that their search is satisfied, after which they won't search any more.
+After each result, the user has a probability alpha, set to 0.1, that their search is satisfied, after which they won't refine their search any more.
 The user will not refine their search more than three times.
 If the search results are empty, the user will give up on the search and move on to their next search.
 
