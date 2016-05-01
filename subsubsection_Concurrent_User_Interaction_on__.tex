@@ -1,17 +1,17 @@
 \subsubsection{Concurrent User Interaction on a Small Graph} 
-The following charts, Figures ~\ref{fig:mcs_200m} and ~\ref{fig:mcv_200m}, illustrate the performance of Elasticsearch and Virtuoso in various configurations under concurrent user workloads with different arrival rates for a graph on the order of 200 million triples.
+The following charts, Figures ~\ref{fig:mcs-200m} and ~\ref{fig:mcv-200m}, illustrate the performance of Elasticsearch and Virtuoso in various configurations under concurrent user workloads with different arrival rates for a graph on the order of 200 million triples.
 The bars correspond to the different database configurations: a 5-node Elasticsearch cluster, a standalone Elasticsearch node, a standalone Virtuoso node, and 5 Virtuoso servers behind an nginx server.  
 The bars are grouped on along the X-axis into categories for different user arrival rates.
 We ran the experiment against each configuration with user arrival rates of 0.1, 1, and 10 users per second.
 The Y-axis presents the response time in seconds on a log scale.  
 The graphs on the left allow for a maximum of ten concurrent users while the graphs on the right allow for a maximum of one hundred concurrent users.  
 
-Figure ~\ref{fig:mcs_200m} shows the response time of the application from the user's click until the keyword search and facet queries return.  Anything above the 1 second mark means it does not meet the user interface requirements.  
+Figure ~\ref{fig:mcs-200m} shows the response time of the application from the user's click until the keyword search and facet queries return.  Anything above the 1 second mark means it does not meet the user interface requirements.  
 The standalone database configurations fail this requirement, although Elasticsearch can almost keep up under a load of 10 concurrent users.
 The Virtuoso servers behind nginx can keep up with 10 concurrent users, but falls short as soon as users start arriving every second on average with all users allowed to access the application simultaneously.
 The Elasticsearch cluster is the only one that can keep up with 100 concurrent users arriving as quickly as possible accessing the application simultaneously.
 
-Figure ~\ref{fig:mcv_200m} shows the response time of the application from the user's until the keyword search, facet queries, and visualization queries return.  Anything above the 10 second mark fails to meet the user interface requirements.
+Figure ~\ref{fig:mcv-200m} shows the response time of the application from the user's until the keyword search, facet queries, and visualization queries return.  Anything above the 10 second mark fails to meet the user interface requirements.
 The standalone databases just meet the requirements when the benchmark limits it to 10 users simultaneously using the application, but perform up to ten times worse when all 100 users are allowed to use the application simultaneously.
 The Virtuoso servers behind nginx can meet the user interface requirements for visualization queries around one second until users begin arriving every second and using the application simultaneously at which point performance degrades to the minimum acceptable 10 seconds.
 Until this point, the Virtuoso servers can satisfy user requests quickly enough that they finish before another user begins using the application. 
