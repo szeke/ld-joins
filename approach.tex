@@ -62,6 +62,7 @@ Initial attempts at implementing the algorithm using Apache Hive were prohibitiv
 An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in fifteen minutes on a large cluster, due to its ability to cache intermediate results and perform joins in memory.   
 \begin{figure}
 \vspace{-0.2cm}
+{\footnotesize
 \begin{verbatim}
 {
   "@type": "WebPage",
@@ -83,7 +84,7 @@ An implementation of the algorithm in Apache Spark can apply a frame to a billio
     "priceSpecification": {"@type": "PriceSpecification"}
   }
 }
-\end{verbatim}
+\end{verbatim}}
 \caption{JSON-LD Frame for WebPage View}
 \label{fig:json_ld_webpage_view}
 \vspace{-0.2cm}
