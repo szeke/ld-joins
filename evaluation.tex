@@ -105,7 +105,7 @@ The five node Elasticsearch cluster performed the best, outperforming five Virtu
     \begin{tabular}{ c c c c c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ 
         Virtuoso 7 & 4649 & 13368 & 12402 & 25891 & 6778 &  27452 \\ 
-        ES 1.7.3 Standalone & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+        ES 1.7.3 Standalone & 70 & 80 & 79 & 124 & 3565 & 3768 \\ 
         ES 1.7.3 Cluster (5) & 469 & 366 & 363 & 496 & 850 & 1415 \\ 
         ES 1.7.3 Cluster (20) & 108 & 105 & 106 & 148 & 1413 & 1510 \\ 
     \end{tabular} 
@@ -116,7 +116,9 @@ The five node Elasticsearch cluster performed the best, outperforming five Virtu
 We continued the evaluation for a single user with a larger graph on the order of 1 billion triples.  
 The graph and indexes were large enough that they no longer fit in working memory for either Elasticsearch nor Virtuoso on a single machine.
 Virtuoso was not able to achieve the required response times of 1 second for Click to Search and 10 seconds for Click to Visualization.
-A standalone Elasticsearch machine was able to almost achieve the necessary user interface performance guidelines for a single user, and Elasticsearch with 5 and 20 nodes was easily able to provide the quality of service required.  
+A standalone Elasticsearch machine was able to achieve the necessary user interface performance guidelines for a single user, and Elasticsearch with 5 and 20 nodes was easily able to provide the quality of service required.
+It is not immediately clear why search is faster on a standalone cluster.
+It may be that merging results across multiple machines has a significant impact that is not ameliorated until enough servers can process them in parallel. 
 The 20 node cluster was able to serve the search and facet results over 100x faster than a single Virtuoso 7 instance. 
 The next step in our evaluation was allowing multiple users to use the application at the same time.
 We did not continue the evaluation for parallel work loads for Virtuoso because it could not meet the requirements for a single user.
