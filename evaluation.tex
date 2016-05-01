@@ -1,6 +1,5 @@
 \section{Evaluation}
 \label{sec:evaluation}
-Jason
 %3.5 pages 
 % explain that elasticsearch is one way to support these queries
 
@@ -11,31 +10,30 @@ Jason
 % c. time to execute queries (sparql lots / ld fragments infinity / ld joins litte )
 % d. benchmark explanation
 
-For our evaluation, we designed a benchmark to simulate some number of users iteratively refining searches for evidence of human trafficking by exploring connections between web pages containing ads and the entities extract from them, namely phone numbers, emails, adult services, sellers, and offers, against databases serving the knowledge graph.
+For our evaluation, we designed a benchmark to simulate users iteratively refining searches for evidence of human trafficking by exploring connections between web pages containing ads and the entities extracted from them: phone numbers, emails, adult services, sellers, and offers.
 The benchmark measured query response time under varying levels of load.
-Query response time was also subject to meeting quality of service measures outlined in the Motivation section and driven by \cite{nielsen1994usability}.
-Although query result ranking is one of the most compelling metrics to measure for an application like this, it was not evaluated in this paper, because most triple stores do not have an inherent way to rank the quality of keyword search results based on relevance.
+Query response time was also subject to meeting quality of service measures defined by \cite{nielsen1994usability}.
+Although query result ranking is a compelling metric to measure for an application like this, it was not evaluated in this paper, because most triple stores do not have an inherent way to rank the quality of keyword search results based on relevance.
 
 \subsection{Database Considerations}
 To test our benchmark, we chose Virtuoso 7 as our triple store and Elasticsearch as our search engine, so we could compare SPARQL performance against an implementation of LD-VIEWS on a NoSQL database.  
-There are many alternatives available.  
-
-We did not make an attempt to automatically translate queries from SPARQL like the examples in the motivation to Elasticsearch's query and aggregation API.  
+We did not automatically translate queries from SPARQL to Elasticsearch's API.  
 Instead, we wrote a specification and interpreter to compose the elements of the queries as necessary and apply filters as searches are iteratively refined in the benchmark.  
 The property paths in SPARQL became document field names in Elasticsearch.  
-The SPARQL group by and aggregation methods became Elasticsearch aggs. 
 
-In addition, to avoid unfairly penalizing Virtuoso because the SPARQL standard only has support for regular expression matching to handle keyword searches, the SPARQL queries for the benchmark are written using the Virtuoso specific bif:contains function.
+To avoid unfairly penalizing Virtuoso because the SPARQL standard only has support for regular expression matching to handle keyword searches, the SPARQL queries for the benchmark are written using the Virtuoso specific bif:contains function.
 This enables Virtuoso to take advantage of its text index.  
-Without it, the evaluation of even simple regular expression queries is incredibly expensive.  
+Without it, the evaluation of regular expression queries is expensive.  
 
 
 \subsection{Benchmark Machines}
-For our evaluation we used the Virtuoso 7.2 Enterprise PAGO Edition\cite{virtuosopago} available on AWS on r3.2xlarge which has 8 CPUs and 61 GB of RAM and RHEL 7 installed.  
+For our evaluation we used the open source version of Virtuoso 7 on AWS on r3.2xlarge which has 8 CPUs and 61 GB of RAM and RHEL 7 installed.  
+Our attempt to evaluate the Virtuoso Cluster offering relied on Virtuoso 7.2 Enterprise PAGO Edition\cite{virtuosopago}.
 The data was stored on EBS volumes backed by SSDs with the maximum provisioned IOPs available. 
 We also ran Elasticsearch using CentOS with the same instance type.  
 For our query driver, we used an Amazon Linux AMI 2015-09.2 on an instance type of m4.xlarge to ensure we had the best networking performance possible in the us-west-2 region.    
 For Virtuoso, we reused the configuration published by the Berlin SPARQL Benchmark V7 \cite{bsbmv7}.
+As an alternative to Virtuoso's cluster option, we attempted to round robin queries to standalone Virtuoso instances with another m4.xlarge server running nginx.
 For Elasticsearch we made no configuration changes except to increase the size of thread pools so that new queries were not rejected when the pending search queue was full. 
 
 \subsection{Benchmark Execution}
@@ -48,8 +46,8 @@ If a user arrives when the maximum level of concurrent users has been reached, t
 We always run the benchmark with 100 users attempting to query the database over the course of the benchmark.
 
 Each user will complete five different searches. 
-The user first selects an entity type to search, for example, web pages.
-As the search results come back, the user will iteratively refine their search based on the results.
+The user first selects an entity type to search, e.g. web pages.
+As the search results come back, the user will iteratively refine their search based on the results by selecting one of the facet values.
 After each result, the user has a probability alpha, set to 0.1, that their search is satisfied, after which they won't search any more.
 The user will not refine their search more than three times.
 If the search results are empty, the user will give up on the search and move on to their next search.
@@ -58,7 +56,7 @@ Each search starts by the user selecting two keywords.
 These keywords are selected from a list of the top 2,000 most common words found in the content of the crawled web pages that go in to the knowledge graph, minus stop words. 
 The database will then return 20 web pages related to those keywords, and gather the relevant information from the RDF graph neighborhood surrounding them, including any offers made on the web page, any information gathered about the seller, including extracted phone numbers and emails, etc.  
 
-When the keyword search is issued, a series of separate facet queries appropriate for web pages are issued against the all web pages related to those keywords in parallel.
+When the keyword search is issued, a series of separate facet queries appropriate for the entity type are issued against the all entities of that type related to those keywords in parallel.
 To meet the quality of service standards, the search query and the facet queries should return with 1 second.
 
 When the keyword search returns, a series of anchored queries based on the 20 web pages will also be issued to populate the appropriate visualizations. 
@@ -77,7 +75,7 @@ The user then continues to iterate over their search until they are satisfied.
 \subsubsection{Single User Interaction}
  \begin{table}
  \centering
- \footnotesize{
+ \scriptsize{
     \begin{tabular}{ l||c|c|c|c|c|c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ \hline 
         Virtuoso 7 & 439 & 1039 & 1008 & 1725 & 206 &  1790 \\ 
@@ -93,20 +91,21 @@ The user then continues to iterate over their search until they are satisfied.
     \vspace{-0.2cm}
 \end{table}
 We began the evaluation by throttling the workload so that the hundred simulated users' access to the application was limited to one at a time.
-In this set up, Elasticsearch beats Virtuoso across the board, with the exception of the Anchored queries as shown in Table~\ref{table:qt_single_user_200m}.  
+In this set up, LD-VIEWS beats SPARQL across the board, with the exception of the Anchored queries as shown in Table~\ref{table:qt_single_user_200m}.  
 The Anchored queries do not require free text search nor aggregation over a large amount of data, so Virtuoso should win because it only has to expand a a small amount of the graph from a single subject URI.
 A single Elasticsearch instance must query every shard and aggregate the results, but when the work is split over many machines, there is much speed up from distributing the workload and lower resource usage pressure.   
-With only two hundred million triples, Virtuoso has the additional benefit that the graph and its indexes easily fit inside RAM.
+With only 200M triples, Virtuoso benefits from the graph and indexes fitting inside RAM.
 Ultimately, although the Anchored queries took longer individually, since they were issued in parallel, Elasticsearch was able to keep up.
 The Virtuoso Cluster performed poorly for a single user and was not evaluated further. 
-This seems to confirm the intuition that the Virtuoso Cluster Edition performs poorly when serving many queries in parallel as discussed at the end of this paper \cite{harthlinked}.  
+This is inline with the result discussed here \cite{harthlinked} that the Virtuoso Cluster Edition performance degrades when serving many queries in parallel.  
 In this application, a single user's click can produce over a hundred parallel queries against the database. 
+
 Every other set up was able to achieve the minimum performance under the user interface guidelines. 
 The five node Elasticsearch cluster performed the best, outperforming five Virtuoso nodes serving queries issued in round robin from an nginx server by an order of magnitude and almost two orders of magnitude over a single Virtuoso server on some queries. 
 
 \begin{table} 
 \centering
-\footnotesize{
+\scriptsize{
     \begin{tabular}{ l||c|c|c|c|c|c }
         Database & Keyword & Facet & Facet (Missing) & Click Search & Anchored & Click Viz \\ \hline
         Virtuoso 7 & 4649 & 13368 & 12402 & 25891 & 6778 &  27452 \\ 
@@ -125,8 +124,8 @@ We continued the evaluation for a single user with a larger graph on the order o
 The graph and indexes were large enough that they no longer fit in working memory for either Elasticsearch nor Virtuoso on a single machine.
 Virtuoso was not able to achieve the required response times of 1 second for Click to Search and 10 seconds for Click to Visualization as shown in Table ~\ref{table:qt_single_user_1b}.
 A standalone Elasticsearch machine was able to achieve the necessary user interface performance guidelines for a single user, and Elasticsearch with 5 and 20 nodes was easily able to provide the quality of service required.
-It is not immediately clear why search is faster on a standalone cluster.
-It may be that merging results across multiple machines has a significant impact that is not ameliorated until enough servers can process them in parallel. 
+It is not obvious why search is faster on a standalone cluster.
+Merging results across multiple machines may have a significant impact that is not ameliorated until enough servers can process them in parallel. 
 The 20 node cluster was able to serve the search and facet results over 100x faster than a single Virtuoso 7 instance. 
 The next step in our evaluation was allowing multiple users to use the application at the same time.
 We did not continue the evaluation for parallel work loads for Virtuoso because it could not meet the requirements for a single user.
