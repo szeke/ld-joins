@@ -69,7 +69,7 @@ Initial attempts at implementing the algorithm using Apache Hive were prohibitiv
 An implementation of the algorithm in Apache Spark can apply a frame to a billion triples in fifteen minutes on a large cluster, due to its ability to cache intermediate results and perform joins in memory.   
 \begin{figure}
 \begin{verbatim}
-
+\vspace{-21pt}
 {
   "@type": "WebPage",
   "url": {},
@@ -89,52 +89,49 @@ An implementation of the algorithm in Apache Spark can apply a frame to a billio
     "itemOffered": {"@type": "AdultService"},
     "priceSpecification": {"@type": "PriceSpecification"}
   }
-
-
+}
 \end{verbatim}
 \caption{JSON-LD Frame for WebPage View}
 \label{fig:json_ld_webpage_view}
+\vspace{-21pt}
 \end{figure}
 \begin{figure}
 \begin{verbatim}
 {
-    "a": "http://schema.org/WebPage",
-    "publisher": {
-      "uri": "http://dig.isi.edu/ht/data/organization/liveescortreviews.com",
-      "name": "liveescortreviews.com"
+  "a": "http://schema.org/WebPage",
+  "publisher": {
+    "uri": "http://dig.isi.edu/ht/data/organization/liveescortreviews.com",
+    "name": "liveescortreviews.com"
+  },
+  "description": "arabic princess. SPECIAL CALL NOW 100 SPECIAL ! ...",
+  "url": "http://liveescortreviews.com/ad/boston/347-471-3027/1/312634",
+  "uri": "http://dig.isi.edu/ht/data/webpage/...",
+  "dateCreated": "2015-03-10T23:24:26",
+  "mainEntity": {
+    "availableAtOrFrom": {
+      "address": {
+        "addressLocality": "Boston",
+        "addressRegion": "Ma"
+      }
     },
-    "description": "arabic princess. SPECIAL CALL NOW 100 SPECIAL ! ...",
-    "url": "http://liveescortreviews.com/ad/boston/347-471-3027/1/312634",
-    "uri": "http://dig.isi.edu/ht/data/webpage/...",
-    "dateCreated": "2015-03-10T23:24:26",
-    "mainEntity": {
-      "availableAtOrFrom": {
-        "address": [
-          {
-            "addressLocality": "Boston",
-            "addressRegion": "Ma"
-          }
-        ]
+    "uri": "http://dig.isi.edu/ht/data/offer/...",
+    "seller": {
+      "telephone": {
+        "uri": "http://dig.isi.edu/ht/data/phone/1-3474713027",
+        "name": "3474713027"
       },
-      "uri": "http://dig.isi.edu/ht/data/offer/...",
-      "seller": {
-        "telephone": [
-          {
-            "uri": "http://dig.isi.edu/ht/data/phone/1-3474713027",
-            "name": "3474713027"
-          }
-        ],
-        "uri": "http://dig.isi.edu/ht/data/seller/..."
-      },
-      "itemOffered": {
-        "age": "19",
-        "uri": "http://dig.isi.edu/ht/data/adultservice/..."
-      },
-      "validFrom": "2015-03-10T23:24:26"
+      "uri": "http://dig.isi.edu/ht/data/seller/..."
     },
-    "name": "Live Escort Reviews - 347-471-3027 - arabic princess..."
-  }
+    "itemOffered": {
+      "age": "19",
+      "uri": "http://dig.isi.edu/ht/data/adultservice/..."
+    },
+    "validFrom": "2015-03-10T23:24:26"
+  },
+  "name": "Live Escort Reviews - 347-471-3027 - arabic princess..."
+}
 \end{verbatim}
+\vspace{-21pt}
 \caption{Example framed WebPage document for view}
 \label{fig:framed-webpage}
 \end{figure}
