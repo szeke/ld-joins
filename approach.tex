@@ -23,14 +23,14 @@ Joins are expensive when the data involved no longer fits in the working memory 
 Even worse is when the join involves data so large it needs to be distributed across many machines.  
 When joins are the primary operation, like many SPARQL queries, the expense is compounded many times over.
 
-LD-VIEWS aims to eliminate expensive join operations by creating a materialized view for each entity type tailored to the query needs of the end users.  
+LD-VIEWS aims to eliminate expensive joins by creating a materialized view for each entity type tailored to the query needs of the end users.  
 A view is materialized by pre-computing certain joins against other entities in its entities' RDF neighborhoods along prescribed predicate paths.  
 The view is then serialized as a collection of denormalized JSON-LD documents with each document containing an entity and the triples in its neighborhood relevant to the desired queries.  
-Since the RDF neighborhood is now denormalized and localized into each document, the documents can be partitioned across many machines.
+Since the RDF neighborhood is denormalized and localized into each document, the documents can be partitioned across many machines.
 To answer a query, the machines can compute their results independently and only communicate when they need to merge the results like in an aggregation query.
-This eliminates the need to recursively expand the candidate result graph across nodes in a clustered triple store database when computing joins.  
+This eliminates the need to iteratively expand the candidate result graph across nodes in a clustered triple store database when computing joins.  
 Finally, to serve the views, the documents need to be indexed many ways.
-The databases that have the necessary indexing and sharding support are the family of document-oriented databases like MongoDB, Couchbase, Solr, and Elasticsearch.  
+The databases that have the necessary indexing and sharding support are document-oriented databases like MongoDB, Couchbase, Solr, and Elasticsearch.  
 
 For generality, our approach to generating views for efficient RDF query processing assumes an RDF graph in N-Triples aligned to a common vocabulary as input.  
 A common vocabulary is not a hard requirement, but helps keep the possible combinations of types and properties in the views manageable.
