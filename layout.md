@@ -17,7 +17,7 @@ figures/architecture-v1/architecture-v1.png
 Figure_ref_fig_architecture_shows__.tex
 evaluation.tex
 subsubsection_Concurrent_User_Interaction_on__.tex
-figures/200m_10c_100c_search/200m_10c_100c_search.png
+figures/200m_10c_100c_search/200m_10c_100c_search_legend.png
 figures/200m_10c_100c_viz/200m_10c_100c_viz_legend.png
 subsubsection_Concurrent_User_Interaction_against__.tex
 figures/1b_10c_100c_search/200m_10c_100c_search_legend.png
